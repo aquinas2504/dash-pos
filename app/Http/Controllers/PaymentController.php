@@ -13,7 +13,7 @@ class PaymentController extends Controller
 
         $paymentspagination = $payments->paginate(10);
 
-        return view('Pages.payment.index', compact('payments', 'paymentspagination'));
+        return view('Pages.Payment.index', compact('payments', 'paymentspagination'));
     }
 
     public function create()
