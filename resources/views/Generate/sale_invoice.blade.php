@@ -53,7 +53,7 @@
         @if ($invoice->suratjalan->ppn_status === 'yes')
             <tr>
                 <td width="30%">
-                    <img src="{{ asset('img/logo-dmi.jpg') }}" alt="Logo" style="height: 75px;">
+                    <img src="/home/u836342820/domains/pos.dashmegah.my.id/public_html/img/logo-dmi.jpg" alt="Logo" style="height:75px;">
                 </td>
                 <td class="text-center" style="font-size: 11px; line-height: 1.4;">
                     <h2 style="margin: 0 0 5px; font-size: 14px;">PT. DASH MEGAH INTERNASIONAL</h2>
@@ -68,7 +68,7 @@
             {{-- Versi tanpa alamat, logo di tengah --}}
             <tr>
                 <td style="text-align: center;">
-                    <img src="{{ asset('img/logo-dmi.jpg') }}" alt="Logo" style="height: 75px;">
+                    <img src="/home/u836342820/domains/pos.dashmegah.my.id/public_html/img/logo-dmi.jpg" alt="Logo" style="height:75px;">
                 </td>
             </tr>
         @endif
