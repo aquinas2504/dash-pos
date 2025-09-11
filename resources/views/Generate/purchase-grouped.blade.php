@@ -87,7 +87,7 @@
             {{-- Versi dengan alamat, logo kiri + alamat kanan --}}
             <tr>
                 <td width="30%">
-                    <img src="{{ public_path('img/logo-dmi.jpg') }}" alt="Logo" style="height: 75px;">
+                    <img src="{{ asset('img/logo-dmi.jpg') }}" alt="Logo" style="height: 75px;">
                 </td>
                 <td style="text-align: center; font-size: 11px; line-height: 1.4;">
                     <h2 style="margin: 0 0 5px; font-size: 14px;">PT. DASH MEGAH INTERNASIONAL</h2>
@@ -102,7 +102,7 @@
             {{-- Versi tanpa alamat, logo di tengah --}}
             <tr>
                 <td style="text-align: center;">
-                    <img src="{{ public_path('img/logo-dmi.jpg') }}" alt="Logo" style="height: 75px;">
+                    <img src="{{ asset('img/logo-dmi.jpg') }}" alt="Logo" style="height: 75px;">
                 </td>
             </tr>
         @endif
