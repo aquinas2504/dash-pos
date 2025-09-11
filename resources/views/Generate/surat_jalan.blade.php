@@ -64,7 +64,7 @@
         @if ($sj->ppn_status === 'yes')
             <tr>
                 <td width="30%">
-                    <img src="{{ asset('img/logo-dmi.jpg') }}" alt="Logo" style="height: 75px;">
+                    <img src="/home/u836342820/domains/pos.dashmegah.my.id/public_html/img/logo-dmi.jpg" alt="Logo" style="height:75px;">
                 </td>
                 @if ($sj->ppn_status === 'yes')
                     <td style="text-align: center; font-size: 11px; line-height: 1.4;">
@@ -81,7 +81,7 @@
             {{-- Versi tanpa alamat, logo di tengah --}}
             <tr>
                 <td style="text-align: center;">
-                    <img src="{{ asset('img/logo-dmi.jpg') }}" alt="Logo" style="height: 75px;">
+                    <img src="/home/u836342820/domains/pos.dashmegah.my.id/public_html/img/logo-dmi.jpg" alt="Logo" style="height:75px;">
                 </td>
             </tr>
         @endif
