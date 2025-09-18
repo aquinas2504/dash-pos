@@ -16,45 +16,27 @@
                     <div class="card-body">
                         <div class="row g-3">
                             <div class="col-md-4">
-                                <label for="customer_code" class="form-label">Kode Customer</label>
-                                <input type="text" name="customer_code" id="customer_code" class="form-control"
-                                    placeholder="Masukkan kode customer" value="{{ old('customer_code') }}" required>
-                            </div>
-
-                            <div class="col-md-4">
                                 <label for="customer_name" class="form-label">Nama Customer</label>
                                 <input type="text" name="customer_name" id="customer_name" class="form-control"
                                     placeholder="Masukkan nama customer" value="{{ old('customer_name') }}" required>
                             </div>
 
                             <div class="col-md-4">
-                                <label for="customer_email" class="form-label">Email Customer</label>
-                                <input type="email" name="customer_email" id="customer_email" class="form-control"
-                                    placeholder="Masukkan email customer" value="{{ old('customer_email') }}" required>
-                            </div>
-
-                            <div class="col-md-4">
                                 <label for="customer_phone" class="form-label">Nomor Telepon</label>
                                 <input type="number" name="customer_phone" id="customer_phone" class="form-control"
-                                    placeholder="Masukkan nomor telepon" value="{{ old('customer_phone') }}" required>
+                                    placeholder="Masukkan nomor telepon" value="{{ old('customer_phone') }}">
                             </div>
 
                             <div class="col-md-4">
                                 <label for="npwp" class="form-label">NPWP</label>
                                 <input type="text" name="npwp" id="npwp" class="form-control"
-                                    placeholder="Masukkan NPWP" value="{{ old('npwp') }}" required>
+                                    placeholder="Masukkan NPWP" value="{{ old('npwp') }}">
                             </div>
 
                             <div class="col-md-4">
                                 <label for="city" class="form-label">Kota</label>
                                 <input type="text" name="city" id="city" class="form-control"
                                     placeholder="Masukkan kota" value="{{ old('city') }}" required>
-                            </div>
-
-                            <div class="col-md-4">
-                                <label for="country" class="form-label">Negara</label>
-                                <input type="text" name="country" id="country" class="form-control"
-                                    placeholder="Masukkan negara" value="{{ old('country') }}" required>
                             </div>
 
                             <div class="col-md-8">

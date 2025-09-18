@@ -56,7 +56,7 @@
                             @foreach ($productspagination as $product)
                                 <tr>
                                     <td>{{ ($productspagination->currentPage() - 1) * $productspagination->perPage() + $loop->iteration }}</td>
-                                    <td>{{ $product->product_code }}</td>
+                                    <td>{{ $product->product_code ?? "-" }}</td>
                                     <td>{{ $product->product_name }}</td>
                                     <td class="{{ $product->stok_gudang < 0 ? 'text-danger fw-bold' : '' }}">
                                         {{ $product->stok_gudang }}

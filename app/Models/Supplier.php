@@ -17,11 +17,9 @@ class Supplier extends Authenticatable
     protected $fillable = [
         'supplier_code',
         'supplier_name',
-        'supplier_email',
         'supplier_phone',
         'npwp',
         'city',
-        'country',
         'address',
         'status',
     ];

@@ -39,9 +39,7 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Code</th>
                                 <th>Name</th>
-                                <th>Email</th>
                                 <th>Phone</th>
                                 <th>NPWP</th>
                                 <th>Action</th>
@@ -51,11 +49,9 @@
                             @foreach ($customers as $customer)
                                 <tr>
                                     <td>{{ ($customers->currentPage() - 1) * $customers->perPage() + $loop->iteration }}</td>
-                                    <td>{{ $customer->customer_code }}</td>
                                     <td>{{ $customer->customer_name }}</td>
-                                    <td>{{ $customer->customer_email }}</td>
-                                    <td>{{ $customer->customer_phone }}</td>
-                                    <td>{{ $customer->npwp }}</td>
+                                    <td>{{ $customer->customer_phone ?? "-" }}</td>
+                                    <td>{{ $customer->npwp ?? "-" }}</td>
                                     <td>
                                         <a href="{{ route('customers.edit', $customer->customer_code) }}" class="btn btn-sm btn-warning">
                                             <i class="fas fa-edit"></i> Edit

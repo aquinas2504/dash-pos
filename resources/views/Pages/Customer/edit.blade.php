@@ -28,38 +28,21 @@
                             </div>
 
                             <div class="col-md-4">
-                                <label for="customer_email" class="form-label">Email Customer</label>
-                                <input type="email" name="customer_email" id="customer_email" class="form-control"
-                                    value="{{ old('customer_email', $customer->customer_email) }}" required>
-                            </div>
-
-                            <div class="col-md-4">
                                 <label for="customer_phone" class="form-label">Nomor Telepon</label>
                                 <input type="number" name="customer_phone" id="customer_phone" class="form-control"
-                                    value="{{ old('customer_phone', $customer->customer_phone) }}" required>
+                                    value="{{ old('customer_phone', $customer->customer_phone) }}">
                             </div>
 
                             <div class="col-md-4">
                                 <label for="npwp" class="form-label">NPWP</label>
                                 <input type="text" name="npwp" id="npwp" class="form-control"
-                                    value="{{ old('npwp', $customer->npwp) }}" required>
+                                    value="{{ old('npwp', $customer->npwp) }}">
                             </div>
 
                             <div class="col-md-4">
                                 <label for="city" class="form-label">Kota</label>
                                 <input type="text" name="city" id="city" class="form-control"
                                     value="{{ old('city', $customer->city) }}" required>
-                            </div>
-
-                            <div class="col-md-4">
-                                <label for="country" class="form-label">Negara</label>
-                                <input type="text" name="country" id="country" class="form-control"
-                                    value="{{ old('country', $customer->country) }}" required>
-                            </div>
-
-                            <div class="col-md-8">
-                                <label for="address" class="form-label">Alamat</label>
-                                <textarea name="address" id="address" rows="3" class="form-control" required>{{ old('address', $customer->address) }}</textarea>
                             </div>
 
                             <div class="col-md-4">
@@ -71,6 +54,12 @@
                                         Inactive</option>
                                 </select>
                             </div>
+
+                            <div class="col-md-8">
+                                <label for="address" class="form-label">Alamat</label>
+                                <textarea name="address" id="address" rows="2" class="form-control" required>{{ old('address', $customer->address) }}</textarea>
+                            </div>
+
                         </div>
                     </div>
 
