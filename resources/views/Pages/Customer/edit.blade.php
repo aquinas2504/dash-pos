@@ -28,21 +28,21 @@
                             </div>
 
                             <div class="col-md-4">
-                                <label for="customer_phone" class="form-label">Nomor Telepon</label>
-                                <input type="number" name="customer_phone" id="customer_phone" class="form-control"
-                                    value="{{ old('customer_phone', $customer->customer_phone) }}">
-                            </div>
-
-                            <div class="col-md-4">
                                 <label for="npwp" class="form-label">NPWP</label>
                                 <input type="text" name="npwp" id="npwp" class="form-control"
                                     value="{{ old('npwp', $customer->npwp) }}">
                             </div>
 
                             <div class="col-md-4">
-                                <label for="city" class="form-label">Kota</label>
-                                <input type="text" name="city" id="city" class="form-control"
-                                    value="{{ old('city', $customer->city) }}" required>
+                                <label for="customer_phone" class="form-label">Nomor Telepon</label>
+                                <input type="number" name="customer_phone" id="customer_phone" class="form-control"
+                                    value="{{ old('customer_phone', $customer->customer_phone) }}">
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <label for="pic" class="form-label">PIC</label>
+                                <input type="text" name="pic" id="pic" class="form-control"
+                                    value="{{ old('pic', $customer->pic) }}">
                             </div>
 
                             <div class="col-md-4">
@@ -53,6 +53,12 @@
                                     <option value="Inactive" {{ $customer->status == 'Inactive' ? 'selected' : '' }}>
                                         Inactive</option>
                                 </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="city" class="form-label">Kota</label>
+                                <input type="text" name="city" id="city" class="form-control"
+                                    value="{{ old('city', $customer->city) }}" required>
                             </div>
 
                             <div class="col-md-8">

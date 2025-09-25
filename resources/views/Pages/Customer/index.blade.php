@@ -41,6 +41,7 @@
                                 <th>#</th>
                                 <th>Name</th>
                                 <th>Phone</th>
+                                <th>PIC</th>
                                 <th>NPWP</th>
                                 <th>Action</th>
                             </tr>
@@ -51,6 +52,7 @@
                                     <td>{{ ($customers->currentPage() - 1) * $customers->perPage() + $loop->iteration }}</td>
                                     <td>{{ $customer->customer_name }}</td>
                                     <td>{{ $customer->customer_phone ?? "-" }}</td>
+                                    <td>{{ $customer->pic ?? "-" }}</td>
                                     <td>{{ $customer->npwp ?? "-" }}</td>
                                     <td>
                                         <a href="{{ route('customers.edit', $customer->customer_code) }}" class="btn btn-sm btn-warning">

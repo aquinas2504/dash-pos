@@ -38,6 +38,7 @@ class CustomerController extends Controller
         $request->validate([
             'customer_name' => 'required|string|max:50|unique:customers,customer_name',
             'customer_phone' => 'nullable|string|max:50',
+            'pic' => 'nullable|string|max:50',
             'npwp' => 'nullable|string|max:20',
             'city' => 'required|string|max:50',
             'address' => 'required|string',
@@ -80,6 +81,7 @@ class CustomerController extends Controller
                 Rule::unique('customers', 'customer_name')->ignore($customer_code, 'customer_code'),
             ],
             'customer_phone' => 'nullable|string|max:50',
+            'pic' => 'nullable|string|max:50',
             'npwp' => 'nullable|string|max:20',
             'city' => 'required|string|max:50',
             'address' => 'required|string',
@@ -89,6 +91,7 @@ class CustomerController extends Controller
         $customer->update([
             'customer_name'  => $request->customer_name,
             'customer_phone' => $request->customer_phone,
+            'pic'            => $request->pic,
             'npwp'           => $request->npwp,
             'city'           => $request->city,
             'address'        => $request->address,

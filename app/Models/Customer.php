@@ -18,6 +18,7 @@ class Customer extends Authenticatable
         'customer_code',
         'customer_name',
         'customer_phone',
+        'pic',
         'npwp',
         'city',
         'address',

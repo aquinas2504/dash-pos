@@ -15,22 +15,28 @@
 
                     <div class="card-body">
                         <div class="row g-3">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <label for="customer_name" class="form-label">Nama Customer</label>
                                 <input type="text" name="customer_name" id="customer_name" class="form-control"
                                     placeholder="Masukkan nama customer" value="{{ old('customer_name') }}" required>
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-md-6">
+                                <label for="npwp" class="form-label">NPWP</label>
+                                <input type="text" name="npwp" id="npwp" class="form-control"
+                                    placeholder="Masukkan NPWP" value="{{ old('npwp') }}">
+                            </div>
+
+                            <div class="col-md-6">
                                 <label for="customer_phone" class="form-label">Nomor Telepon</label>
                                 <input type="number" name="customer_phone" id="customer_phone" class="form-control"
                                     placeholder="Masukkan nomor telepon" value="{{ old('customer_phone') }}">
                             </div>
 
-                            <div class="col-md-4">
-                                <label for="npwp" class="form-label">NPWP</label>
-                                <input type="text" name="npwp" id="npwp" class="form-control"
-                                    placeholder="Masukkan NPWP" value="{{ old('npwp') }}">
+                            <div class="col-md-6">
+                                <label for="pic" class="form-label">PIC</label>
+                                <input type="text" name="pic" id="pic" class="form-control"
+                                    placeholder="Masukkan nama PIC" value="{{ old('pic') }}">
                             </div>
 
                             <div class="col-md-4">
