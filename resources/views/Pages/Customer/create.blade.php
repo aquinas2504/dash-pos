@@ -29,7 +29,7 @@
 
                             <div class="col-md-6">
                                 <label for="customer_phone" class="form-label">Nomor Telepon</label>
-                                <input type="number" name="customer_phone" id="customer_phone" class="form-control"
+                                <input type="text" name="customer_phone" id="customer_phone" class="form-control"
                                     placeholder="Masukkan nomor telepon" value="{{ old('customer_phone') }}">
                             </div>
 

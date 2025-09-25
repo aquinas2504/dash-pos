@@ -35,7 +35,7 @@
 
                             <div class="col-md-4">
                                 <label for="customer_phone" class="form-label">Nomor Telepon</label>
-                                <input type="number" name="customer_phone" id="customer_phone" class="form-control"
+                                <input type="text" name="customer_phone" id="customer_phone" class="form-control"
                                     value="{{ old('customer_phone', $customer->customer_phone) }}">
                             </div>
                             
