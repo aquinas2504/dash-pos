@@ -23,7 +23,9 @@ class CustomerController extends Controller
             });
         }
 
-        $customers = $query->paginate(10);
+        $customers = $query
+        ->orderBy('customer_name', 'asc') // urut A-Z
+        ->paginate(10);
 
         return view('Pages.Customer.index', compact('customers', 'searchQuery'));
     }
