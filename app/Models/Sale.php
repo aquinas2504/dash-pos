@@ -21,7 +21,6 @@ class Sale extends Model
         'customer_code',
         'ppn_status',
         'subtotal',
-        'dpp',
         'ppn',
         'grandtotal',
         'top',

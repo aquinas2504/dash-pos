@@ -36,6 +36,8 @@ class InvoiceController extends Controller
     // store Form Invoice Pembelian
     public function store(Request $request)
     {
+        // dd($request->all());
+
         $request->merge([
             'price' => array_map(fn($p) => (int) preg_replace('/\D/', '', $p), $request->price ?? [])
         ]);
@@ -54,15 +56,15 @@ class InvoiceController extends Controller
                         return;
                     }
 
-                    // format dasar: angka atau angka+angka+...
-                    if (!preg_match('/^\d+(\+\d+)*$/', $value)) {
-                        $fail("$attribute harus berupa angka atau kombinasi angka dipisahkan dengan '+' (contoh: 10 atau 10+5).");
+                    if (!preg_match('/^\d+([.,]\d+)?(\+\d+([.,]\d+)?)*$/', $value)) {
+                        $fail("$attribute harus berupa angka (boleh desimal) atau kombinasi angka dipisahkan '+', contoh: 10,5+2.5");
                         return;
                     }
 
+
                     // cek setiap angka 0..100
                     foreach (explode('+', $value) as $rate) {
-                        $r = (int) $rate;
+                        $r = (float) str_replace(',', '.', $rate);
                         if ($r < 0 || $r > 100) {
                             $fail("$attribute harus antara 0 sampai 100% setiap segmen.");
                             return;
@@ -94,7 +96,7 @@ class InvoiceController extends Controller
 
                 // Hitung diskon bertingkat
                 foreach (explode('+', $discountStr) as $d) {
-                    $rate = (float) $d;
+                    $rate = (float) str_replace(',', '.', $d);
                     if ($rate > 0) {
                         $netPrice -= $netPrice * $rate / 100;
                     }
@@ -204,14 +206,14 @@ class InvoiceController extends Controller
                     }
 
                     // format dasar: angka atau angka+angka+...
-                    if (!preg_match('/^\d+(\+\d+)*$/', $value)) {
-                        $fail("$attribute harus berupa angka atau kombinasi angka dipisahkan dengan '+' (contoh: 10 atau 10+5).");
+                    if (!preg_match('/^\d+([.,]\d+)?(\+\d+([.,]\d+)?)*$/', $value)) {
+                        $fail("$attribute harus berupa angka (boleh desimal) atau kombinasi angka dipisahkan '+', contoh: 10,5+2.5");
                         return;
                     }
 
                     // cek setiap angka 0..100
                     foreach (explode('+', $value) as $rate) {
-                        $r = (int) $rate;
+                        $r = (float) str_replace(',', '.', $rate);
                         if ($r < 0 || $r > 100) {
                             $fail("$attribute harus antara 0 sampai 100% setiap segmen.");
                             return;
@@ -252,7 +254,7 @@ class InvoiceController extends Controller
 
                 $netPrice = $price;
                 foreach (explode('+', $discountStr) as $d) {
-                    $rate = (float) $d;
+                    $rate = (float) str_replace(',', '.', $d);
                     if ($rate > 0) {
                         $netPrice -= $netPrice * $rate / 100;
                     }
@@ -353,14 +355,14 @@ class InvoiceController extends Controller
                     }
 
                     // format dasar: angka atau angka+angka+...
-                    if (!preg_match('/^\d+(\+\d+)*$/', $value)) {
-                        $fail("$attribute harus berupa angka atau kombinasi angka dipisahkan dengan '+' (contoh: 10 atau 10+5).");
+                    if (!preg_match('/^\d+([.,]\d+)?(\+\d+([.,]\d+)?)*$/', $value)) {
+                        $fail("$attribute harus berupa angka (boleh desimal) atau kombinasi angka dipisahkan '+', contoh: 10,5+2.5");
                         return;
                     }
 
                     // cek setiap angka 0..100
                     foreach (explode('+', $value) as $rate) {
-                        $r = (int) $rate;
+                        $r = (float) str_replace(',', '.', $rate);
                         if ($r < 0 || $r > 100) {
                             $fail("$attribute harus antara 0 sampai 100% setiap segmen.");
                             return;
@@ -392,7 +394,7 @@ class InvoiceController extends Controller
 
                 // Hitung diskon bertingkat
                 foreach (explode('+', $discountStr) as $d) {
-                    $rate = (float) $d;
+                    $rate = (float) str_replace(',', '.', $d);
                     if ($rate > 0) {
                         $netPrice -= $netPrice * $rate / 100;
                     }
@@ -526,14 +528,14 @@ class InvoiceController extends Controller
                     }
 
                     // format dasar: angka atau angka+angka+...
-                    if (!preg_match('/^\d+(\+\d+)*$/', $value)) {
-                        $fail("$attribute harus berupa angka atau kombinasi angka dipisahkan dengan '+' (contoh: 10 atau 10+5).");
+                    if (!preg_match('/^\d+([.,]\d+)?(\+\d+([.,]\d+)?)*$/', $value)) {
+                        $fail("$attribute harus berupa angka (boleh desimal) atau kombinasi angka dipisahkan '+', contoh: 10,5+2.5");
                         return;
                     }
 
                     // cek setiap angka 0..100
                     foreach (explode('+', $value) as $rate) {
-                        $r = (int) $rate;
+                        $r = (float) str_replace(',', '.', $rate);
                         if ($r < 0 || $r > 100) {
                             $fail("$attribute harus antara 0 sampai 100% setiap segmen.");
                             return;
@@ -574,7 +576,7 @@ class InvoiceController extends Controller
 
                 $netPrice = $price;
                 foreach (explode('+', $discountStr) as $d) {
-                    $rate = (float) $d;
+                    $rate = (float) str_replace(',', '.', $d);
                     if ($rate > 0) {
                         $netPrice -= $netPrice * $rate / 100;
                     }

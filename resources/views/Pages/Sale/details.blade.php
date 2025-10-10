@@ -125,7 +125,7 @@
                                                     <input type="number" name="qty_units[]"
                                                         class="form-control text-end qty-unit"
                                                         value="{{ $detail->remaining_unit }}"
-                                                        data-max="{{ $detail->remaining_unit }}" min="0"
+                                                        data-max="{{ $detail->remaining_unit }}" min="1"
                                                         max="{{ $detail->remaining_unit }}">
                                                     <span class="input-group-text bg-light">{{ $detail->unit }}</span>
                                                 </div>
@@ -142,7 +142,8 @@
                         </div>
 
                         <div class="text-end mt-4">
-                            <button type="button" class="btn btn-primary px-4" onclick="confirmSubmit()">Buat Surat Jalan</button>
+                            <button type="button" class="btn btn-primary px-4" onclick="confirmSubmit()">Buat Surat
+                                Jalan</button>
                         </div>
                     </form>
                 </div>
@@ -165,6 +166,14 @@
 
     <script>
         function confirmSubmit() {
+            const form = document.getElementById('form-create');
+
+            // Jalankan validasi HTML5 dulu (cek required, max, min, dll)
+            if (!form.checkValidity()) {
+                form.reportValidity(); // tampilkan pesan error dari browser
+                return; // stop lanjut ke SweetAlert
+            }
+
             Swal.fire({
                 title: 'Yakin simpan data ini?',
                 icon: 'warning',
@@ -175,11 +184,12 @@
                 cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    document.getElementById('form-create').submit();
+                    form.submit(); // submit setelah validasi lolos
                 }
             });
         }
     </script>
+
 
     @if ($errors->any())
         <script>

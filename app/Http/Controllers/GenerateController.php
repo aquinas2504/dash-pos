@@ -14,6 +14,8 @@ class GenerateController extends Controller
     // PO Normal
     public function generatePdf($order_number)
     {
+        $order_number = urldecode($order_number); // ← Tambahkan baris ini
+
         $purchase = Purchase::with(['supplier', 'purchaseDetail.saleDetail.product', 'purchaseDetail.product'])
             ->where('order_number', $order_number)
             ->firstOrFail();
@@ -30,7 +32,20 @@ class GenerateController extends Controller
                 $first = $items->first();
                 $qty_packing = $items->sum('qty_packing');
                 $qty_unit = $items->sum('qty_unit');
-                $total = $items->sum('total');
+                $price = $first->price ?? 0;
+
+                // Hitung total = qty_unit * price
+                $total = $qty_unit * $price;
+
+                // Kalau ada diskon bertingkat (misal 5+2%), bisa diproses
+                $discountStr = $first->discount ?? '0%';
+                foreach (explode('+', str_replace('%','',$discountStr)) as $d) {
+                    $rate = (float) $d;
+                    if ($rate > 0) {
+                        $total -= $total * $rate / 100;
+                    }
+                }
+
 
                 return (object)[
                     'product' => $first->product,
@@ -50,12 +65,16 @@ class GenerateController extends Controller
         $purchase->purchaseDetail = $groupedDetails;
 
         $pdf = Pdf::loadView('Generate.purchase', compact('purchase'))->setPaper('A4', 'portrait');
-        return $pdf->stream("PO_{$purchase->order_number}.pdf");
+
+        $filename = "PO_" . str_replace(['/', '\\'], '-', $order_number) . ".pdf";
+        return $pdf->stream($filename);
     }
 
     // grouped PO
     public function generatePdf2($order_number)
     {
+        $order_number = urldecode($order_number); // ← Tambahkan baris ini
+
         $purchase = Purchase::with([
             'supplier',
             'purchaseDetail.saleDetail.product',
@@ -91,9 +110,23 @@ class GenerateController extends Controller
                 $totalQtyUnit = $items->sum(function ($i) {
                     return (int) ($i->qty_unit ?? 0);
                 });
-                $total = $items->sum(function ($i) {
-                    return (float) ($i->total ?? 0);
-                });
+
+                // Ambil harga dan diskon dari item pertama (asumsi semua item sama)
+                $first = $items->first();
+                $price = $first->price ?? 0;
+                $discountStr = $first->discount ?? '0%';
+
+                // Hitung total sebelum diskon
+                $rawTotal = $totalQtyUnit * $price;
+
+                // Jika ada diskon bertingkat (misal 5+2), kita bisa pakai logika sebelumnya
+                $total = $rawTotal;
+                foreach (explode('+', str_replace('%','',$discountStr)) as $d) {
+                    $rate = (float) $d;
+                    if ($rate > 0) {
+                        $total -= $total * $rate / 100;
+                    }
+                }
 
                 // Ambil product yang benar (purchaseDetail.product atau fallback ke saleDetail->product)
                 $product = $first->product ?? optional($first->saleDetail)->product;
@@ -122,7 +155,9 @@ class GenerateController extends Controller
             'groupedDetails' => $groupedDetails
         ])->setPaper('A4', 'portrait');
 
-        return $pdf->stream("PO_{$purchase->order_number}.pdf");
+        $filename = "PO_" . str_replace(['/', '\\'], '-', $order_number) . ".pdf";
+        return $pdf->stream($filename);
+
     }
 
 

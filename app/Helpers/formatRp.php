@@ -11,8 +11,8 @@ class formatRp
         if (fmod($value, 1) == 0) {
             return 'Rp ' . number_format($value, 0, ',', '.');
         } else {
-            // Jika ada koma, tampilkan dengan 3 angka dibelakang koma
-            return 'Rp ' . number_format($value, 3, ',', '.');
+            // Jika ada koma, tampilkan dengan 2 angka dibelakang koma
+            return 'Rp ' . number_format($value, 2, ',', '.');
         }
     }
 

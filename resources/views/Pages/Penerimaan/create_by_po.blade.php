@@ -121,7 +121,8 @@
                         </div>
 
                         <div class="mt-4 text-end">
-                            <button type="button" class="btn btn-primary px-4" onclick="confirmSubmit()">Simpan Penerimaan</button>
+                            <button type="button" class="btn btn-primary px-4" onclick="confirmSubmit()">Simpan
+                                Penerimaan</button>
                         </div>
                     </form>
                 </div>
@@ -144,6 +145,15 @@
 
     <script>
         function confirmSubmit() {
+            const form = document.getElementById('form-create');
+
+            // Jalankan validasi HTML5 dulu
+            if (!form.checkValidity()) {
+                // Tampilkan pesan error bawaan browser
+                form.reportValidity();
+                return;
+            }
+
             Swal.fire({
                 title: 'Yakin simpan data ini?',
                 icon: 'warning',
@@ -154,11 +164,12 @@
                 cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    document.getElementById('form-create').submit();
+                    form.submit(); // baru submit setelah valid
                 }
             });
         }
     </script>
+
 
     @if ($errors->any())
         <script>

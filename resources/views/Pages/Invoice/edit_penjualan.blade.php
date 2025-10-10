@@ -120,7 +120,7 @@
 
 
                         <div class="mt-4 text-end" id="summary">
-                            <p><strong>Subtotal:</strong> <span id="subtotal">Rp 0</span></p>
+                            {{-- <p><strong>Subtotal:</strong> <span id="subtotal">Rp 0</span></p> --}}
 
                             @if ($invoice->suratJalan->ppn_status === 'yes')
                                 <p><strong>DPP:</strong> <span id="dpp">Rp 0</span></p>
@@ -272,8 +272,10 @@
             function parseDiscountNested(discountStr, price) {
                 let net = price;
                 discountStr.split('+').forEach(d => {
-                    const rate = parseFloat(d);
-                    if (!isNaN(rate)) net -= net * rate / 100;
+                    const rate = parseFloat(d.replace(',', '.'));
+                    if (!isNaN(rate)) {
+                        net -= net * rate / 100;
+                    }
                 });
                 return price - net;
             }
@@ -303,7 +305,7 @@
                     ppn = subtotal - dpp;
                 }
 
-                document.getElementById('subtotal').innerText = formatRupiah(subtotal);
+                // document.getElementById('subtotal').innerText = formatRupiah(subtotal);
                 if (ppnStatus === 'yes') {
                     document.getElementById('dpp').innerText = formatRupiah(dpp);
                     document.getElementById('ppn').innerText = formatRupiah(ppn);
@@ -358,7 +360,7 @@
             // Event: retur checkbox
             document.querySelectorAll('.retur-checkbox').forEach(cb => {
                 cb.addEventListener('change', function() {
-                    const subtotal = parseRupiah(document.getElementById('subtotal').innerText);
+                    const subtotal = parseRupiah(document.getElementById('grandtotal').innerText);
                     const totalRetur = Array.from(document.querySelectorAll('.retur-checkbox:checked'))
                         .reduce((sum, cb) => sum + (parseFloat(cb.dataset.total) || 0), 0);
 
@@ -374,7 +376,7 @@
 
             // Event: check all retur
             document.getElementById('checkAllRetur')?.addEventListener('change', function() {
-                const grandTotal = parseRupiah(document.getElementById('subtotal').innerText);
+                const grandTotal = parseRupiah(document.getElementById('grandtotal').innerText);
                 const totalSemuaRetur = Array.from(document.querySelectorAll('.retur-checkbox'))
                     .reduce((sum, cb) => sum + (parseFloat(cb.dataset.total) || 0), 0);
 

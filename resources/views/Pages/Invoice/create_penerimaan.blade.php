@@ -101,7 +101,7 @@
                         </div>
 
                         <div class="mt-4 text-end" id="summary">
-                            <p><strong>Subtotal:</strong> <span id="subtotal">Rp 0</span></p>
+                            {{-- <p><strong>Subtotal:</strong> <span id="subtotal">Rp 0</span></p> --}}
                             @if ($penerimaan->ppn_status === 'yes')
                                 <p><strong>DPP:</strong> <span id="dpp">Rp 0</span></p>
                                 <p><strong>PPN:</strong> <span id="ppn">Rp 0</span></p>
@@ -193,7 +193,7 @@
             function parseDiscountNested(discountStr, price) {
                 let net = price;
                 discountStr.split('+').forEach(d => {
-                    const rate = parseFloat(d);
+                    const rate = parseFloat(d.replace(',', '.'));
                     if (!isNaN(rate)) {
                         net -= net * rate / 100;
                     }
@@ -226,7 +226,7 @@
                     ppn = subtotal - dpp;
                 }
 
-                document.getElementById('subtotal').innerText = formatRupiah(subtotal);
+                // document.getElementById('subtotal').innerText = formatRupiah(subtotal);
                 if (ppnStatus === 'yes') {
                     document.getElementById('dpp').innerText = formatRupiah(dpp);
                     document.getElementById('ppn').innerText = formatRupiah(ppn);

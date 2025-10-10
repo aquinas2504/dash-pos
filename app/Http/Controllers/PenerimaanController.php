@@ -30,6 +30,8 @@ class PenerimaanController extends Controller
 
     public function createFromPO($order_number)
     {
+        $order_number = urldecode($order_number); // ← Tambahkan baris ini
+        
         $purchase = Purchase::with(['supplier', 'purchaseDetail.product'])->where('order_number', $order_number)->firstOrFail();
 
         // 🔹 Step 1: Gabungkan purchase_details berdasarkan id_product + packing + unit

@@ -22,7 +22,6 @@ class Purchase extends Model
         'supplier_code',
         'ppn_status',
         'subtotal',
-        'dpp',
         'ppn',
         'grandtotal',
         'status',

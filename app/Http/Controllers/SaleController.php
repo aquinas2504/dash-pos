@@ -32,7 +32,7 @@ class SaleController extends Controller
             'ppn' => 'required|in:yes,no',
             'note' => 'nullable|string',
             'qty' => 'required|array',
-            'qty.*' => 'required|integer|min:1', 
+            'qty.*' => 'required|integer|min:1',
             'unit' => 'required|array',
             'unit_price' => 'required|array',
             'unit_price.*' => [
@@ -44,24 +44,25 @@ class SaleController extends Controller
                     }
                 },
             ],
-            'discount' => 'required|array',
+            'discount' => 'nullable|array',
             'discount.*' => [
                 'nullable',
                 function ($attribute, $value, $fail) {
-                    if ($value === null || trim($value) === '') {
+                    if ($value === null || $value === '') {
+                        return; // kalau kosong, skip
+                    }
+
+                    // cek format: angka+angka+...
+                    if (!preg_match('/^\d{1,3}([.,]\d+)?(\+\d{1,3}([.,]\d+)?)*$/', $value)) {
+                        $fail("$attribute harus berupa angka atau kombinasi angka dipisahkan dengan '+' (boleh pakai desimal dengan titik atau koma).");
                         return;
                     }
 
-                    if (!preg_match('/^\d+(\+\d+)*$/', $value)) {
-                        $fail("$attribute harus berupa angka atau kombinasi angka dipisahkan '+'. Contoh: 10 atau 10+5.");
-                        return;
-                    }
 
+                    // cek semua nilai diskon antara 0–100
                     foreach (explode('+', $value) as $rate) {
-                        $r = (int) $rate;
-                        if ($r < 0 || $r > 100) {
-                            $fail("$attribute harus antara 0 sampai 100%.");
-                            return;
+                        if ((int) $rate < 0 || (int) $rate > 100) {
+                            $fail("$attribute harus antara 0 sampai 100%");
                         }
                     }
                 },
@@ -74,9 +75,8 @@ class SaleController extends Controller
             'top' => 'nullable|numeric|min:0',
         ]);
 
-        // Ambil nilai numerik dari subtotal, dpp, ppn, dan grand_total (hilangkan 'Rp.' dan titik)
+        // Ambil nilai numerik dari subtotal, ppn, dan grand_total (hilangkan 'Rp.' dan titik)
         $subtotal = (int) str_replace(['Rp. ', '.', ','], '', $request->input('subtotal'));
-        $dpp = $request->input('ppn') === 'yes' ? (int) str_replace(['Rp. ', '.', ','], '', $request->input('dpp')) : null;
         $ppn = $request->input('ppn') === 'yes' ? (int) str_replace(['Rp. ', '.', ','], '', $request->input('ppn_amount')) : null;
         $grandTotal = (int) str_replace(['Rp. ', '.', ','], '', $request->input('grand_total'));
 
@@ -87,7 +87,6 @@ class SaleController extends Controller
             'customer_code' => $request->customer_code,
             'ppn_status' => $request->ppn,
             'subtotal' => $subtotal,
-            'dpp' => $dpp,
             'ppn' => $ppn,
             'grandtotal' => $grandTotal,
             'note' => $request->note,

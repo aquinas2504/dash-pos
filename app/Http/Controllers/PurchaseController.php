@@ -34,13 +34,12 @@ class PurchaseController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all());
         try {
             DB::beginTransaction();
 
             $request->merge([
-                'price' => array_map(function ($p) {
-                    return (int) str_replace(['Rp. ', '.'], '', $p);
-                }, $request->price ?? [])
+                'price' => array_map(fn($p) => $this->parseCurrency($p), $request->price ?? [])
             ]);
 
 
@@ -70,11 +69,11 @@ class PurchaseController extends Controller
                                 return; // kalau kosong, skip
                             }
 
-                            // cek format: angka+angka+...
-                            if (!preg_match('/^\d{1,3}(\+\d{1,3})*$/', $value)) {
-                                $fail("$attribute harus berupa angka atau kombinasi angka dipisahkan dengan '+'");
+                            if (!preg_match('/^\d{1,3}([.,]\d+)?(\+\d{1,3}([.,]\d+)?)*$/', $value)) {
+                                $fail("$attribute harus berupa angka atau kombinasi angka dipisahkan dengan '+' (boleh pakai desimal dengan titik atau koma).");
                                 return;
                             }
+
 
                             // cek semua nilai diskon antara 0–100
                             foreach (explode('+', $value) as $rate) {
@@ -109,10 +108,11 @@ class PurchaseController extends Controller
                             }
 
                             // cek format: angka+angka+...
-                            if (!preg_match('/^\d{1,3}(\+\d{1,3})*$/', $value)) {
-                                $fail("$attribute harus berupa angka atau kombinasi angka dipisahkan dengan '+'");
+                            if (!preg_match('/^\d{1,3}([.,]\d+)?(\+\d{1,3}([.,]\d+)?)*$/', $value)) {
+                                $fail("$attribute harus berupa angka atau kombinasi angka dipisahkan dengan '+' (boleh pakai desimal dengan titik atau koma).");
                                 return;
                             }
+
 
                             // cek semua nilai diskon antara 0–100
                             foreach (explode('+', $value) as $rate) {
@@ -127,10 +127,9 @@ class PurchaseController extends Controller
             }
 
             // Format nilai numerik
-            $subtotal = str_replace(['Rp. ', '.'], '', $request->input('subtotal'));
-            $dpp = str_replace(['Rp. ', '.'], '', $request->input('dpp'));
-            $ppn = str_replace(['Rp. ', '.'], '', $request->input('ppn_amount'));
-            $grandTotal = str_replace(['Rp. ', '.'], '', $request->input('grand_total'));
+            $subtotal = $this->parseCurrency($request->input('subtotal'));
+            $ppn = $this->parseCurrency($request->input('ppn_amount'));
+            $grandTotal = $this->parseCurrency($request->input('grand_total'));
 
             // Buat record Purchase
             $purchase = new Purchase();
@@ -145,13 +144,11 @@ class PurchaseController extends Controller
             if ($mode === 'so') {
                 $purchase->ppn_status = $request->input('ppn_status_so', 'no'); // Default 'no' jika tidak ada
                 if ($purchase->ppn_status === 'yes') {
-                    $purchase->dpp = $dpp;
                     $purchase->ppn = $ppn;
                 }
             } else {
                 $purchase->ppn_status = $request->input('ppn_option_manual', 'no');
                 if ($purchase->ppn_status === 'yes') {
-                    $purchase->dpp = $dpp;
                     $purchase->ppn = $ppn;
                 }
             }
@@ -173,12 +170,10 @@ class PurchaseController extends Controller
                             if (!$saleDetail) continue;
 
                             $qty_unit = $saleDetail->quantity;
-                            $price = str_replace(['Rp. ', '.'], '', $request->input('price')[$index] ?? 0);
+                            $price = $this->parseCurrency($request->input('price')[$index] ?? 0);
                             $discount = $request->input('discount')[$index] ?? '0';
 
-                            // Hitung total dengan diskon bertahap
-                            $final_price = $this->applyDiscounts($price, $discount);
-                            $total = $qty_unit * $final_price;
+                            $total = $this->parseCurrency($request->input('total')[$index] ?? 0);
 
                             $purchaseDetail = new PurchaseDetail();
                             $purchaseDetail->order_number = $purchase->order_number;
@@ -210,13 +205,18 @@ class PurchaseController extends Controller
                         $purchaseDetail->unit = $request->input('unit')[$index] ?? '';
 
                         // Format price
-                        $price = str_replace(['Rp. ', '.'], '', $request->input('price')[$index] ?? 0);
+                        $price = $this->parseCurrency($request->input('price')[$index] ?? 0);
                         $purchaseDetail->price = $price;
 
                         // Set discount and total
                         $purchaseDetail->discount = $request->input('discount')[$index] ?? '0';
-                        $total = str_replace(['Rp. ', '.'], '', $request->input('total')[$index] ?? 0);
+                        $total = $this->parseCurrency($request->input('total')[$index] ?? 0);
                         $purchaseDetail->total = $total;
+
+                        logger()->info('Saving detail', [
+                            'price' => $purchaseDetail->price,
+                            'total' => $purchaseDetail->total,
+                        ]);
 
                         $purchaseDetail->save();
                     }
@@ -234,12 +234,51 @@ class PurchaseController extends Controller
         }
     }
 
-    private function applyDiscounts($price, $discountString)
+    private function parseCurrency($value)
     {
-        $discounts = explode('+', $discountString);
-        foreach ($discounts as $d) {
-            $price -= ($price * ((float) $d / 100));
+        if ($value === null || $value === '') return '0.00';
+
+        // Keep only digits, dot, comma, minus
+        $clean = preg_replace('/[^\d\.\,\-]/u', '', trim($value));
+
+        // If both dot and comma present -> last one is decimal separator
+        if (strpos($clean, '.') !== false && strpos($clean, ',') !== false) {
+            $lastDot   = strrpos($clean, '.');
+            $lastComma = strrpos($clean, ',');
+            if ($lastDot > $lastComma) {
+                // dot is decimal, remove commas (thousands)
+                $clean = str_replace(',', '', $clean);
+            } else {
+                // comma is decimal -> remove dots and convert comma to dot
+                $clean = str_replace('.', '', $clean);
+                $clean = str_replace(',', '.', $clean);
+            }
         }
-        return round($price);
+        // Only comma present
+        elseif (strpos($clean, ',') !== false) {
+            $parts = explode(',', $clean);
+            $frac  = end($parts);
+            // if fractional part length == 3 -> probably thousand separator (e.g., "100,000")
+            if (strlen($frac) === 3) {
+                $clean = str_replace(',', '', $clean);
+            } else {
+                // comma is decimal
+                $clean = str_replace(',', '.', $clean);
+            }
+        }
+        // Only dot present
+        elseif (strpos($clean, '.') !== false) {
+            $parts = explode('.', $clean);
+            $frac  = end($parts);
+            // if fractional part length == 3 -> probably thousand separator (e.g., "1.000")
+            if (strlen($frac) === 3) {
+                $clean = str_replace('.', '', $clean);
+            } else {
+                // dot is decimal -> keep as is
+            }
+        }
+
+        // Final: return a string formatted with two decimals (safe for DECIMAL(,2))
+        return number_format((float) $clean, 2, '.', '');
     }
 }

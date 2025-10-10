@@ -97,7 +97,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/pengiriman-list', [SuratJalanController::class, 'index'])->name('pengirimans.index')->middleware('checkpermission:pengirimans.index');
 
     // Penerimaan Barang
-    Route::get('/penerimaan/from-po/{orderNumber}', [PenerimaanController::class, 'createFromPO'])->name('penerimaan.create.fromPO')->middleware('checkpermission:penerimaan.create.fromPO');
+    Route::get('/penerimaan/from-po/{orderNumber}', [PenerimaanController::class, 'createFromPO'])->where('orderNumber', '.*')->name('penerimaan.create.fromPO')->middleware('checkpermission:penerimaan.create.fromPO');
     Route::post('/penerimaan/store', [PenerimaanController::class, 'store'])->name('penerimaan.store')->middleware('checkpermission:penerimaan.store');
     Route::get('/penerimaan/manual', [PenerimaanController::class, 'createManual'])->name('penerimaan.create.manual')->middleware('checkpermission:penerimaan.create.manual');
     Route::post('/penerimaans/manual/store', [PenerimaanController::class, 'storeManual'])->name('penerimaans.manual.store')->middleware('checkpermission:penerimaans.manual.store');
@@ -118,8 +118,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/invoice/{invoice}', [InvoiceController::class, 'updateSaleInvoice'])->name('invoiceSJ.update')->middleware('checkpermission:invoiceSJ.update');
 
     // Generate
-    Route::get('/purchase/{order_number}/pdf', [GenerateController::class, 'generatePdf'])->name('purchase.pdf')->middleware('checkpermission:purchase.pdf');
-    Route::get('/purchase-grouped/{order_number}/pdf', [GenerateController::class, 'generatePdf2'])->name('purchase-grouped.pdf')->middleware('checkpermission:purchase-grouped.pdf');
+    Route::get('/purchase/{order_number}/pdf', [GenerateController::class, 'generatePdf'])->where('order_number', '.*')->name('purchase.pdf')->middleware('checkpermission:purchase.pdf');
+    Route::get('/purchase-grouped/{order_number}/pdf', [GenerateController::class, 'generatePdf2'])->where('order_number', '.*')->name('purchase-grouped.pdf')->middleware('checkpermission:purchase-grouped.pdf');
     Route::get('/sale/{order_number}/pdf', [GenerateController::class, 'generatePdfSale'])->name('sale.pdf')->middleware('checkpermission:sale.pdf');
     Route::get('/SJ/{sj_number}/pdf', [GenerateController::class, 'generateSJ'])->name('SJ.Print')->middleware('checkpermission:SJ.Print');
     Route::get('/Sale-Invoice/{invoice_number}/pdf', [GenerateController::class, 'printSaleInvoice'])->name('saleInvoice.Print')->middleware('checkpermission:saleInvoice.Print');

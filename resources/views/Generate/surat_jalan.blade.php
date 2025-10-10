@@ -15,6 +15,13 @@
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-bottom: 10px;
+        }
+
+        table td,
+        table th {
+            border: 1px solid black;
+            padding: 5px;
         }
 
         .no-border-table td {
@@ -27,7 +34,6 @@
         .detail-table td {
             border: 1px solid black;
             padding: 5px;
-            text-align: center;
         }
 
         .mt-3 {
@@ -38,109 +44,136 @@
             margin-top: 1.5rem;
         }
 
-        .mt-5 {
-            margin-top: 8rem;
-        }
-
         .signature {
             width: 30%;
             text-align: center;
         }
 
         h2 {
-            margin: 0;
-            font-size: 14px;
-        }
-
-        .space-lg {
-            height: 100px;
+            margin: 0 0 -8 0;
+            font-size: 20px;
         }
     </style>
 </head>
 
 <body>
     {{-- Header --}}
-    <table class="no-border-table">
-        @if ($sj->ppn_status === 'yes')
-            <tr>
-                <td width="30%">
-                    <img src="/home/u836342820/domains/pos.dashmegah.my.id/public_html/img/logo-dmi.jpg" alt="Logo" style="height:75px;">
-                </td>
-                @if ($sj->ppn_status === 'yes')
+    <div style="margin-top: -40px;">
+        <table class="no-border-table">
+            @if ($sj->ppn_status === 'yes')
+                <tr>
+                    <td width="30%">
+                        {{-- <img src="/home/u836342820/domains/pos.dashmegah.my.id/public_html/img/logo-dmi.jpg" alt="Logo" style="height:75px; margin-top:20px;"> --}}
+                        <img src="{{ public_path('img/logo-dmi.jpg') }}" alt="Logo"
+                            style="height: 75px; margin-top:20px;">
+                    </td>
                     <td style="text-align: center; font-size: 11px; line-height: 1.4;">
-                        <h2>PT. DASH MEGAH INTERNASIONAL</h2>
+                        <u>
+                            <h2>PT. DASH MEGAH INTERNASIONAL</h2>
+                        </u><br>
                         JL. PERUM DELTA SARI BARU KOMPLEK DELTA ASRI NO 21,<br>
                         NGINGAS, WARU - SIDOARJO<br>
+                        SURABAYA - JAWA TIMUR<br>
                         TLP.: 031-85530240 / 0818-0307-5728<br>
-                        NPWP : 61-345-357-6-043-000<br>
-                        SURABAYA - JAWA TIMUR
+                        NPWP : 61-345-357-6-043-000 ;
+                        <span style="color: blue;">Email: dashplastic@gmail.com</span>
                     </td>
-                @endif
-            </tr>
-        @else
-            {{-- Versi tanpa alamat, logo di tengah --}}
-            <tr>
-                <td style="text-align: center;">
-                    <img src="/home/u836342820/domains/pos.dashmegah.my.id/public_html/img/logo-dmi.jpg" alt="Logo" style="height:75px;">
-                </td>
-            </tr>
-        @endif
-    </table>
+                </tr>
+            @else
+                {{-- Versi tanpa alamat, logo di tengah --}}
+                <tr>
+                    <td style="text-align: center;">
+                        {{-- <img src="/home/u836342820/domains/pos.dashmegah.my.id/public_html/img/logo-dmi.jpg" alt="Logo" style="height:75px;"> --}}
+                        <img src="{{ public_path('img/logo-dmi.jpg') }}" alt="Logo" style="height: 75px;">
+                    </td>
+                </tr>
+            @endif
+        </table>
+    </div>
 
-    <hr style="margin-top: 5px; margin-bottom: 5px;">
+    <hr style="margin-top: 5px; margin-bottom: 10px;">
 
-    {{-- Info Surat Jalan dan Ekspedisi --}}
-    <table class="no-border-table mt-3">
+    <table style="width:100%; border-collapse: collapse; margin-bottom:10px;">
         <tr>
-            {{-- Kiri: Info SJ dan Customer --}}
-            <td width="50%">
-                <table class="no-border-table">
+            {{-- Kolom Customer --}}
+            <td width="35%" style="vertical-align: top;">
+                <table style="width:100%; border-collapse: collapse; border: none;">
                     <tr>
-                        <td width="40%">No. Surat Jalan</td>
-                        <td>: {{ $sj->sj_number }}</td>
+                        <th style="text-align:left;">
+                            Customer: {{ $sj->customer->customer_name ?? '-' }}
+                        </th>
                     </tr>
                     <tr>
-                        <td>Tanggal</td>
-                        <td>: {{ \Carbon\Carbon::parse($sj->ship_date)->format('d/M/Y') }}</td>
-                    </tr>
-                    <tr>
-                        <td>No. SO</td>
-                        <td>: {{ $sj->SJdetails->first()->so_number ?? '-' }}</td>
-                    </tr>
-                    <tr>
-                        <td>Customer</td>
-                        <td>: {{ $sj->customer->customer_name }}</td>
-                    </tr>
-                    <tr>
-                        <td>Alamat</td>
-                        <td>: {{ $sj->customer->address }}</td>
+                        <td style="border: none;">
+                            {{ $sj->customer->address ?? '-' }}
+                        </td>
                     </tr>
                 </table>
             </td>
 
-            {{-- Kanan: Info Ekspedisi --}}
-            <td width="50%">
-                <table class="no-border-table">
+            {{-- Kolom Info Surat Jalan / No SO --}}
+            <td width="65%" style="vertical-align: top;">
+                <table style="width:100%; border-collapse: collapse; border:1px solid #000;">
                     <tr>
-                        <td width="40%">Ekspedisi 1</td>
-                        <td>: {{ $sj->ship_1 ?? '-' }}</td>
+                        <th style="border:1px solid #000; padding:5px;">Keterangan</th>
+                        <th style="border:1px solid #000; padding:5px;">Detail</th>
                     </tr>
                     <tr>
-                        <td>Alamat Ekspedisi 1</td>
-                        <td>: {{ $sj->shipping1->address ?? '-' }}</td>
+                        <td style="border:1px solid #000; padding:5px;">No. Surat Jalan</td>
+                        <td style="border:1px solid #000; padding:5px;">: {{ $sj->sj_number }}</td>
                     </tr>
                     <tr>
-                        <td>Ekspedisi 2</td>
-                        <td>: {{ $sj->ship_2 ?? '-' }}</td>
+                        <td style="border:1px solid #000; padding:5px;">Tanggal</td>
+                        <td style="border:1px solid #000; padding:5px;">
+                            : {{ \Carbon\Carbon::parse($sj->ship_date)->format('d/M/Y') }}</td>
                     </tr>
                     <tr>
-                        <td>Alamat Ekspedisi 2</td>
-                        <td>: {{ $sj->shipping2->address ?? '-' }}</td>
+                        <td style="border:1px solid #000; padding:5px;">No. SO</td>
+                        <td style="border:1px solid #000; padding:5px;">: {{ $sj->SJdetails->first()->so_number ?? '-' }}
+                        </td>
                     </tr>
                 </table>
             </td>
         </tr>
     </table>
+
+    {{-- Table 3: Info Ekspedisi --}}
+    <table style="width:100%; border-collapse: collapse; margin-bottom:10px;" border="1">
+        @if (!$sj->shipping1)
+            {{-- Ekspedisi 1 kosong --}}
+            <tr>
+                <td colspan="4" style="text-align:center; font-weight:bold;">Tidak Menggunakan Ekspedisi</td>
+            </tr>
+        @elseif($sj->shipping1 && !$sj->shipping2)
+            {{-- Hanya Ekspedisi 1 --}}
+            <tr>
+                <th>Ekspedisi 1</th>
+                <th>Alamat Ekspedisi 1</th>
+            </tr>
+            <tr>
+                <td>{{ $sj->shipping1->shipping_name }}</td>
+                <td>{{ $sj->shipping1->address }}</td>
+            </tr>
+        @elseif($sj->shipping1 && $sj->shipping2)
+            {{-- Ekspedisi 1 & 2 --}}
+            <tr>
+                <th>Ekspedisi 1</th>
+                <th>Alamat Ekspedisi 1</th>
+                <th>To:</th>
+                <th>Ekspedisi 2</th>
+                <th>Alamat Ekspedisi 2</th>
+            </tr>
+            <tr>
+                <td>{{ $sj->shipping1->shipping_name }}</td>
+                <td>{{ $sj->shipping1->address }}</td>
+                <td style="text-align: center">></td>
+                <td>{{ $sj->shipping2->shipping_name }}</td>
+                <td>{{ $sj->shipping2->address }}</td>
+            </tr>
+        @endif
+    </table>
+
+    <hr style="margin-top: 5px; margin-bottom: 10px;">
 
     {{-- Tabel Barang --}}
     <table class="detail-table mt-4">
@@ -155,10 +188,10 @@
         <tbody>
             @foreach ($sj->SJdetails as $index => $detail)
                 <tr>
-                    <td>{{ $index + 1 }}</td>
+                    <td style="text-align: center">{{ $index + 1 }}</td>
                     <td>{{ $detail->product?->product_name ?? '-' }}</td>
-                    <td>{{ $detail->qty_packing }} {{ $detail->packing }}</td>
-                    <td>{{ $detail->qty_unit }} {{ $detail->unit }}</td>
+                    <td style="text-align: right">{{ $detail->qty_packing }} {{ $detail->packing }}</td>
+                    <td style="text-align: right">{{ $detail->qty_unit }} {{ $detail->unit }}</td>
                 </tr>
             @endforeach
         </tbody>
@@ -170,21 +203,18 @@
     @endif
 
     {{-- Tanda Tangan --}}
-    <div class="mt-5"></div>
+    <div class="mt-4"></div>
     <table class="no-border-table">
         <tr>
-            <td class="signature">Penerima<br><br><br><br><br><br>
-            (____________________)<br>
-            Tanda Tangan</td>
-            <td class="signature">Pengantar<br><br><br><br><br><br>
-            (____________________)<br>
-            Tanda Tangan</td>
-            <td class="signature">Pengirim<br><br><br><br><br><br>
-            (____________________)<br>
-            Tanda Tangan</td>
-        </tr>
-        <tr>
-            <td colspan="3" class="space-lg"></td>
+            <td class="signature">Penerima<br><br><br><br>
+                (____________________)<br>
+            </td>
+            <td class="signature">Pengantar<br><br><br><br>
+                (____________________)<br>
+            </td>
+            <td class="signature">Pengirim<br><br><br><br>
+                (____________________)<br>
+            </td>
         </tr>
     </table>
 </body>

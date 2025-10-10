@@ -163,22 +163,18 @@
                             </div>
 
                             <div class="form-group col-md-6">
-                                <label>Subtotal</label>
-                                <input type="text" id="subtotal" name="subtotal" class="form-control mb-2" readonly>
-
-                                <div id="dpp-ppn-section">
-                                    <label>DPP</label>
-                                    <input type="text" id="dpp" name="dpp" class="form-control mb-2" readonly>
+                                <div id="subtotal-ppn-section">
+                                    <label>Subtotal</label>
+                                    <input type="text" id="subtotal" name="subtotal" class="form-control mb-2" readonly>
 
                                     <label>PPN</label>
-                                    <input type="text" id="ppn" name="ppn_amount" class="form-control mb-2"
-                                        readonly>
+                                    <input type="text" id="ppn" name="ppn_amount" class="form-control mb-2" readonly>
                                 </div>
 
                                 <label>Grand Total</label>
-                                <input type="text" id="grand_total" name="grand_total" class="form-control mb-2"
-                                    readonly>
+                                <input type="text" id="grand_total" name="grand_total" class="form-control mb-2" readonly>
                             </div>
+
                         </div>
                     </div>
 
@@ -345,11 +341,16 @@
 
             // Proses diskon bertingkat
             if (discountText.trim() !== '') {
-                const discounts = discountText.split('+').map(d => parseFloat(d.replace(',', '.')) || 0);
+                const discounts = discountText.split('+').map(d => {
+                    // ganti koma jadi titik supaya bisa diparse float
+                    d = d.replace(',', '.');
+                    return parseFloat(d) || 0;
+                });
                 discounts.forEach(d => {
                     total -= total * (d / 100);
                 });
             }
+
 
             const totalFormatted = formatRupiah(Math.round(total));
             row.querySelector('.total-cell').textContent = totalFormatted;
@@ -359,21 +360,30 @@
 
         function calculateSummary() {
             const rows = document.querySelectorAll('#product-table tbody tr');
-            let subtotal = 0;
+            let grandtotal = 0;
 
             rows.forEach(row => {
                 const totalText = row.querySelector('.total-cell').textContent.replace(/[^\d]/g, '');
-                subtotal += parseInt(totalText) || 0;
+                grandtotal += parseInt(totalText) || 0;
             });
 
-            const dpp = Math.round(subtotal / 1.11);
-            const ppn = subtotal - dpp;
+            // cek status PPN
+            const ppnStatus = document.querySelector('input[name="ppn"]:checked')?.value || 'no';
+
+            let subtotal, ppn;
+            if (ppnStatus === 'yes') {
+                subtotal = Math.round(grandtotal / 1.11);
+                ppn = grandtotal - subtotal;
+            } else {
+                subtotal = 0;
+                ppn = 0;
+            }
 
             document.getElementById('subtotal').value = formatRupiah(subtotal);
-            document.getElementById('dpp').value = formatRupiah(dpp);
             document.getElementById('ppn').value = formatRupiah(ppn);
-            document.getElementById('grand_total').value = formatRupiah(subtotal);
+            document.getElementById('grand_total').value = formatRupiah(grandtotal);
         }
+
 
         function addProductToTable(product) {
             const table = document.querySelector('#product-table tbody');
@@ -422,6 +432,11 @@
                 calculateSummary();
             });
 
+            unitQty.addEventListener('input', () => {
+                calculateLineTotal(row);
+            });
+
+
             priceInput.addEventListener('input', () => {
                 let value = priceInput.value.replace(/[^\d]/g, '');
                 priceInput.value = value ? formatRupiah(value) : '';
@@ -429,7 +444,7 @@
             });
 
             discountInput.addEventListener('input', () => {
-                discountInput.value = discountInput.value.replace(/[^0-9,+]/g, '');
+                discountInput.value = discountInput.value.replace(/[^0-9+,.]/g, '');
                 calculateLineTotal(row);
             });
 
@@ -488,7 +503,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const ppnRadios = document.querySelectorAll('input[name="ppn"]');
-            const dppPpnSection = document.getElementById("dpp-ppn-section");
+            const subtotalPpnSection = document.getElementById("subtotal-ppn-section");
 
             // Inisialisasi kondisi saat load
             toggleDppPpn();
@@ -500,7 +515,10 @@
 
             function toggleDppPpn() {
                 const isPpnYes = document.querySelector('input[name="ppn"]:checked').value === "yes";
-                dppPpnSection.style.display = isPpnYes ? 'block' : 'none';
+
+                subtotalPpnSection.style.display = isPpnYes ? 'block' : 'none';
+
+                calculateSummary();
             }
         });
     </script>

@@ -41,7 +41,7 @@
                                     <td>{{ $purchase->supplier->supplier_name ?? '-' }}</td>
                                     <td>{{ $purchase->status }}</td>
                                     <td>
-                                        <a href="{{ route('purchase.pdf', $purchase->order_number) }}"
+                                        <a href="{{ route('purchase.pdf', urlencode($purchase->order_number)) }}"
                                             class="btn btn-sm btn-danger" target="_blank" title="Print PDF">
                                             <i class="fas fa-file-pdf"></i> PDF
                                         </a>
@@ -53,13 +53,13 @@
                                         @endphp
 
                                         @if ($hasSO)
-                                            <a href="{{ route('purchase-grouped.pdf', $purchase->order_number) }}"
+                                            <a href="{{ route('purchase-grouped.pdf', urlencode($purchase->order_number)) }}"
                                                 class="btn btn-sm btn-danger" target="_blank" title="Print PDF Grouped">
                                                 <i class="fas fa-file-pdf"></i> PDF Grouped
                                             </a>
                                         @endif
 
-                                        <a href="{{ route('penerimaan.create.fromPO', $purchase->order_number) }}"
+                                        <a href="{{ route('penerimaan.create.fromPO', urlencode($purchase->order_number)) }}"
                                             class="btn btn-sm btn-success" title="Terima">
                                             <i class="fas fa-truck-loading"></i> Terima
                                         </a>

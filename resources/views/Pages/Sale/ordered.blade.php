@@ -39,12 +39,12 @@
                                     <td>{{ $sale['status_pengiriman'] }}</td>
                                     <td>
                                         <a href="{{ route('sale.pdf', $sale['order_number']) }}"
-                                            class="btn btn-sm btn-danger" target="_blank" title="Print PDF">
-                                            <i class="fas fa-file-pdf"></i> PDF
+                                            class="btn btn-sm btn-danger" target="_blank" title="Print Sale Order">
+                                            <i class="fas fa-file-pdf"></i>
                                         </a>
                                         <a href="{{ route('sales.details', $sale['order_number']) }}"
-                                            class="btn btn-sm btn-primary">
-                                            <i class="fa fa-truck"></i> Create Surat Jalan
+                                            class="btn btn-sm btn-primary" title="Create Surat Jalan">
+                                            <i class="fa fa-truck"></i>
                                         </a>
                                     </td>
                                 </tr>

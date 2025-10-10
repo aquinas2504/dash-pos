@@ -154,34 +154,42 @@
                     <div class="card mb-4">
                         <div class="card-header bg-info text-white">Additional Options</div>
                         <div class="card-body row">
-                            <div class="form-group col-md-6">
-                                <label>Note</label>
-                                <textarea name="note" class="form-control" rows="3"></textarea>
+                            <!-- Kiri: Note -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Note</label>
+                                    <textarea name="note" class="form-control" rows="3"></textarea>
+                                </div>
                             </div>
 
-                            <div class="form-group col-md-6">
-                                <label>Subtotal</label>
-                                <input type="text" id="subtotal" name="subtotal" class="form-control mb-2" readonly>
+                            <!-- Kanan: Subtotal, PPN, Grand Total -->
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div id="subtotal-ppn-group">
+                                            <label>Subtotal</label>
+                                            <input type="text" id="subtotal" name="subtotal"
+                                                class="form-control mb-2" readonly>
 
-                                <div id="dpp-ppn-section" style="display: none">
-                                    <label>DPP</label>
-                                    <input type="text" id="dpp" name="dpp" class="form-control mb-2"
-                                        readonly>
+                                            <label>PPN</label>
+                                            <input type="text" id="ppn" name="ppn_amount"
+                                                class="form-control mb-2" readonly>
+                                        </div>
 
-                                    <label>PPN</label>
-                                    <input type="text" id="ppn" name="ppn_amount" class="form-control mb-2"
-                                        readonly>
+                                        <div>
+                                            <label>Grand Total</label>
+                                            <input type="text" id="grand_total" name="grand_total"
+                                                class="form-control mb-2" readonly>
+                                        </div>
+                                    </div>
                                 </div>
-
-                                <label>Grand Total</label>
-                                <input type="text" id="grand_total" name="grand_total" class="form-control mb-2"
-                                    readonly>
                             </div>
                         </div>
                     </div>
 
                     <div class="text-end mb-5">
-                        <button type="button" class="btn btn-success px-4" onclick="confirmSubmit()">Create Purchase Order</button>
+                        <button type="button" class="btn btn-success px-4" onclick="confirmSubmit()">Create Purchase
+                            Order</button>
                     </div>
                 </div>
             </div>
@@ -469,13 +477,28 @@
 
             // =============== Utilities ===============
             function formatRupiah(angka) {
-                return 'Rp. ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                let number = parseFloat(angka) || 0;
+
+                // Format dengan 2 digit desimal (biar rapih untuk angka pecahan)
+                return 'Rp. ' + number.toLocaleString('id-ID', {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 2
+                });
             }
 
+
             function parseDiscount(discountStr) {
-                const parts = discountStr.split('+').map(Number).filter(n => !isNaN(n));
+                if (!discountStr) return 1;
+
+                const parts = discountStr.split('+').map(d => {
+                    // ganti koma jadi titik dulu
+                    d = d.replace(',', '.');
+                    return parseFloat(d);
+                }).filter(n => !isNaN(n));
+
                 return parts.reduce((acc, d) => acc * (1 - d / 100), 1);
             }
+
 
             function recalculateTotal(row) {
                 const priceRaw = row.find('.price-input').val().replace(/[^\d]/g, '');
@@ -495,40 +518,42 @@
                 row.find('.input-total-hidden').val(total);
             }
 
+
+            // Fungsi utama untuk update summary
             function updateSummary() {
-                let subtotal = 0;
+                let grandTotal = 0;
 
-                // Gunakan status PPN dari global ppnStatus, fallback ke radio
+                // Status PPN
                 let hasPPN;
-
                 if (currentMode === 'manual') {
                     hasPPN = $('.radio-ppn:checked').val() === 'yes';
                 } else {
                     hasPPN = ppnStatus === 'yes';
                 }
 
-                // Hitung total dari data-total yang tersimpan di setiap baris
+                // Hitung Grand Total dari semua baris
                 $('#product-table tbody tr').each(function() {
                     const total = parseFloat($(this).attr('data-total')) || 0;
-                    subtotal += total;
+                    grandTotal += total;
                 });
 
-                $('#subtotal').val(formatRupiah(subtotal.toFixed(0)));
+                // ✅ Selalu update Grand Total
+                $('#grand_total').val(formatRupiah(Math.round(grandTotal)));
 
                 if (hasPPN) {
-                    const dpp = Math.round(subtotal / 1.11);
-                    const ppn = subtotal - dpp;
-                    $('#dpp').val(formatRupiah(dpp));
-                    $('#ppn').val(formatRupiah(ppn));
-                    $('#dpp-ppn-section').show();
-                } else {
-                    $('#dpp').val('');
-                    $('#ppn').val('');
-                    $('#dpp-ppn-section').hide();
-                }
+                    const subtotal = Math.round(grandTotal / 1.11);
+                    const ppn = Math.round(grandTotal - subtotal);
 
-                $('#grand_total').val(formatRupiah(subtotal.toFixed(0)));
+                    $('#subtotal').val(formatRupiah(subtotal));
+                    $('#ppn').val(formatRupiah(ppn));
+                    $('#subtotal-ppn-group').show();
+                } else {
+                    $('#subtotal').val('');
+                    $('#ppn').val('');
+                    $('#subtotal-ppn-group').hide(); // Grand Total tetap terlihat
+                }
             }
+
 
 
             // =============== Render product table from selectedDetails ===============
@@ -674,6 +699,8 @@
                 }
             });
 
+
+            // DARI SINI MULAI YANG MANUAL
 
             $('#search-product').on('input', function() {
                 const keyword = $(this).val();
