@@ -100,7 +100,7 @@
                                                     <div class="col-7">
                                                         <input type="number" name="details[{{ $i }}][qty_unit]"
                                                             value="{{ $item['qty_unit'] }}" class="form-control text-end"
-                                                            min="1" max="{{ $item['qty_unit'] }}">
+                                                            min="0" step="any" max="{{ $item['qty_unit'] }}">
                                                     </div>
                                                     <div class="col-5">
                                                         <input type="text" name="details[{{ $i }}][unit]"

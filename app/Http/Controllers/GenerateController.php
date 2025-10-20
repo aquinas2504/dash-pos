@@ -103,13 +103,8 @@ class GenerateController extends Controller
             })->map(function ($items) {
                 $first = $items->first();
 
-                // Cast numeric supaya penjumlahan aman
-                $totalQtyPacking = $items->sum(function ($i) {
-                    return (int) ($i->qty_packing ?? 0);
-                });
-                $totalQtyUnit = $items->sum(function ($i) {
-                    return (int) ($i->qty_unit ?? 0);
-                });
+                $totalQtyPacking = $items->sum('qty_packing'); // otomatis float
+                $totalQtyUnit = $items->sum('qty_unit');       // otomatis float
 
                 // Ambil harga dan diskon dari item pertama (asumsi semua item sama)
                 $first = $items->first();

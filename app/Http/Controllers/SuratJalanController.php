@@ -76,7 +76,7 @@ class SuratJalanController extends Controller
 
     public function storeSuratJalan(Request $request)
     {
-        
+
         // ✅ Validasi lebih dulu
         $request->validate([
             'sj_number'     => 'required|string|unique:surat_jalans,sj_number',
@@ -84,6 +84,7 @@ class SuratJalanController extends Controller
             'ship_1'        => 'nullable|string',
             'ship_2'        => 'nullable|string',
             'note'          => 'nullable|string',
+            'note_shipping' => 'nullable|string',
             'top'           => 'nullable|string',
 
             // Array product_details wajib
@@ -94,9 +95,18 @@ class SuratJalanController extends Controller
             'qty_packings'      => 'required|array',
             'qty_packings.*'    => 'required|numeric|min:0',
             'qty_units'         => 'required|array',
-            'qty_units.*'       => 'required|numeric|min:1',
+            'qty_units.*'       => 'required|numeric|min:0.5',
         ]);
-        
+
+        // 🔹 Ambil dulu sebagai array biasa
+        $qty_units = $request->input('qty_units', []);
+
+        // 🔹 Normalisasi koma → titik pada qty_units
+        foreach ($qty_units as &$unit) {
+            $unit = (float) str_replace(',', '.', $unit);
+        }
+        unset($unit); // hapus referensi biar aman
+
         DB::beginTransaction();
         try {
             // Ambil sale dari sale_detail pertama
@@ -119,6 +129,7 @@ class SuratJalanController extends Controller
                 'ship_1' => $request->ship_1,
                 'ship_2' => $request->ship_2,
                 'note' => $request->note,
+                'note_shipping' => $request->note_shipping,
                 'top' => $request->top,
                 'customer_code' => $request->customer_code,
                 'ppn_status' => $sale->ppn_status,
@@ -128,7 +139,7 @@ class SuratJalanController extends Controller
             $details = [];
             foreach ($request->product_details as $index => $detailId) {
                 $qtyPacking = $request->qty_packings[$index];
-                $qtyUnit = $request->qty_units[$index];
+                $qtyUnit = $qty_units[$index];
 
                 if ($qtyPacking > 0 || $qtyUnit > 0) {
                     $saleDetail = SaleDetail::find($detailId);
@@ -145,7 +156,7 @@ class SuratJalanController extends Controller
                     ];
 
                     // 🔹 Konversi qty_unit ke pieces
-                    $qtyInPieces = match(strtolower($saleDetail->unit)) {
+                    $qtyInPieces = match (strtolower($saleDetail->unit)) {
                         'lusin' => $qtyUnit * 12,
                         'gross' => $qtyUnit * 144,
                         'set', 'pieces' => $qtyUnit,
@@ -231,8 +242,19 @@ class SuratJalanController extends Controller
             'manual.*.packing'      => 'required|string',
             'manual.*.qty_packing'  => 'required|numeric|min:1',
             'manual.*.unit'         => 'required|string',
-            'manual.*.qty_unit'     => 'required|numeric|min:1',
+            'manual.*.qty_unit'     => 'required|numeric|min:0.5',
         ]);
+
+        // 🔹 Ambil dulu data manual ke variabel biasa
+        $manualItems = $request->input('manual', []);
+    
+        foreach ($manualItems as &$item) {
+            if (isset($item['qty_unit'])) {
+                $item['qty_unit'] = (float) str_replace(',', '.', $item['qty_unit']);
+            }
+        }
+        unset($item); // hapus referensi agar aman
+
 
         DB::beginTransaction();
         try {
@@ -243,15 +265,16 @@ class SuratJalanController extends Controller
                 'ship_1' => $request->ship_1 ?: null,
                 'ship_2' => $request->ship_2 ?: null,
                 'note' => $request->note,
+                'note_shipping' => $request->note_shipping,
                 'top' => $request->top,
                 'customer_code' => $request->customer_code,
                 'status' => 'Pending',
                 'ppn_status'  => $request->ppn_status,
             ]);
 
-            // Simpan detail produk dari $request->manual
+            // Simpan detail produk dari $manualItems
             $details = [];
-            foreach ($request->manual as $item) {
+            foreach ($manualItems as $item) {
                 $details[] = [
                     'sj_number' => $sj->sj_number,
                     'so_number' => null,
@@ -266,7 +289,7 @@ class SuratJalanController extends Controller
                 ];
 
                 // 🔹 Konversi qty_unit ke pieces
-                $qtyInPieces = match(strtolower($item['unit'])) {
+                $qtyInPieces = match (strtolower($item['unit'])) {
                     'lusin' => ($item['qty_unit'] ?? 0) * 12,
                     'gross' => ($item['qty_unit'] ?? 0) * 144,
                     'set', 'pieces' => $item['qty_unit'] ?? 0,

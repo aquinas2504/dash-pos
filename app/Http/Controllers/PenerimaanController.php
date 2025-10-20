@@ -124,13 +124,24 @@ class PenerimaanController extends Controller
                 'supplier_code' => 'required|exists:suppliers,supplier_code',
                 'details' => 'required|array|min:1',
                 'details.*.qty_packing' => 'required|integer|min:1',
-                'details.*.qty_unit' => 'required|integer|min:1',
+                'details.*.qty_unit' => 'required|numeric|min:0.5',
             ]);
+
+            // 🔹 Ambil array "details" secara terpisah (bukan reference ke Request)
+            $details = $request->input('details', []);
+            
+            foreach ($details as &$detail) {
+                if (isset($detail['qty_unit'])) {
+                    $detail['qty_unit'] = (float) str_replace(',', '.', $detail['qty_unit']);
+                }
+            }
+            unset($detail);
+
 
             $order_number = null;
 
             // Ambil salah satu detail untuk referensi PO
-            foreach ($request->details as $detail) {
+            foreach ($details as $detail) {
                 if (!empty($detail['po_details'])) {
                     $firstPoDetail = $detail['po_details'][0];
                     $poDetail = PurchaseDetail::find($firstPoDetail);
@@ -157,7 +168,7 @@ class PenerimaanController extends Controller
             ]);
 
             // Simpan detail-detail penerimaan
-            foreach ($request->details as $detail) {
+            foreach ($details as $detail) {
                 $poDetailIds = $detail['po_details'] ?? [];
                 $id_product = $detail['id_product'] ?? null;
                 $qty_packing = $detail['qty_packing'] ?? 0;
@@ -198,7 +209,6 @@ class PenerimaanController extends Controller
                         $product->save();
                     }
                 }
-
             }
 
             // Update status PO
@@ -290,12 +300,22 @@ class PenerimaanController extends Controller
             'manual.*.id_product' => 'required|exists:products,id',
             'manual.*.qty_packing' => 'required|integer|min:1',
             'manual.*.packing' => 'required|string',
-            'manual.*.qty_unit' => 'required|integer|min:1',
+            'manual.*.qty_unit' => 'required|numeric|min:0.5',
             'manual.*.unit' => 'required|string',
         ]);
-        
+
 
         try {
+
+            $manualDetails = $request->input('manual');
+
+            // 🔹 Konversi qty_unit koma → titik
+            foreach ($manualDetails as &$detail) {
+                if (isset($detail['qty_unit'])) {
+                    $detail['qty_unit'] = (float) str_replace(',', '.', $detail['qty_unit']);
+                }
+            }
+            unset($detail);
 
             // 1. Simpan ke tabel `penerimaans`
             $penerimaan = Penerimaan::create([
@@ -307,7 +327,7 @@ class PenerimaanController extends Controller
             ]);
 
             // 2. Simpan ke tabel `penerimaan_details`
-            foreach ($request->manual as $detail) {
+            foreach ($manualDetails as $detail) {
                 // Simpan detail penerimaan
                 PenerimaanDetail::create([
                     'penerimaan_number' => $penerimaan->penerimaan_number,
@@ -319,7 +339,7 @@ class PenerimaanController extends Controller
                 ]);
 
                 // 🔹 Konversi qty_unit ke pieces
-                $qtyInPieces = match(strtolower($detail['unit'])) {
+                $qtyInPieces = match (strtolower($detail['unit'])) {
                     'lusin' => $detail['qty_unit'] * 12,
                     'gross' => $detail['qty_unit'] * 144,
                     'set', 'pieces', 'pcs' => $detail['qty_unit'],

@@ -47,10 +47,6 @@
             text-align: left;
         }
 
-        .footer-table td {
-            border: none;
-        }
-
         .sign-section {
             margin-top: 50px;
             width: 100%;
@@ -84,8 +80,8 @@
             @if ($purchase->ppn_status === 'yes')
                 <tr>
                     <td width="30%">
-                        {{-- <img src="/home/u836342820/domains/pos.dashmegah.my.id/public_html/img/logo-dmi.jpg" alt="Logo" style="height:75px; margin-top:10px;"> --}}
-                        <img src="{{ public_path('img/logo-dmi.jpg') }}" alt="Logo" style="height: 75px; margin-top:10px;">
+                        <img src="/home/u836342820/domains/pos.dashmegah.my.id/public_html/img/logo-dmi.jpg" alt="Logo" style="height:75px; margin-top:10px;">
+                        {{-- <img src="{{ public_path('img/logo-dmi.jpg') }}" alt="Logo" style="height: 75px; margin-top:10px;"> --}}
                     </td>
                     <td
                         style="text-align: center; font-size: 11px; line-height: 1.4;">
@@ -102,8 +98,8 @@
                 {{-- Versi tanpa alamat, logo di tengah --}}
                 <tr>
                     <td style="text-align: center;">
-                        {{-- <img src="/home/u836342820/domains/pos.dashmegah.my.id/public_html/img/logo-dmi.jpg" alt="Logo" style="height:75px;"> --}}
-                        <img src="{{ public_path('img/logo-dmi.jpg') }}" alt="Logo" style="height: 75px;">
+                        <img src="/home/u836342820/domains/pos.dashmegah.my.id/public_html/img/logo-dmi.jpg" alt="Logo" style="height:75px;">
+                        {{-- <img src="{{ public_path('img/logo-dmi.jpg') }}" alt="Logo" style="height: 75px;"> --}}
                     </td>
                 </tr>
             @endif
@@ -190,17 +186,30 @@
 
 
     {{-- FOOTER --}}
-    <table class="footer-table" width="100%" style="margin-top: 10px;">
+    <table width="100%" style="margin-top: 10px; border-collapse: collapse;">
         <tr>
-            <td width="60%" class="text-left" style="word-break: break-word; vertical-align: top;">
+            <!-- Kolom Note -->
+            <td width="60%" style="border: none; vertical-align: top; padding-right: 20px; text-align: left;">
                 <strong>Note:</strong><br>
                 {{ $purchase->note ?? '-' }}
             </td>
-            <td width="40%" class="text-right" valign="top">
-                <strong>Grand Total: {{ \App\Helpers\formatRp::rupiah($purchase->grandtotal) }}</strong>
+
+            <!-- Kolom Grand Total -->
+            <td width="40%" style="border: none; vertical-align: top;">
+                <!-- Table kecil hanya untuk Grand Total dengan border -->
+                <table style="width: 100%; border: 1px solid #000; border-collapse: collapse;">
+                    <tr>
+                        <td style="border: 1px solid #000; padding: 5px;"><strong>Grand Total</strong></td>
+                        <td style="border: 1px solid #000; padding: 5px; text-align: left;">
+                            <strong>{{ \App\Helpers\formatRp::rupiah($purchase->grandtotal) }}</strong>
+                        </td>
+                    </tr>
+                </table>
             </td>
         </tr>
     </table>
+
+    <div style="clear: both;"></div>
 
     <div class="sign-section">
         <table class="no-border-table" width="100%" style="margin-top: 0px; text-align: center;">

@@ -94,7 +94,7 @@ class PurchaseController extends Controller
                     'packing'         => 'required|array|min:1',
                     'packing.*'       => 'required|string',
                     'qty_unit'        => 'required|array|min:1',
-                    'qty_unit.*'      => 'required|numeric|min:1',
+                    'qty_unit.*'      => 'required|numeric|min:0.5',
                     'unit'            => 'required|array|min:1',
                     'unit.*'          => 'required|string',
                     'price'           => 'required|array|min:1',
@@ -201,7 +201,11 @@ class PurchaseController extends Controller
                         $purchaseDetail->id_product = $productId;
                         $purchaseDetail->qty_packing = $request->input('qty_packing')[$index] ?? 0;
                         $purchaseDetail->packing = $request->input('packing')[$index] ?? '';
-                        $purchaseDetail->qty_unit = $request->input('qty_unit')[$index] ?? 0;
+
+                        // 🔹 Normalisasi qty_unit agar bisa terima desimal (contoh: 2,5)
+                        $qtyUnitRaw = $request->input('qty_unit')[$index] ?? 0;
+                        $qtyUnit = (float) str_replace(',', '.', $qtyUnitRaw);
+                        $purchaseDetail->qty_unit = $qtyUnit;
                         $purchaseDetail->unit = $request->input('unit')[$index] ?? '';
 
                         // Format price

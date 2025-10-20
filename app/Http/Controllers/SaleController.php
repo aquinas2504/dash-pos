@@ -23,6 +23,7 @@ class SaleController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all());
 
         // Validasi data
         $request->validate([
@@ -32,7 +33,7 @@ class SaleController extends Controller
             'ppn' => 'required|in:yes,no',
             'note' => 'nullable|string',
             'qty' => 'required|array',
-            'qty.*' => 'required|integer|min:1',
+            'qty.*' => 'required|numeric|min:0.5',
             'unit' => 'required|array',
             'unit_price' => 'required|array',
             'unit_price.*' => [
@@ -97,6 +98,8 @@ class SaleController extends Controller
 
         // Loop untuk menyimpan data ke sale_details
         foreach ($request->qty as $index => $qty) {
+            $qty = (float) str_replace(',', '.', $qty); // ubah 2,5 jadi 2.5
+
             $unitId = $request->unit[$index];
             $packingId = $request->packing[$index];
             $qtyPacking = $request->qty_packing[$index];
@@ -165,7 +168,7 @@ class SaleController extends Controller
                         'product_name' => $d->product->product_name ?? 'Unknown',
                         'product_code' => $d->product->product_code ?? 'Unknown',
                         'unit' => $d->unit,
-                        'quantity' => $d->quantity,
+                        'quantity' => (float) $d->quantity, 
                         'qty_packing' => $d->qty_packing,
                         'packing' => $d->packing,
                     ];
@@ -178,10 +181,16 @@ class SaleController extends Controller
     public function search(Request $request)
     {
         $keyword = $request->keyword;
-        return Product::where('product_name', 'like', "%$keyword%")
-            ->orWhere('product_code', 'like', "%$keyword%")
-            ->limit(10)
-            ->get();
+        $keywords = explode(' ', $keyword);
+
+        $query = Product::query();
+        foreach ($keywords as $k) {
+            $query->where(function($q) use ($k) {
+                $q->where('product_name', 'like', "%$k%");
+            });
+        }
+
+        return $query->limit(10)->get();
     }
 
     // PO

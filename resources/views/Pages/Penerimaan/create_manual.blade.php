@@ -248,7 +248,7 @@
                     </td>
                     <td>
                         <div class="form-inline-select">
-                            <input type="number" name="manual[${index}][qty_unit]" class="form-control" placeholder="Qty">
+                            <input type="number" name="manual[${index}][qty_unit]" class="form-control" placeholder="Qty" step="any" min="0">
                             <select name="manual[${index}][unit]" class="form-control">
                                 @foreach ($units as $unit)
                                     <option value="{{ $unit }}">{{ $unit }}</option>
@@ -327,7 +327,7 @@
                             const item = document.createElement('div');
                             item.classList.add('p-2', 'border-bottom', 'search-result-item');
                             item.style.cursor = 'pointer';
-                            item.textContent = `${product.product_name} (${product.product_code})`;
+                            item.textContent = `${product.product_name}`;
 
                             item.addEventListener('click', () => {
                                 input.value = product.product_name;

@@ -66,7 +66,7 @@
                         </div>
 
                         <div class="row mb-3">
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-3 mb-3">
                                 <label>Shipping 1</label>
                                 <select name="ship_1" class="form-control">
                                     <option value="">Pilih Shipping</option>
@@ -76,7 +76,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-3 mb-3">
                                 <label>Shipping 2</label>
                                 <select name="ship_2" class="form-control">
                                     <option value="">Pilih Shipping</option>
@@ -86,15 +86,15 @@
                                     @endforeach
                                 </select>
                             </div>
-                            
-                            <div class="col-md-4 mb-3">
+
+                            <div class="col-md-3 mb-3">
                                 <label>Term of Payment (days)</label>
                                 <input type="number" name="top" class="form-control"
-                                    placeholder="Misal: 30 hari setelah invoice">
+                                    placeholder="Input lama Pembayaran">
                             </div>
 
                             <!-- Tambahkan bagian pilihan PPN -->
-                            <div class="mb-3">
+                            <div class="col-md-3 mb-3">
                                 <label>Pakai PPN?</label>
                                 <div>
                                     <input type="radio" name="ppn_status" id="ppn_yes" value="yes" required>
@@ -105,10 +105,15 @@
                             </div>
                         </div>
 
-
-                        <div class="mb-3">
-                            <label>Note</label>
-                            <textarea name="note" class="form-control" rows="2"></textarea>
+                        <div class="row mb-3">
+                            <div class="col-md-6 mb-3">
+                                <label>Note Umum</label>
+                                <textarea name="note" class="form-control" rows="3"></textarea>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Note Shipping</label>
+                                <textarea name="note_shipping" class="form-control" rows="3"></textarea>
+                            </div>
                         </div>
 
                         {{-- Tabel Produk Manual --}}
@@ -133,7 +138,8 @@
                         </table>
 
                         <div class="text-end mt-4">
-                            <button type="button" class="btn btn-success px-4" onclick="confirmSubmit()">Buat Surat Jalan</button>
+                            <button type="button" class="btn btn-success px-4" onclick="confirmSubmit()">Buat Surat
+                                Jalan</button>
                         </div>
                     </form>
                 </div>
@@ -269,7 +275,7 @@
                     </td>
                     <td>
                         <div class="form-inline-select">
-                            <input type="number" name="manual[${index}][qty_unit]" class="form-control" placeholder="Qty">
+                            <input type="number" name="manual[${index}][qty_unit]" class="form-control" placeholder="Qty" min="0" step="any">
                             <select name="manual[${index}][unit]" class="form-control">
                                 @foreach ($units as $unit)
                                     <option value="{{ $unit }}">{{ $unit }}</option>
@@ -348,7 +354,7 @@
                             const item = document.createElement('div');
                             item.classList.add('p-2', 'border-bottom', 'search-result-item');
                             item.style.cursor = 'pointer';
-                            item.textContent = `${product.product_name} (${product.product_code})`;
+                            item.textContent = `${product.product_name}`;
 
                             item.addEventListener('click', () => {
                                 input.value = product.product_name;

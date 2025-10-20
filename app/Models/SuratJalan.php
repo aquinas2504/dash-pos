@@ -21,6 +21,7 @@ class SuratJalan extends Model
         'ship_1',
         'ship_2',
         'note',
+        'note_shipping',
         'status'
     ];
 

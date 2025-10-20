@@ -83,8 +83,8 @@
             @if ($sale->ppn_status === 'yes')
                 <tr>
                     <td width="30%">
-                        {{-- <img src="/home/u836342820/domains/pos.dashmegah.my.id/public_html/img/logo-dmi.jpg" alt="Logo" style="height:75px; margin-top:10px;"> --}}
-                        <img src="{{ public_path('img/logo-dmi.jpg') }}" alt="Logo" style="height: 75px; margin-top:10px;">
+                        <img src="/home/u836342820/domains/pos.dashmegah.my.id/public_html/img/logo-dmi.jpg" alt="Logo" style="height:75px; margin-top:10px;">
+                        {{-- <img src="{{ public_path('img/logo-dmi.jpg') }}" alt="Logo" style="height: 75px; margin-top:10px;"> --}}
                     </td>
                     <td
                         style="text-align: center; font-size: 11px; line-height: 1.4;">
@@ -101,8 +101,8 @@
                 {{-- Versi tanpa alamat, logo di tengah --}}
                 <tr>
                     <td style="text-align: center;">
-                        {{-- <img src="/home/u836342820/domains/pos.dashmegah.my.id/public_html/img/logo-dmi.jpg" alt="Logo" style="height:75px;"> --}}
-                        <img src="{{ public_path('img/logo-dmi.jpg') }}" alt="Logo" style="height: 75px;">
+                        <img src="/home/u836342820/domains/pos.dashmegah.my.id/public_html/img/logo-dmi.jpg" alt="Logo" style="height:75px;">
+                        {{-- <img src="{{ public_path('img/logo-dmi.jpg') }}" alt="Logo" style="height: 75px;"> --}}
                     </td>
                 </tr>
             @endif
@@ -151,7 +151,9 @@
                     <td class="text-center">{{ $index + 1 }}</td>
                     <td class="product-name">{{ $detail->product->product_name ?? '-' }}</td>
                     <td class="text-right">{{ $detail->qty_packing }} {{ $detail->packing }}</td>
-                    <td class="text-right">{{ $detail->quantity }} {{ $detail->unit }}</td>
+                    <td class="text-right">
+                        {{ rtrim(rtrim(number_format($detail->quantity, 2, '.', ''), '0'), '.') }} {{ $detail->unit }}
+                    </td>
                     <td class="text-left">{{ \App\Helpers\formatRp::rupiah($detail->price) }}</td>
                     <td class="text-center">{{ $detail->discount ?? '0%' }}</td>
                     <td class="text-left">{{ \App\Helpers\formatRp::rupiah($detail->total) }}</td>

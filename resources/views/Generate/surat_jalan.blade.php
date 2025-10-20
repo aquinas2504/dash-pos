@@ -63,9 +63,8 @@
             @if ($sj->ppn_status === 'yes')
                 <tr>
                     <td width="30%">
-                        {{-- <img src="/home/u836342820/domains/pos.dashmegah.my.id/public_html/img/logo-dmi.jpg" alt="Logo" style="height:75px; margin-top:20px;"> --}}
-                        <img src="{{ public_path('img/logo-dmi.jpg') }}" alt="Logo"
-                            style="height: 75px; margin-top:20px;">
+                        <img src="/home/u836342820/domains/pos.dashmegah.my.id/public_html/img/logo-dmi.jpg" alt="Logo" style="height:75px; margin-top:20px;">
+                        {{-- <img src="{{ public_path('img/logo-dmi.jpg') }}" alt="Logo" style="height: 75px; margin-top:20px;"> --}}
                     </td>
                     <td style="text-align: center; font-size: 11px; line-height: 1.4;">
                         <u>
@@ -83,8 +82,8 @@
                 {{-- Versi tanpa alamat, logo di tengah --}}
                 <tr>
                     <td style="text-align: center;">
-                        {{-- <img src="/home/u836342820/domains/pos.dashmegah.my.id/public_html/img/logo-dmi.jpg" alt="Logo" style="height:75px;"> --}}
-                        <img src="{{ public_path('img/logo-dmi.jpg') }}" alt="Logo" style="height: 75px;">
+                        <img src="/home/u836342820/domains/pos.dashmegah.my.id/public_html/img/logo-dmi.jpg" alt="Logo" style="height:75px;">
+                        {{-- <img src="{{ public_path('img/logo-dmi.jpg') }}" alt="Logo" style="height: 75px;"> --}}
                     </td>
                 </tr>
             @endif
@@ -129,7 +128,8 @@
                     </tr>
                     <tr>
                         <td style="border:1px solid #000; padding:5px;">No. SO</td>
-                        <td style="border:1px solid #000; padding:5px;">: {{ $sj->SJdetails->first()->so_number ?? '-' }}
+                        <td style="border:1px solid #000; padding:5px;">:
+                            {{ $sj->SJdetails->first()->so_number ?? '-' }}
                         </td>
                     </tr>
                 </table>
@@ -173,6 +173,8 @@
         @endif
     </table>
 
+    <p>* {{ $sj->note_shipping ?? 'Tidak ada catatan pengiriman' }}</p>
+
     <hr style="margin-top: 5px; margin-bottom: 10px;">
 
     {{-- Tabel Barang --}}
@@ -191,7 +193,9 @@
                     <td style="text-align: center">{{ $index + 1 }}</td>
                     <td>{{ $detail->product?->product_name ?? '-' }}</td>
                     <td style="text-align: right">{{ $detail->qty_packing }} {{ $detail->packing }}</td>
-                    <td style="text-align: right">{{ $detail->qty_unit }} {{ $detail->unit }}</td>
+                    <td style="text-align: right">
+                        {{ rtrim(rtrim(number_format($detail->qty_unit, 2, '.', ''), '0'), '.') }} {{ $detail->unit }}
+                    </td>
                 </tr>
             @endforeach
         </tbody>

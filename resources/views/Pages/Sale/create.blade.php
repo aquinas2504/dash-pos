@@ -309,7 +309,7 @@
                     products.forEach(product => {
                         const item = document.createElement('div');
                         item.classList.add('list-group-item', 'list-group-item-action');
-                        item.textContent = `${product.product_name} (${product.product_code})`;
+                        item.textContent = `${product.product_name}`;
                         item.style.cursor = 'pointer';
 
                         item.addEventListener('click', function() {

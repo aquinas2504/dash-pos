@@ -92,7 +92,7 @@
                                         <tr>
                                             <td class="text-start">{{ $product->product_name ?? '-' }}</td>
                                             <td>{{ $detail->qty_packing }} {{ $detail->packing }}</td>
-                                            <td>{{ $detail->qty_unit }} {{ $detail->unit }}</td>
+                                            <td>{{ rtrim(rtrim(number_format((float) $detail->qty_unit, 2, '.', ''), '0'), '.') }} {{ $detail->unit }}</td>
                                             <td>
                                                 <input type="text" name="price[]" class="form-control price-input"
                                                     value="{{ $price ? number_format($price, 0, ',', '.') : '' }}"

@@ -33,7 +33,7 @@ class ProductController extends Controller
             $product->stok_gudang = ($product->qty_ppn ?? 0) + ($product->qty_nonppn ?? 0);
             return $product;
         });
-        
+
         // Tambahkan baris ini untuk mempertahankan parameter pencarian
         $productspagination->appends(['search' => $searchQuery]);
 
@@ -169,21 +169,15 @@ class ProductController extends Controller
     public function search(Request $request)
     {
         $query = $request->q;
+        $keywords = explode(' ', $query);
 
-        $products = Product::where(function ($q) use ($query) {
-            $q->where('product_name', 'LIKE', "%$query%")
-                ->orWhere('product_code', 'LIKE', "%$query%");
+        $products = Product::where(function ($q) use ($keywords) {
+            foreach ($keywords as $k) {
+                $q->where('product_name', 'like', "%$k%");
+            }
         })
             ->limit(20)
             ->get(['id', 'product_code', 'product_name']);
-
-        $products = $products->map(function ($product) {
-            return [
-                'id' => $product->id,
-                'product_code' => $product->product_code,
-                'product_name' => $product->product_name,
-            ];
-        });
 
         return response()->json($products);
     }

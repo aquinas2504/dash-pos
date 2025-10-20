@@ -45,9 +45,13 @@
                         </div>
 
                         <div class="row mb-3">
-                            <div class="col-md-12 mb-3">
-                                <label>Note</label>
+                            <div class="col-md-6 mb-3">
+                                <label>Note Umum</label>
                                 <textarea name="note" class="form-control" rows="3"></textarea>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Note Shipping</label>
+                                <textarea name="note_shipping" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
 
@@ -125,7 +129,7 @@
                                                     <input type="number" name="qty_units[]"
                                                         class="form-control text-end qty-unit"
                                                         value="{{ $detail->remaining_unit }}"
-                                                        data-max="{{ $detail->remaining_unit }}" min="1"
+                                                        data-max="{{ $detail->remaining_unit }}" min="0" step="any"
                                                         max="{{ $detail->remaining_unit }}">
                                                     <span class="input-group-text bg-light">{{ $detail->unit }}</span>
                                                 </div>

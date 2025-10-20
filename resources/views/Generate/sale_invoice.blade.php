@@ -69,9 +69,8 @@
             @if ($invoice->suratjalan->ppn_status === 'yes')
                 <tr>
                     <td width="30%">
-                        {{-- <img src="/home/u836342820/domains/pos.dashmegah.my.id/public_html/img/logo-dmi.jpg" alt="Logo" style="height:75px; margin-top:10px;"> --}}
-                        <img src="{{ public_path('img/logo-dmi.jpg') }}" alt="Logo"
-                            style="height: 75px; margin-top:10px;">
+                        <img src="/home/u836342820/domains/pos.dashmegah.my.id/public_html/img/logo-dmi.jpg" alt="Logo" style="height:75px; margin-top:10px;">
+                        {{-- <img src="{{ public_path('img/logo-dmi.jpg') }}" alt="Logo" style="height: 75px; margin-top:10px;"> --}}
                     </td>
                     <td style="text-align: center; font-size: 11px; line-height: 1.4;">
                         <u>
@@ -89,8 +88,8 @@
                 {{-- Versi tanpa alamat, logo di tengah --}}
                 <tr>
                     <td style="text-align: center;">
-                        {{-- <img src="/home/u836342820/domains/pos.dashmegah.my.id/public_html/img/logo-dmi.jpg" alt="Logo" style="height:75px;"> --}}
-                        <img src="{{ public_path('img/logo-dmi.jpg') }}" alt="Logo" style="height: 75px;">
+                        <img src="/home/u836342820/domains/pos.dashmegah.my.id/public_html/img/logo-dmi.jpg" alt="Logo" style="height:75px;">
+                        {{-- <img src="{{ public_path('img/logo-dmi.jpg') }}" alt="Logo" style="height: 75px;"> --}}
                     </td>
                 </tr>
             @endif
@@ -165,7 +164,12 @@
                 @php
                     $sjDetail = $detail->SJDetail;
                     $productName = $sjDetail->product->product_name ?? '-';
-                    $quantity = ($sjDetail->qty_unit ?? 0) . ' ' . ($sjDetail->unit ?? '');
+
+                    // Format qty_unit supaya 5.00 jadi 5, tapi 5.5 tetap 5.5
+                    $qtyUnit = $sjDetail->qty_unit ?? 0;
+                    $formattedQty = rtrim(rtrim(number_format($qtyUnit, 2, '.', ''), '0'), '.');
+                    $quantity = $formattedQty . ' ' . ($sjDetail->unit ?? '');
+                    
                     $discount = $detail->discount ?: 0;
                 @endphp
                 <tr>
@@ -204,8 +208,8 @@
             <td width="50%">
                 <strong>Informasi Pembayaran</strong><br>
                 Bank: {{ $invoice->payment->bank_name ?? '-' }}<br>
-                No Rekening: {{ $invoice->payment->rekening_number ?? '-' }}<br>
-                Atas Nama: {{ $invoice->payment->rekening_name ?? '-' }}
+                No Rekening: <strong>{{ $invoice->payment->rekening_number ?? '-' }}</strong><br>
+                Atas Nama: <strong>{{ $invoice->payment->rekening_name ?? '-' }}</strong>
             </td>
         </tr>
     </table>

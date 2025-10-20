@@ -364,6 +364,14 @@
             let selectedDetails = {};
             let ppnStatus = 'yes'; // Default global PPN status (untuk mode SO)
 
+            // =============== Untuk tampilan qty di modal ===============
+            function formatQuantity(qty) {
+                if (Number.isInteger(qty)) return qty;          // misal 2 → 2
+                let str = qty.toFixed(2);                       // misal 2.5 → "2.50", 2.55 → "2.55"
+                str = str.replace(/\.?0+$/, '');                // hapus nol yang tidak perlu
+                return str;
+            }
+
             // =============== Load Pending Sales (Berdasarkan SO) ===============
             function loadPendingSales(filter = 'yes') {
                 ppnStatus = filter; // <-- Simpan status ke global
@@ -396,7 +404,7 @@
                                 data-detail-id="${d.detail_id}" 
                                 data-order-number="${sale.order_number}"
                                 ${isChecked ? 'checked' : ''}>
-                            ${d.product_name} ${d.qty_packing} ${d.packing} (${d.quantity} ${d.unit}) 
+                            ${d.product_name} ${d.qty_packing} ${d.packing} (${formatQuantity(d.quantity)} ${d.unit}) 
                         </label>
                     </li>
                 `;
@@ -714,7 +722,7 @@
                             data-id="${product.id}" 
                             data-name="${product.product_name}" 
                             data-code="${product.product_code}">
-                            ${product.product_code} - ${product.product_name}
+                            ${product.product_name}
                         </li>`;
                         });
                         html += '</ul>';
