@@ -12,6 +12,7 @@ class SuratJalanDetail extends Model
         'sj_number',
         'so_number',
         'id_product',
+        'product_name',
         'qty_packing',
         'packing',
         'qty_unit',

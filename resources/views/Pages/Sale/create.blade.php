@@ -41,7 +41,7 @@
         <form action="{{ route('sales.store') }}" method="POST" id="purchase-form">
             @csrf
             <div class="row">
-                <div class="col-12">    
+                <div class="col-12">
 
                     {{-- SECTION: Order Info --}}
                     <div class="card mb-4">
@@ -120,6 +120,7 @@
                         <div class="card-header bg-secondary text-white">Product Selection</div>
                         <div class="card-body">
 
+                            <!-- Product Selection area tetap seperti sebelumnya, tapi kita pakai product-search-result sebagai trigger modal -->
                             <div class="form-group position-relative mb-3 w-25">
                                 <input type="text" id="search-product" placeholder="Search product..."
                                     class="form-control">
@@ -136,9 +137,9 @@
                                             <th>Code</th>
                                             <th>Packing</th>
                                             <th>Quantity by Unit</th>
-                                            <th style="width: 150px">Price/unit</th>
-                                            <th style="width: 110px">Discount</th>
-                                            <th style="width: 180px">Total</th>
+                                            <th>Price/unit</th>
+                                            <th>Discount</th>
+                                            <th>Total</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -168,22 +169,93 @@
                                     <input type="text" id="subtotal" name="subtotal" class="form-control mb-2" readonly>
 
                                     <label>PPN</label>
-                                    <input type="text" id="ppn" name="ppn_amount" class="form-control mb-2" readonly>
+                                    <input type="text" id="ppn" name="ppn_amount" class="form-control mb-2"
+                                        readonly>
                                 </div>
 
                                 <label>Grand Total</label>
-                                <input type="text" id="grand_total" name="grand_total" class="form-control mb-2" readonly>
+                                <input type="text" id="grand_total" name="grand_total" class="form-control mb-2"
+                                    readonly>
                             </div>
 
                         </div>
                     </div>
 
                     <div class="text-end mb-5">
-                        <button type="button" class="btn btn-success px-4" onclick="confirmSubmit()">Create Sale Order</button>
+                        <button type="button" class="btn btn-success px-4" onclick="confirmSubmit()">Create Sale
+                            Order</button>
                     </div>
                 </div>
             </div>
         </form>
+
+        <!-- Modal untuk input lengkap produk -->
+        <div class="modal fade" id="productModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <form id="productModalForm" onsubmit="return false;">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="productModalTitle">Tambah Produk</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+
+                            <!-- Hidden: product ID -->
+                            <input type="hidden" id="modal_product_id">
+
+                            <div class="row g-2">
+                                <div class="col-md-6">
+                                    <label class="form-label">Product Name</label>
+                                    <input type="text" id="modal_product_name" class="form-control">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Product Code</label>
+                                    <input type="text" id="modal_product_code" class="form-control" readonly>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label class="form-label">Packing</label>
+                                    <select id="modal_packing" class="form-select"></select>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Qty Packing</label>
+                                    <input type="number" min="0" id="modal_qty_packing" class="form-control">
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label class="form-label">Unit</label>
+                                    <select id="modal_unit" class="form-select"></select>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Qty Unit</label>
+                                    <input type="number" min="0" id="modal_qty_unit" class="form-control">
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label class="form-label">Price / unit</label>
+                                    <input type="text" id="modal_price" class="form-control" placeholder="Rp. 0">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Discount (ex: 10+5)</label>
+                                    <input type="text" id="modal_discount" class="form-control" placeholder="0">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Total (Preview)</label>
+                                    <input type="text" id="modal_total_preview" class="form-control" readonly>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="modal_save_btn" class="btn btn-primary">Simpan ke Tabel</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     @if (session('success'))
@@ -313,7 +385,7 @@
                         item.style.cursor = 'pointer';
 
                         item.addEventListener('click', function() {
-                            addProductToTable(product);
+                            openModalWithProduct(product);
                             resultDiv.innerHTML = '';
                             document.getElementById('search-product').value = '';
                         });
@@ -323,132 +395,70 @@
                 });
         });
 
+        /* --- Utilities (format rupiah) --- */
         function formatRupiah(number) {
-            const [whole, decimal] = number.toString().split('.');
-            const formatted = 'Rp. ' + whole.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-            return decimal && parseInt(decimal) > 0 ? `${formatted},${decimal}` : formatted;
+            if (number === '' || number === null || isNaN(number)) return '-';
+            const n = parseInt(number);
+            const whole = n.toString();
+            return 'Rp. ' + whole.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
         }
 
-        // Tambahkan di luar fungsi
-        function calculateLineTotal(row) {
-            const qty = parseFloat(row.querySelector('input[name="qty[]"]').value) || 0;
-            const priceText = row.querySelector('input[name="unit_price[]"]').value;
-            const discountText = row.querySelector('input[name="discount[]"]').value;
+        function parseRupiahToNumber(str) {
+            if (!str) return 0;
+            const digits = str.toString().replace(/[^\d]/g, '');
+            return parseInt(digits) || 0;
+        }
 
-            const price = parseFloat(priceText.replace(/[^\d]/g, '')) || 0;
+        const priceInput = document.getElementById('modal_price');
 
-            let total = qty * price;
+        priceInput.addEventListener('input', function (e) {
+            let value = e.target.value;
 
-            // Proses diskon bertingkat
-            if (discountText.trim() !== '') {
-                const discounts = discountText.split('+').map(d => {
-                    // ganti koma jadi titik supaya bisa diparse float
-                    d = d.replace(',', '.');
-                    return parseFloat(d) || 0;
-                });
-                discounts.forEach(d => {
-                    total -= total * (d / 100);
-                });
+            // Ambil hanya angka dari input (hilangkan huruf, titik, spasi, dll)
+            value = value.replace(/[^\d]/g, '');
+
+            // Jika kosong, jangan tampilkan Rp. biar user bisa ngetik nyaman
+            if (value === '') {
+                e.target.value = '';
+                return;
             }
 
+            // Ubah ke format rupiah
+            e.target.value = formatRupiah(value);
 
-            const totalFormatted = formatRupiah(Math.round(total));
-            row.querySelector('.total-cell').textContent = totalFormatted;
-
-            calculateSummary();
-        }
-
-        function calculateSummary() {
-            const rows = document.querySelectorAll('#product-table tbody tr');
-            let grandtotal = 0;
-
-            rows.forEach(row => {
-                const totalText = row.querySelector('.total-cell').textContent.replace(/[^\d]/g, '');
-                grandtotal += parseInt(totalText) || 0;
-            });
-
-            // cek status PPN
-            const ppnStatus = document.querySelector('input[name="ppn"]:checked')?.value || 'no';
-
-            let subtotal, ppn;
-            if (ppnStatus === 'yes') {
-                subtotal = Math.round(grandtotal / 1.11);
-                ppn = grandtotal - subtotal;
-            } else {
-                subtotal = 0;
-                ppn = 0;
-            }
-
-            document.getElementById('subtotal').value = formatRupiah(subtotal);
-            document.getElementById('ppn').value = formatRupiah(ppn);
-            document.getElementById('grand_total').value = formatRupiah(grandtotal);
-        }
+            // Setelah diformat, otomatis posisi kursor ke akhir
+            e.target.setSelectionRange(e.target.value.length, e.target.value.length);
+        });
 
 
-        function addProductToTable(product) {
-            const table = document.querySelector('#product-table tbody');
-            const row = document.createElement('tr');
-            row.dataset.productId = product.id;
 
-            row.innerHTML = `
-                <input type="hidden" name="id_product[]" value="${product.id}">
-                <td>${product.product_name}</td>
-                <td>${product.product_code}</td>
+        /* --- Global state for modal packing/unit data per product --- */
+        const modalState = {
+            packingData: [], // product_packings
+            allPackings: [],
+            allUnits: []
+        };
 
-                <td>
-                    <div class="input-group">
-                        <input type="number" min="1" class="form-control packing-qty" name="qty_packing[]" placeholder="Qty" style="width: 70px;">
-                        <select class="form-select packing-select" name="packing[]" style="width: 100px;"></select>
-                    </div>
-                </td>
+        /* Bootstrap modal instance (assumes bootstrap 5 is loaded) */
+        const productModalEl = document.getElementById('productModal');
+        const bsProductModal = new bootstrap.Modal(productModalEl);
 
-                <td>
-                    <div class="input-group">
-                        <input type="number" class="form-control unit-qty" name="qty[]" placeholder="0" style="width: 70px;">
-                        <select class="form-select unit-select" name="unit[]" style="width: 100px;"></select>
-                    </div>
-                </td>
+        /* Open modal with product basic info and fetch its packings/units */
+        function openModalWithProduct(product, existingRow = null) {
+            // fill basic fields
+            document.getElementById('modal_product_id').value = product.id;
+            document.getElementById('modal_product_name').value = product.product_name;
+            document.getElementById('modal_product_code').value = product.product_code;
+            document.getElementById('modal_qty_packing').value = '';
+            document.getElementById('modal_qty_unit').value = '';
+            document.getElementById('modal_price').value = '';
+            document.getElementById('modal_discount').value = '';
+            document.getElementById('modal_total_preview').value = '';
 
-                <td><input type="text" class="form-control price-input" name="unit_price[]" placeholder="Rp. 0"></td>
-                <td><input type="text" class="form-control discount-input" name="discount[]" placeholder="0"></td>
-                <td class="total-cell">-</td>
-                <td><button class="btn btn-danger btn-sm remove-row">&times;</button></td>
-            `;
+            document.getElementById('productModalTitle').textContent = existingRow ? 'Edit Produk' : 'Tambah Produk';
+            document.getElementById('modal_save_btn').dataset.editingRowId = existingRow ? existingRow.dataset.rowId : '';
 
-            table.appendChild(row);
-
-            const priceInput = row.querySelector('.price-input');
-            const discountInput = row.querySelector('.discount-input');
-            const removeBtn = row.querySelector('.remove-row');
-            const packingSelect = row.querySelector('.packing-select');
-            const packingQty = row.querySelector('.packing-qty');
-            const unitSelect = row.querySelector('.unit-select');
-            const unitQty = row.querySelector('.unit-qty');
-
-            let packingData = []; // data hasil fetch
-
-            removeBtn.addEventListener('click', () => {
-                row.remove();
-                calculateSummary();
-            });
-
-            unitQty.addEventListener('input', () => {
-                calculateLineTotal(row);
-            });
-
-
-            priceInput.addEventListener('input', () => {
-                let value = priceInput.value.replace(/[^\d]/g, '');
-                priceInput.value = value ? formatRupiah(value) : '';
-                calculateLineTotal(row);
-            });
-
-            discountInput.addEventListener('input', () => {
-                discountInput.value = discountInput.value.replace(/[^0-9+,.]/g, '');
-                calculateLineTotal(row);
-            });
-
-            // Ambil data packing dari backend
+            // fetch packing/unit data
             fetch(`/product-packings/${product.id}`)
                 .then(res => res.json())
                 .then(({
@@ -456,48 +466,286 @@
                     all_units,
                     product_packings
                 }) => {
-                    // Isi dropdown packing
-                    packingSelect.innerHTML = '<option disabled selected value="">Pilih Packing</option>';
-                    all_packings.forEach(p => {
+                    modalState.packingData = product_packings || [];
+                    modalState.allPackings = all_packings || [];
+                    modalState.allUnits = all_units || [];
+
+                    // populate selects
+                    const packingSel = document.getElementById('modal_packing');
+                    const unitSel = document.getElementById('modal_unit');
+
+                    packingSel.innerHTML = '<option value="">Pilih Packing</option>';
+                    modalState.allPackings.forEach(p => {
                         const opt = document.createElement('option');
                         opt.value = p.packing_id;
                         opt.textContent = p.packing_name;
-                        packingSelect.appendChild(opt);
+                        packingSel.appendChild(opt);
                     });
 
-                    // Isi dropdown unit
-                    unitSelect.innerHTML = '<option disabled selected value="">Pilih Unit</option>';
-                    all_units.forEach(u => {
+                    unitSel.innerHTML = '<option value="">Pilih Unit</option>';
+                    modalState.allUnits.forEach(u => {
                         const opt = document.createElement('option');
                         opt.value = u.unit_id;
                         opt.textContent = u.unit_name;
-                        unitSelect.appendChild(opt);
+                        unitSel.appendChild(opt);
                     });
 
-                    // Simpan untuk referensi pengecekan
-                    packingData = product_packings;
+                    // If editing existingRow, prefill modal with row's values
+                    if (existingRow) {
+                        prefillModalFromRow(existingRow);
+                    }
+
+                    bsProductModal.show();
                 });
+        }
 
-            function updateQtyByUnit() {
-                const packingQtyVal = parseFloat(packingQty.value) || 0;
-                const packingId = parseInt(packingSelect.value);
-                const unitId = parseInt(unitSelect.value);
+        /* Prefill modal fields when editing */
+        function prefillModalFromRow(row) {
+            // read data attributes / cell texts
+            document.getElementById('modal_product_id').value = row.dataset.productId;
+            document.getElementById('modal_product_name').value = row.querySelector('.cell-name').textContent.trim();
+            document.getElementById('modal_product_code').value = row.querySelector('.cell-code').textContent.trim();
 
-                const matched = packingData.find(p => p.packing_id === packingId && p.unit_id === unitId);
+            // packing/unit: we stored ids in data attributes when creating row
+            const packingId = row.dataset.packingId || '';
+            const unitId = row.dataset.unitId || '';
+            const qtyPacking = row.dataset.qtyPacking || '';
+            const qtyUnit = row.dataset.qtyUnit || '';
+            const price = row.dataset.price || '';
+            const discount = row.dataset.discount || '';
 
+            document.getElementById('modal_packing').value = packingId;
+            document.getElementById('modal_qty_packing').value = qtyPacking;
+            document.getElementById('modal_unit').value = unitId;
+            document.getElementById('modal_qty_unit').value = qtyUnit;
+            document.getElementById('modal_price').value = price ? formatRupiah(price) : '';
+            document.getElementById('modal_discount').value = discount;
+
+            // preview total
+            updateModalPreviewTotal();
+        }
+
+        /* Calculate total in modal (like per-line calc) */
+        function calculateTotalFromModalInputs() {
+            const qtyUnit = parseFloat(document.getElementById('modal_qty_unit').value) || 0;
+            const priceText = document.getElementById('modal_price').value || '';
+            const discountText = document.getElementById('modal_discount').value || '';
+
+            const price = parseRupiahToNumber(priceText) || 0;
+            let total = qtyUnit * price;
+
+            if (discountText.trim() !== '') {
+                const ds = discountText.split('+').map(d => d.replace(',', '.')).map(parseFloat).map(x => isNaN(x) ? 0 : x);
+                ds.forEach(d => {
+                    total -= total * (d / 100);
+                });
+            }
+            return Math.round(total);
+        }
+
+        function updateModalPreviewTotal() {
+            const total = calculateTotalFromModalInputs();
+            document.getElementById('modal_total_preview').value = total ? formatRupiah(total) : 'Rp. 0';
+        }
+
+        /* Hook modal input changes to preview update */
+        ['modal_qty_packing', 'modal_qty_unit', 'modal_price', 'modal_discount', 'modal_packing', 'modal_unit'].forEach(
+            id => {
+                document.addEventListener('input', (e) => {
+                    if (e.target && e.target.id === id) {
+                        // If packing changed and packing->unit conversion exists we may auto fill qty unit based on packing
+                        if (id === 'modal_packing' || id === 'modal_qty_packing' || id === 'modal_unit') {
+                            updateModalQtyUnitFromPacking();
+                        }
+                        updateModalPreviewTotal();
+                    }
+                });
+            });
+
+        /* When packing + unit selected, try fill qty unit by conversion */
+        function updateModalQtyUnitFromPacking() {
+            const packingId = parseInt(document.getElementById('modal_packing').value) || null;
+            const unitId = parseInt(document.getElementById('modal_unit').value) || null;
+            const qtyPackingVal = parseFloat(document.getElementById('modal_qty_packing').value) || 0;
+
+            if (packingId && unitId) {
+                const matched = modalState.packingData.find(p => p.packing_id === packingId && p.unit_id === unitId);
                 if (matched) {
-                    unitQty.value = packingQtyVal * matched.conversion_value;
+                    document.getElementById('modal_qty_unit').value = qtyPackingVal * matched.conversion_value;
                 } else {
-                    unitQty.value = ''; // atau '0' kalau kamu mau
+                    // tidak ditemukan: kosongkan agar user isi manual
+                    document.getElementById('modal_qty_unit').value = '';
                 }
+            }
+        }
 
-                calculateLineTotal(row);
+        /* Save tombol di modal: tambah atau update row */
+        document.getElementById('modal_save_btn').addEventListener('click', function() {
+
+            const productId = document.getElementById('modal_product_id').value;
+            const productName = document.getElementById('modal_product_name').value;
+            const productCode = document.getElementById('modal_product_code').value;
+            const packingId = document.getElementById('modal_packing').value || '';
+            const packingText = document.getElementById('modal_packing').selectedOptions.length ? document
+                .getElementById('modal_packing').selectedOptions[0].text : '';
+            const qtyPacking = document.getElementById('modal_qty_packing').value || '';
+            const unitId = document.getElementById('modal_unit').value || '';
+            const unitText = document.getElementById('modal_unit').selectedOptions.length ? document.getElementById(
+                'modal_unit').selectedOptions[0].text : '';
+            const qtyUnit = document.getElementById('modal_qty_unit').value || '';
+            const priceText = document.getElementById('modal_price').value || '';
+            const priceNumeric = parseRupiahToNumber(priceText);
+            const discount = document.getElementById('modal_discount').value || '';
+            const total = calculateTotalFromModalInputs();
+
+            // Build row data attributes
+            const rowData = {
+                productId,
+                productName,
+                productCode,
+                packingId,
+                packingText,
+                qtyPacking,
+                unitId,
+                unitText,
+                qtyUnit,
+                priceNumeric,
+                discount,
+                total
+            };
+
+            const editingRowId = this.dataset.editingRowId || '';
+
+            if (editingRowId) {
+                // update existing row (find by data-row-id)
+                const existingRow = document.querySelector(
+                    `#product-table tbody tr[data-row-id="${editingRowId}"]`);
+                if (existingRow) {
+                    fillRowWithData(existingRow, rowData);
+                }
+            } else {
+                // create new row with unique id
+                const newRowId = 'r' + Date.now();
+                const tbody = document.querySelector('#product-table tbody');
+                const tr = document.createElement('tr');
+                tr.dataset.rowId = newRowId;
+                tr.dataset.productId = productId;
+                fillRowWithData(tr, rowData);
+                tbody.appendChild(tr);
             }
 
+            // clear editing flag & hide modal
+            delete this.dataset.editingRowId;
+            bsProductModal.hide();
+            calculateSummary();
+        });
 
-            packingQty.addEventListener('input', updateQtyByUnit);
-            unitSelect.addEventListener('change', updateQtyByUnit);
+        /* Fill a <tr> element with textual cells + hidden inputs stored as data attributes */
+        function fillRowWithData(tr, data) {
+            // Set dataset for easy edit later
+            tr.dataset.productId = data.productId;
+            tr.dataset.packingId = data.packingId;
+            tr.dataset.qtyPacking = data.qtyPacking;
+            tr.dataset.unitId = data.unitId;
+            tr.dataset.qtyUnit = data.qtyUnit;
+            tr.dataset.price = data.priceNumeric;
+            tr.dataset.discount = data.discount;
+            tr.dataset.total = data.total;
+
+            // Build inner HTML as text cells (rapi) and include hidden inputs (optional)
+            tr.innerHTML = `
+                <td class="cell-name text-start">${escapeHtml(data.productName)}</td>
+                <td class="cell-code">${escapeHtml(data.productCode)}</td>
+                <td class="cell-packing">${escapeHtml(data.packingText)} ${data.qtyPacking ? (' x ' + data.qtyPacking) : ''}</td>
+                <td class="cell-qtyunit">${data.qtyUnit ? data.qtyUnit : '-'} ${escapeHtml(data.unitText)}</td>
+                <td class="cell-price">${data.priceNumeric ? formatRupiah(data.priceNumeric) : '-'}</td>
+                <td class="cell-discount">${data.discount ? escapeHtml(data.discount) : '-'}</td>
+                <td class="cell-total">${data.total ? formatRupiah(data.total) : '-'}</td>
+                <td class="cell-action">
+                    <button type="button" class="btn btn-sm btn-outline-primary btn-edit" title="Edit"><i class="fas fa-pen"></i></button>
+                    <button type="button" class="btn btn-sm btn-outline-danger btn-delete" title="Hapus"><i class="fas fa-trash"></i></button>
+                    <!-- Hidden inputs for form submit -->
+                    <input type="hidden" name="id_product[]" value="${escapeHtml(data.productId)}">
+                    <input type="hidden" name="product_name[]" value="${escapeHtml(data.productName)}">  
+                    <input type="hidden" name="packing[]" value="${escapeHtml(data.packingId)}">
+                    <input type="hidden" name="qty_packing[]" value="${escapeHtml(data.qtyPacking)}">
+                    <input type="hidden" name="unit[]" value="${escapeHtml(data.unitId)}">
+                    <input type="hidden" name="qty[]" value="${escapeHtml(data.qtyUnit)}">
+                    <input type="hidden" name="unit_price[]" value="${escapeHtml(data.priceNumeric)}">
+                    <input type="hidden" name="discount[]" value="${escapeHtml(data.discount)}">
+                    <input type="hidden" name="line_total[]" value="${escapeHtml(data.total)}">
+                </td>
+            `;
+
+            // bind edit / delete events (since row might be newly created)
+            tr.querySelector('.btn-edit').addEventListener('click', function() {
+                openRowInModalForEdit(tr);
+            });
+            tr.querySelector('.btn-delete').addEventListener('click', function() {
+                if (confirm('Hapus baris ini?')) {
+                    tr.remove();
+                    calculateSummary();
+                }
+            });
         }
+
+        /* escapeHtml utility to avoid XSS in text nodes */
+        function escapeHtml(text) {
+            if (text === null || text === undefined) return '';
+            return String(text)
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#039;');
+        }
+
+        /* Open existing row into modal to edit */
+        function openRowInModalForEdit(tr) {
+            // Build a pseudo product object to pass to openModalWithProduct()
+            const product = {
+                id: tr.dataset.productId,
+                product_name: tr.querySelector('.cell-name').textContent.trim(),
+                product_code: tr.querySelector('.cell-code').textContent.trim()
+            };
+            // pass existing row so modal will prefill
+            openModalWithProduct(product, tr);
+        }
+
+        /* After any row changes, recalc summary (subtotal/ppn/grand) */
+        function calculateSummary() {
+            const rows = document.querySelectorAll('#product-table tbody tr');
+            let grandtotal = 0;
+            rows.forEach(row => {
+                const t = parseInt(row.dataset.total) || 0;
+                grandtotal += t;
+            });
+
+            // cek status PPN
+            const ppnStatus = document.querySelector('input[name="ppn"]:checked')?.value || 'no';
+
+            let subtotal = 0,
+                ppn = 0;
+            if (ppnStatus === 'yes') {
+                // assume grandtotal includes PPN: DPP = grand / 1.11
+                subtotal = Math.round(grandtotal / 1.11);
+                ppn = grandtotal - subtotal;
+            } else {
+                subtotal = grandtotal;
+                ppn = 0;
+            }
+
+            // set ke elemen input (format rupiah)
+            if (document.getElementById('subtotal')) document.getElementById('subtotal').value = formatRupiah(subtotal);
+            if (document.getElementById('ppn')) document.getElementById('ppn').value = formatRupiah(ppn);
+            if (document.getElementById('grand_total')) document.getElementById('grand_total').value = formatRupiah(
+                grandtotal);
+        }
+
+        /* When modal is hidden, clear editing id to avoid stale state */
+        productModalEl.addEventListener('hidden.bs.modal', function() {
+            document.getElementById('modal_save_btn').dataset.editingRowId = '';
+        });
     </script>
 
     <script>

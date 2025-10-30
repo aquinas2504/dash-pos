@@ -32,6 +32,7 @@ class SaleController extends Controller
             'customer_code' => 'required|string|exists:customers,customer_code',
             'ppn' => 'required|in:yes,no',
             'note' => 'nullable|string',
+            'product_name' => 'required|array',
             'qty' => 'required|array',
             'qty.*' => 'required|numeric|min:0.5',
             'unit' => 'required|array',
@@ -124,6 +125,7 @@ class SaleController extends Controller
             SaleDetail::create([
                 'order_number' => $sale->order_number,
                 'id_product' => $request->input('id_product')[$index],
+                'product_name' => $request->product_name[$index],
                 'qty_packing' => $qtyPacking,
                 'packing' => $packingName, // Simpan nama
                 'quantity' => $qty,

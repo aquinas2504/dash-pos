@@ -81,7 +81,6 @@
                                 <tbody>
                                     @foreach ($invoice->suratJalan->SJdetails as $i => $detail)
                                         @php
-                                            $product = $detail->product;
                                             $matched = $invoice->details
                                                 ->where('surat_jalan_detail', $detail->id)
                                                 ->first();
@@ -90,7 +89,7 @@
                                             $qty = $detail->qty_unit ?? 0;
                                         @endphp
                                         <tr>
-                                            <td class="text-start">{{ $product->product_name ?? '-' }}</td>
+                                            <td class="text-start">{{ $detail->product_name ?? '-' }}</td>
                                             <td>{{ $detail->qty_packing }} {{ $detail->packing }}</td>
                                             <td>{{ rtrim(rtrim(number_format((float) $detail->qty_unit, 2, '.', ''), '0'), '.') }} {{ $detail->unit }}</td>
                                             <td>

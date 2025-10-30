@@ -149,7 +149,7 @@
             @foreach ($sale->saleDetail as $index => $detail)
                 <tr>
                     <td class="text-center">{{ $index + 1 }}</td>
-                    <td class="product-name">{{ $detail->product->product_name ?? '-' }}</td>
+                    <td class="product-name">{{ $detail->product_name ?? '-' }}</td>
                     <td class="text-right">{{ $detail->qty_packing }} {{ $detail->packing }}</td>
                     <td class="text-right">
                         {{ rtrim(rtrim(number_format($detail->quantity, 2, '.', ''), '0'), '.') }} {{ $detail->unit }}

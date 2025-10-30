@@ -163,7 +163,7 @@
             @foreach ($invoice->details as $index => $detail)
                 @php
                     $sjDetail = $detail->SJDetail;
-                    $productName = $sjDetail->product->product_name ?? '-';
+                    $productName = $sjDetail->product_name ?? '-';
 
                     // Format qty_unit supaya 5.00 jadi 5, tapi 5.5 tetap 5.5
                     $qtyUnit = $sjDetail->qty_unit ?? 0;

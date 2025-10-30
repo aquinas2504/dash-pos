@@ -111,7 +111,7 @@
                                         <tr class="produk-row">
                                             <td>{{ $index++ }}</td>
                                             <td class="text-start">
-                                                {{ $detail->product->product_name }}
+                                                {{ $detail->product_name }}
                                                 <input type="hidden" name="product_details[]" value="{{ $detail->id }}">
                                             </td>
                                             <td>

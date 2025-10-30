@@ -149,6 +149,7 @@ class SuratJalanController extends Controller
                         'sj_number' => $sj->sj_number,
                         'so_number' => $saleDetail->order_number, // perubahan utama di sini
                         'id_product' => $saleDetail->id_product,
+                        'product_name' => $saleDetail->product_name,
                         'qty_packing' => $qtyPacking,
                         'packing' => $saleDetail->packing,
                         'qty_unit' => $qtyUnit,
@@ -279,6 +280,7 @@ class SuratJalanController extends Controller
                     'sj_number' => $sj->sj_number,
                     'so_number' => null,
                     'id_product' => $item['id_product'],
+                    'product_name' => $item['product_name'],
                     'packing' => $item['packing'],
                     'qty_packing' => $item['qty_packing'] ?? 0,
                     'unit' => $item['unit'],
