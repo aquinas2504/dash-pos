@@ -20,6 +20,8 @@ class InvoiceController extends Controller
     // Create Form Invoice Pembelian
     public function create($penerimaan_number)
     {
+        $penerimaan_number = urldecode($penerimaan_number); // ← Tambahkan baris ini
+        
         $penerimaan = Penerimaan::with([
             'supplier',
             'details.product'
@@ -313,6 +315,8 @@ class InvoiceController extends Controller
     // Invoice SJ
     public function createSJ($sj_number)
     {
+        $sj_number = urldecode($sj_number); // ← Tambahkan baris ini
+
         $SuratJalan = SuratJalan::with([
             'customer',
             'SJdetails.product'

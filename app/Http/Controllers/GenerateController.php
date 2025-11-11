@@ -172,10 +172,14 @@ class GenerateController extends Controller
     // SURAT JALAN
     public function generateSJ($sj_number)
     {
+        $sj_number = urldecode($sj_number); // ← Tambahkan baris ini
+
         $sj = SuratJalan::with(['SJdetails.product'])->where('sj_number', $sj_number)->firstOrFail();
 
         $pdf = PDF::loadView('Generate.surat_jalan', compact('sj'));
-        return $pdf->stream('Surat Jalan - ' . $sj->sj_number . '.pdf');
+
+        $filename = "Surat Jalan - " . str_replace(['/', '\\'], '-', $sj_number) . ".pdf";
+        return $pdf->stream($filename);
     }
 
     // SALE INVOICE

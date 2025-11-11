@@ -32,13 +32,13 @@
                                     <td>{{ $sj->status }}</td>
                                     <td>
 
-                                        <a href="{{ route('SJ.Print', $sj->sj_number) }}" class="btn btn-sm btn-primary"
+                                        <a href="{{ route('SJ.Print', urlencode($sj->sj_number)) }}" class="btn btn-sm btn-primary"
                                             target="_blank">
                                             <i class="fa fa-print"></i> Surat Jalan
                                         </a>
 
                                         @if($sj->status == 'Pending')
-                                        <a href="{{ route('invoice.createSJ', $sj->sj_number) }}"
+                                        <a href="{{ route('invoice.createSJ', urlencode($sj->sj_number)) }}"
                                             class="btn btn-sm btn-success">
                                             <i class="fa fa-file-invoice"></i> Create Invoice
                                         </a>

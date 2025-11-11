@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DraftController;
 use App\Http\Controllers\ReturController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\PaymentController;
@@ -27,6 +28,11 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware('auth')->group(function () {
     // Dashboard
     Route::get('/dashboard', fn() => view('welcome'));
+
+    //Draft
+    Route::post('/drafts/save', [DraftController::class, 'save'])->name('drafts.save');
+    Route::get('/drafts', [DraftController::class, 'index'])->name('drafts.index');
+    Route::delete('/drafts/{id}', [DraftController::class, 'delete'])->name('drafts.delete');
 
     // Hak Akses Role (supermanager only)
     Route::middleware('role:supermanager')->group(function () {
@@ -104,14 +110,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/penerimaan-list', [PenerimaanController::class, 'index'])->name('penerimaans.index')->middleware('checkpermission:penerimaans.index');
 
     // Invoice Pembelian
-    Route::get('/invoice/create/{penerimaan_number}', [InvoiceController::class, 'create'])->name('invoice.create')->middleware('checkpermission:invoice.create');
+    Route::get('/invoice/create/{penerimaan_number}', [InvoiceController::class, 'create'])->where('penerimaan_number', '.*')->name('invoice.create')->middleware('checkpermission:invoice.create');
     Route::post('/invoices/store', [InvoiceController::class, 'store'])->name('invoices.store')->middleware('checkpermission:invoices.store');
     Route::get('/purchaseInvoice-list', [InvoiceController::class, 'indexPurchaseInvoice'])->name('purchaseInvoice.index')->middleware('checkpermission:purchaseInvoice.index');
     Route::get('/invoices/purchase/{id}/edit', [InvoiceController::class, 'editPurchaseInvoice'])->name('invoices.purchase.edit')->middleware('checkpermission:invoices.purchase.edit');
     Route::put('/invoices/purchase/{id}', [InvoiceController::class, 'updatePurchaseInvoice'])->name('invoices.purchase.update')->middleware('checkpermission:invoices.purchase.update');
 
     // Invoice Penjualan
-    Route::get('/sale-invoice/create/{sj_number}', [InvoiceController::class, 'createSJ'])->name('invoice.createSJ')->middleware('checkpermission:invoice.createSJ');
+    Route::get('/sale-invoice/create/{sj_number}', [InvoiceController::class, 'createSJ'])->where('sj_number', '.*')->name('invoice.createSJ')->middleware('checkpermission:invoice.createSJ');
     Route::post('/sale-invoice/store', [InvoiceController::class, 'storeSJ'])->name('invoiceSJ.store')->middleware('checkpermission:invoiceSJ.store');
     Route::get('/saleInvoice-list', [InvoiceController::class, 'indexSaleInvoice'])->name('saleInvoice.index')->middleware('checkpermission:saleInvoice.index');
     Route::get('/invoice/{invoice}/edit', [InvoiceController::class, 'editSaleInvoice'])->name('invoiceSJ.edit')->middleware('checkpermission:invoiceSJ.edit');
@@ -121,7 +127,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/purchase/{order_number}/pdf', [GenerateController::class, 'generatePdf'])->where('order_number', '.*')->name('purchase.pdf')->middleware('checkpermission:purchase.pdf');
     Route::get('/purchase-grouped/{order_number}/pdf', [GenerateController::class, 'generatePdf2'])->where('order_number', '.*')->name('purchase-grouped.pdf')->middleware('checkpermission:purchase-grouped.pdf');
     Route::get('/sale/{order_number}/pdf', [GenerateController::class, 'generatePdfSale'])->name('sale.pdf')->middleware('checkpermission:sale.pdf');
-    Route::get('/SJ/{sj_number}/pdf', [GenerateController::class, 'generateSJ'])->name('SJ.Print')->middleware('checkpermission:SJ.Print');
+    Route::get('/SJ/{sj_number}/pdf', [GenerateController::class, 'generateSJ'])->where('sj_number', '.*')->name('SJ.Print')->middleware('checkpermission:SJ.Print');
     Route::get('/Sale-Invoice/{invoice_number}/pdf', [GenerateController::class, 'printSaleInvoice'])->name('saleInvoice.Print')->middleware('checkpermission:saleInvoice.Print');
 
     // API & Search (dibiarkan tanpa checkpermission)

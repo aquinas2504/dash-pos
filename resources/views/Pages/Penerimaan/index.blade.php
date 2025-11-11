@@ -45,7 +45,7 @@
                                     <td>{{ $penerimaan->status }}</td>
                                     <td>
                                         @if ($penerimaan->status !== 'Difaktur')
-                                            <a href="{{ route('invoice.create', $penerimaan->penerimaan_number) }}"
+                                            <a href="{{ route('invoice.create', urlencode($penerimaan->penerimaan_number)) }}"
                                                 class="btn btn-sm btn-success">
                                                 <i class="fa fa-file-invoice"></i> Invoice
                                             </a>
