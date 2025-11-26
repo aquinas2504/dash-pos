@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Draft;
 use App\Models\Purchase;
 use App\Models\Supplier;
 use App\Models\SaleDetail;
@@ -9,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\PurchaseDetail;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
 
@@ -226,6 +228,14 @@ class PurchaseController extends Controller
                     }
                 }
             }
+
+
+            $userId = Auth::id();
+            // Hapus draft user untuk form purchase_order
+            Draft::where('form_type', 'purchase_order')
+                ->where('user_id', $userId) // pastikan hanya draft user ini
+                ->delete();
+
 
             DB::commit();
             return redirect()->route('purchases.index')->with('success', 'Purchase order berhasil dibuat!');

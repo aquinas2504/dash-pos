@@ -49,17 +49,18 @@
                         <div class="card-body row">
                             <div class="form-group col-md-6">
                                 <label>Order Number</label>
-                                <input type="text" name="order_number" required class="form-control">
+                                <input type="text" id="order_number" name="order_number" required class="form-control">
                             </div>
 
                             <div class="form-group col-md-6">
                                 <label>Date</label>
-                                <input type="date" name="date" value="{{ date('Y-m-d') }}" class="form-control"
-                                    required>
+                                <input type="date" id="date" name="date" value="{{ date('Y-m-d') }}"
+                                    class="form-control" required>
                             </div>
 
                             <div class="form-group col-md-6 position-relative">
                                 <label>Customer</label>
+                                <input type="hidden" name="customer_code" id="customer_code">
                                 <input type="text" id="search-customer" placeholder="Search Customer..."
                                     class="form-control mb-2">
                                 <div id="customer-search-result" class="mt-1"></div>
@@ -102,7 +103,7 @@
 
                                 <div class="form-group col-md-4">
                                     <label>Term of Payment (days)</label>
-                                    <input type="number" name="top" class="form-control" min="0"
+                                    <input type="number" name="top" id="top" class="form-control" min="0"
                                         placeholder="Ex: 30">
                                 </div>
                             </div>
@@ -160,7 +161,7 @@
                         <div class="card-body row">
                             <div class="form-group col-md-6">
                                 <label>Note</label>
-                                <textarea name="note" class="form-control" rows="3"></textarea>
+                                <textarea name="note" id="note" class="form-control" rows="3"></textarea>
                             </div>
 
                             <div class="form-group col-md-6">
@@ -310,6 +311,7 @@
         </script>
     @endif
 
+    {{-- Script Search Customer --}}
     <script>
         const customerInput = document.getElementById('search-customer');
         const resultBox = document.getElementById('customer-search-result');
@@ -363,6 +365,7 @@
         });
     </script>
 
+    {{-- Script Search Product & Modal Handling --}}
     <script>
         document.getElementById('search-product').addEventListener('input', function() {
             const query = this.value;
@@ -411,7 +414,7 @@
 
         const priceInput = document.getElementById('modal_price');
 
-        priceInput.addEventListener('input', function (e) {
+        priceInput.addEventListener('input', function(e) {
             let value = e.target.value;
 
             // Ambil hanya angka dari input (hilangkan huruf, titik, spasi, dll)
@@ -595,7 +598,7 @@
             const qtyUnit = document.getElementById('modal_qty_unit').value || '';
             const priceText = document.getElementById('modal_price').value || '';
             const priceNumeric = parseRupiahToNumber(priceText);
-            const discount = document.getElementById('modal_discount').value || '';
+            const discount = document.getElementById('modal_discount').value || '0';
             const total = calculateTotalFromModalInputs();
 
             // Build row data attributes
@@ -656,8 +659,8 @@
             tr.innerHTML = `
                 <td class="cell-name text-start">${escapeHtml(data.productName)}</td>
                 <td class="cell-code">${escapeHtml(data.productCode)}</td>
-                <td class="cell-packing">${escapeHtml(data.packingText)} ${data.qtyPacking ? (' x ' + data.qtyPacking) : ''}</td>
-                <td class="cell-qtyunit">${data.qtyUnit ? data.qtyUnit : '-'} ${escapeHtml(data.unitText)}</td>
+                <td class="cell-packing">${data.qtyPacking ? (data.qtyPacking + ' ' + escapeHtml(data.packingText)) : escapeHtml(data.packingText)}</td>
+                <td class="cell-qtyunit">${data.qtyUnit ? (data.qtyUnit + ' ' + escapeHtml(data.unitText)) : escapeHtml(data.unitText)}</td>
                 <td class="cell-price">${data.priceNumeric ? formatRupiah(data.priceNumeric) : '-'}</td>
                 <td class="cell-discount">${data.discount ? escapeHtml(data.discount) : '-'}</td>
                 <td class="cell-total">${data.total ? formatRupiah(data.total) : '-'}</td>
@@ -672,7 +675,7 @@
                     <input type="hidden" name="unit[]" value="${escapeHtml(data.unitId)}">
                     <input type="hidden" name="qty[]" value="${escapeHtml(data.qtyUnit)}">
                     <input type="hidden" name="unit_price[]" value="${escapeHtml(data.priceNumeric)}">
-                    <input type="hidden" name="discount[]" value="${escapeHtml(data.discount)}">
+                    <input type="hidden" name="discount[]" value="${escapeHtml(data.discount || '0')}">
                     <input type="hidden" name="line_total[]" value="${escapeHtml(data.total)}">
                 </td>
             `;
@@ -748,6 +751,118 @@
         });
     </script>
 
+    {{-- Script Load Draft --}}
+    <script>
+        function loadDraft() {
+            fetch('/draft/load?form_type=sale_order')
+                .then(res => res.json())
+                .then(draft => {
+                    if (!draft || !draft.data) return;
+
+                    const data = draft.data;
+
+                    // HEADER: isi field utama
+                    if (data.order_number) document.getElementById('order_number').value = data.order_number;
+                    if (data.order_date) document.getElementById('date').value = data.order_date;
+                    if (data.top) document.getElementById('top').value = data.top;
+                    if (data.note) document.getElementById('note').value = data.note;
+
+                    // PPN
+                    if (data.ppn_status) {
+                        const ppnEl = document.querySelector(`input[name="ppn"][value="${data.ppn_status}"]`);
+                        if (ppnEl) ppnEl.checked = true;
+                    }
+
+                    // CUSTOMER (tampilkan name di input, simpan code di hidden)
+                    if (data.supplier_code) document.getElementById('customer_code').value = data.supplier_code;
+                    if (data.supplier_name) document.getElementById('search-customer').value = data.supplier_name;
+
+                    // SHIPPING
+                    if (data.ship_1) {
+                        const sel1 = document.querySelector('select[name="ship_1"]');
+                        if (sel1) sel1.value = data.ship_1;
+                    }
+                    if (data.ship_2) {
+                        const sel2 = document.querySelector('select[name="ship_2"]');
+                        if (sel2) sel2.value = data.ship_2;
+                    }
+
+                    // PRODUCTS
+                    if (Array.isArray(data.products) && data.products.length) {
+                        const tbody = document.querySelector('#product-table tbody');
+                        tbody.innerHTML = ''; // clear dulu
+
+                        data.products.forEach((p, idx) => {
+                            const tr = document.createElement('tr');
+                            const rowId = 'r' + Date.now() + idx; // unique id
+
+                            // ambil name untuk packing/unit kalau ada
+                            const packingName = p.packing_name ||
+                                ''; // nanti bisa diambil dari modalState.allPackings
+                            const unitName = p.unit_name || '';
+
+                            tr.dataset.rowId = rowId;
+                            tr.dataset.productId = p.id_product || '';
+                            tr.dataset.packingId = p.packing || '';
+                            tr.dataset.qtyPacking = p.qty_packing || '';
+                            tr.dataset.unitId = p.unit || '';
+                            tr.dataset.qtyUnit = p.qty_unit || '';
+                            tr.dataset.price = p.price || '';
+                            tr.dataset.discount = p.discount || '';
+                            tr.dataset.total = p.total || '';
+
+                            tr.innerHTML = `
+                        <td class="cell-name text-start">${escapeHtml(p.name)}</td>
+                        <td class="cell-code">${escapeHtml(p.code)}</td>
+                        <td class="cell-packing">${p.qty_packing ? (p.qty_packing + ' ' + packingName) : packingName}</td>
+                        <td class="cell-qtyunit">${p.qty_unit ? (p.qty_unit + ' ' + unitName) : unitName}</td>
+                        <td class="cell-price">${p.price ? formatRupiah(p.price) : '-'}</td>
+                        <td class="cell-discount">${p.discount ? p.discount : '-'}</td>
+                        <td class="cell-total">${p.total ? formatRupiah(p.total) : '-'}</td>
+                        <td class="cell-action">
+                            <button type="button" class="btn btn-sm btn-outline-primary btn-edit" title="Edit"><i class="fas fa-pen"></i></button>
+                            <button type="button" class="btn btn-sm btn-outline-danger btn-delete" title="Hapus"><i class="fas fa-trash"></i></button>
+                            <input type="hidden" name="id_product[]" value="${p.id_product}">
+                            <input type="hidden" name="product_name[]" value="${escapeHtml(p.name)}">  
+                            <input type="hidden" name="packing[]" value="${p.packing}">
+                            <input type="hidden" name="qty_packing[]" value="${p.qty_packing}">
+                            <input type="hidden" name="unit[]" value="${p.unit}">
+                            <input type="hidden" name="qty[]" value="${p.qty_unit}">
+                            <input type="hidden" name="unit_price[]" value="${p.price}">
+                            <input type="hidden" name="discount[]" value="${p.discount}">
+                            <input type="hidden" name="line_total[]" value="${p.total}">
+                        </td>
+                    `;
+
+                            // bind edit/delete
+                            tr.querySelector('.btn-edit').addEventListener('click', () => openRowInModalForEdit(
+                                tr));
+                            tr.querySelector('.btn-delete').addEventListener('click', () => {
+                                if (confirm('Hapus baris ini?')) {
+                                    tr.remove();
+                                    calculateSummary();
+                                }
+                            });
+
+                            tbody.appendChild(tr);
+                        });
+                    }
+
+                    // SUBTOTAL, PPN, GRAND
+                    if (data.subtotal && document.getElementById('subtotal')) document.getElementById('subtotal')
+                        .value = data.subtotal;
+                    if (data.ppn && document.getElementById('ppn')) document.getElementById('ppn').value = data.ppn;
+                    if (data.grand_total && document.getElementById('grand_total')) document.getElementById(
+                        'grand_total').value = data.grand_total;
+                });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDraft();
+        });
+    </script>
+
+    {{-- Script PPN Handling --}}
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const ppnRadios = document.querySelectorAll('input[name="ppn"]');
@@ -770,4 +885,14 @@
             }
         });
     </script>
+
+    <script>
+        // kirim URL dan CSRF token ke JS
+        const draftSaveConfig = {
+            url: "{{ route('drafts.save') }}",
+            csrf: "{{ csrf_token() }}"
+        };
+    </script>
+
+    <script src="{{ asset('js/draft_createSO.js') }}"></script>
 @endsection

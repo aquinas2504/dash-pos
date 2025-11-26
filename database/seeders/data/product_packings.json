@@ -249,7 +249,7 @@
         "product_id": 36,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 18
+        "conversion_value": 27
     },
     {
         "id": 37,
@@ -270,7 +270,7 @@
         "product_id": 39,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 24
+        "conversion_value": 18
     },
     {
         "id": 40,
@@ -283,8 +283,8 @@
         "id": 41,
         "product_id": 41,
         "packing_name": "Dus",
-        "unit_name": "Gross",
-        "conversion_value": 20
+        "unit_name": "Lusin",
+        "conversion_value": 24
     },
     {
         "id": 42,
@@ -311,15 +311,15 @@
         "id": 45,
         "product_id": 45,
         "packing_name": "Dus",
-        "unit_name": "Lusin",
-        "conversion_value": 24
+        "unit_name": "Gross",
+        "conversion_value": 20
     },
     {
         "id": 46,
         "product_id": 46,
         "packing_name": "Dus",
-        "unit_name": "Gross",
-        "conversion_value": 30
+        "unit_name": "Lusin",
+        "conversion_value": 24
     },
     {
         "id": 47,
@@ -346,36 +346,36 @@
         "id": 50,
         "product_id": 50,
         "packing_name": "Dus",
-        "unit_name": "Lusin",
-        "conversion_value": 12
+        "unit_name": "Gross",
+        "conversion_value": 30
     },
     {
         "id": 51,
         "product_id": 51,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 15
+        "conversion_value": 12
     },
     {
         "id": 52,
         "product_id": 52,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 3
+        "conversion_value": 12
     },
     {
         "id": 53,
         "product_id": 53,
-        "packing_name": "Bal",
+        "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 2
+        "conversion_value": 15
     },
     {
         "id": 54,
         "product_id": 54,
-        "packing_name": "Bal",
+        "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 2
+        "conversion_value": 3
     },
     {
         "id": 55,
@@ -410,63 +410,63 @@
         "product_id": 59,
         "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 4
+        "conversion_value": 2
     },
     {
         "id": 60,
         "product_id": 60,
         "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 12
+        "conversion_value": 2
     },
     {
         "id": 61,
         "product_id": 61,
-        "packing_name": "Dus",
+        "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 12
+        "conversion_value": 4
     },
     {
         "id": 62,
         "product_id": 62,
-        "packing_name": "Dus",
+        "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 3
+        "conversion_value": 12
     },
     {
         "id": 63,
         "product_id": 63,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 3
+        "conversion_value": 12
     },
     {
         "id": 64,
         "product_id": 64,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 4
+        "conversion_value": 3
     },
     {
         "id": 65,
         "product_id": 65,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 6
+        "conversion_value": 3
     },
     {
         "id": 66,
         "product_id": 66,
         "packing_name": "Dus",
-        "unit_name": "Gross",
-        "conversion_value": 2
+        "unit_name": "Lusin",
+        "conversion_value": 4
     },
     {
         "id": 67,
         "product_id": 67,
         "packing_name": "Dus",
-        "unit_name": "Gross",
-        "conversion_value": 2
+        "unit_name": "Lusin",
+        "conversion_value": 6
     },
     {
         "id": 68,
@@ -493,15 +493,15 @@
         "id": 71,
         "product_id": 71,
         "packing_name": "Dus",
-        "unit_name": "Lusin",
-        "conversion_value": 18
+        "unit_name": "Gross",
+        "conversion_value": 2
     },
     {
         "id": 72,
         "product_id": 72,
         "packing_name": "Dus",
-        "unit_name": "Lusin",
-        "conversion_value": 18
+        "unit_name": "Gross",
+        "conversion_value": 2
     },
     {
         "id": 73,
@@ -515,21 +515,21 @@
         "product_id": 74,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 20
+        "conversion_value": 18
     },
     {
         "id": 75,
         "product_id": 75,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 12
+        "conversion_value": 18
     },
     {
         "id": 76,
         "product_id": 76,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 12
+        "conversion_value": 20
     },
     {
         "id": 77,
@@ -543,83 +543,83 @@
         "product_id": 78,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 24
+        "conversion_value": 12
     },
     {
         "id": 79,
         "product_id": 79,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 8
+        "conversion_value": 12
     },
     {
         "id": 80,
         "product_id": 80,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 12
+        "conversion_value": 24
     },
     {
         "id": 81,
         "product_id": 81,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 12
+        "conversion_value": 8
     },
     {
         "id": 82,
         "product_id": 82,
-        "packing_name": "Bal",
+        "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 1
+        "conversion_value": 12
     },
     {
         "id": 83,
         "product_id": 83,
-        "packing_name": "Bal",
+        "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 1
+        "conversion_value": 12
     },
     {
         "id": 84,
         "product_id": 84,
         "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 5
+        "conversion_value": 1
     },
     {
         "id": 85,
         "product_id": 85,
         "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 5
+        "conversion_value": 1
     },
     {
         "id": 86,
         "product_id": 86,
-        "packing_name": "Dus",
+        "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 20
+        "conversion_value": 5
     },
     {
         "id": 87,
         "product_id": 87,
-        "packing_name": "Dus",
+        "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 1
+        "conversion_value": 5
     },
     {
         "id": 88,
         "product_id": 88,
         "packing_name": "Dus",
-        "unit_name": "Set",
-        "conversion_value": 1
+        "unit_name": "Lusin",
+        "conversion_value": 20
     },
     {
         "id": 89,
         "product_id": 89,
         "packing_name": "Dus",
-        "unit_name": "Set",
+        "unit_name": "Lusin",
         "conversion_value": 1
     },
     {
@@ -1550,15 +1550,15 @@
         "id": 222,
         "product_id": 222,
         "packing_name": "Dus",
-        "unit_name": "Lusin",
-        "conversion_value": 10
+        "unit_name": "Set",
+        "conversion_value": 1
     },
     {
         "id": 223,
         "product_id": 223,
         "packing_name": "Dus",
-        "unit_name": "Lusin",
-        "conversion_value": 10
+        "unit_name": "Set",
+        "conversion_value": 1
     },
     {
         "id": 224,
@@ -1572,14 +1572,14 @@
         "product_id": 225,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 16
+        "conversion_value": 10
     },
     {
         "id": 226,
         "product_id": 226,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 16
+        "conversion_value": 10
     },
     {
         "id": 227,
@@ -1591,23 +1591,23 @@
     {
         "id": 228,
         "product_id": 228,
-        "packing_name": "Bal",
+        "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 28
+        "conversion_value": 16
     },
     {
         "id": 229,
         "product_id": 229,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 18
+        "conversion_value": 16
     },
     {
         "id": 230,
         "product_id": 230,
-        "packing_name": "Dus",
+        "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 24
+        "conversion_value": 28
     },
     {
         "id": 231,
@@ -1621,7 +1621,7 @@
         "product_id": 232,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 36
+        "conversion_value": 24
     },
     {
         "id": 233,
@@ -1635,7 +1635,7 @@
         "product_id": 234,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 18
+        "conversion_value": 36
     },
     {
         "id": 235,
@@ -1649,77 +1649,77 @@
         "product_id": 236,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 36
+        "conversion_value": 18
     },
     {
         "id": 237,
         "product_id": 237,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 36
+        "conversion_value": 18
     },
     {
         "id": 238,
         "product_id": 238,
-        "packing_name": "Bal",
+        "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 32
+        "conversion_value": 36
     },
     {
         "id": 239,
         "product_id": 239,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 16
+        "conversion_value": 36
     },
     {
         "id": 240,
         "product_id": 240,
-        "packing_name": "Dus",
+        "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 12
+        "conversion_value": 32
     },
     {
         "id": 241,
         "product_id": 241,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 10
+        "conversion_value": 16
     },
     {
         "id": 242,
         "product_id": 242,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 6
+        "conversion_value": 12
     },
     {
         "id": 243,
         "product_id": 243,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 8
+        "conversion_value": 10
     },
     {
         "id": 244,
         "product_id": 244,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 13
+        "conversion_value": 6
     },
     {
         "id": 245,
         "product_id": 245,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 20
+        "conversion_value": 8
     },
     {
         "id": 246,
         "product_id": 246,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 20
+        "conversion_value": 13
     },
     {
         "id": 247,
@@ -1747,42 +1747,42 @@
         "product_id": 250,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 12
+        "conversion_value": 20
     },
     {
         "id": 251,
         "product_id": 251,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 12
+        "conversion_value": 20
     },
     {
         "id": 252,
         "product_id": 252,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 10
+        "conversion_value": 12
     },
     {
         "id": 253,
         "product_id": 253,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 10
+        "conversion_value": 12
     },
     {
         "id": 254,
         "product_id": 254,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 12
+        "conversion_value": 10
     },
     {
         "id": 255,
         "product_id": 255,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 12
+        "conversion_value": 10
     },
     {
         "id": 256,
@@ -1794,51 +1794,51 @@
     {
         "id": 257,
         "product_id": 257,
-        "packing_name": "Bal",
+        "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 40
+        "conversion_value": 12
     },
     {
         "id": 258,
         "product_id": 258,
-        "packing_name": "Bal",
+        "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 40
+        "conversion_value": 12
     },
     {
         "id": 259,
         "product_id": 259,
         "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 36
+        "conversion_value": 40
     },
     {
         "id": 260,
         "product_id": 260,
         "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 36
+        "conversion_value": 40
     },
     {
         "id": 261,
         "product_id": 261,
-        "packing_name": "Dus",
+        "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 30
+        "conversion_value": 36
     },
     {
         "id": 262,
         "product_id": 262,
-        "packing_name": "Dus",
+        "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 16
+        "conversion_value": 36
     },
     {
         "id": 263,
         "product_id": 263,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 24
+        "conversion_value": 30
     },
     {
         "id": 264,
@@ -1852,7 +1852,7 @@
         "product_id": 265,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 16
+        "conversion_value": 24
     },
     {
         "id": 266,
@@ -1873,28 +1873,28 @@
         "product_id": 268,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 24
+        "conversion_value": 16
     },
     {
         "id": 269,
         "product_id": 269,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 24
+        "conversion_value": 16
     },
     {
         "id": 270,
         "product_id": 270,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 16
+        "conversion_value": 24
     },
     {
         "id": 271,
         "product_id": 271,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 16
+        "conversion_value": 24
     },
     {
         "id": 272,
@@ -1915,49 +1915,49 @@
         "product_id": 274,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 24
+        "conversion_value": 16
     },
     {
         "id": 275,
         "product_id": 275,
-        "packing_name": "Bal",
+        "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 120
+        "conversion_value": 16
     },
     {
         "id": 276,
         "product_id": 276,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 16
+        "conversion_value": 24
     },
     {
         "id": 277,
         "product_id": 277,
         "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 24
+        "conversion_value": 120
     },
     {
         "id": 278,
         "product_id": 278,
-        "packing_name": "Bal",
+        "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 24
+        "conversion_value": 16
     },
     {
         "id": 279,
         "product_id": 279,
         "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 12
+        "conversion_value": 24
     },
     {
         "id": 280,
         "product_id": 280,
         "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 12
+        "conversion_value": 24
     },
     {
         "id": 281,
@@ -1978,21 +1978,21 @@
         "product_id": 283,
         "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 2
+        "conversion_value": 12
     },
     {
         "id": 284,
         "product_id": 284,
         "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 10
+        "conversion_value": 12
     },
     {
         "id": 285,
         "product_id": 285,
         "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 10
+        "conversion_value": 2
     },
     {
         "id": 286,
@@ -2011,16 +2011,16 @@
     {
         "id": 288,
         "product_id": 288,
-        "packing_name": "Dus",
+        "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 1
+        "conversion_value": 10
     },
     {
         "id": 289,
         "product_id": 289,
-        "packing_name": "Ikat",
+        "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 1
+        "conversion_value": 10
     },
     {
         "id": 290,
@@ -2046,58 +2046,58 @@
     {
         "id": 293,
         "product_id": 293,
-        "packing_name": "Dus",
-        "unit_name": "Set",
-        "conversion_value": 20
+        "packing_name": "Ikat",
+        "unit_name": "Lusin",
+        "conversion_value": 1
     },
     {
         "id": 294,
         "product_id": 294,
         "packing_name": "Dus",
-        "unit_name": "Set",
-        "conversion_value": 20
+        "unit_name": "Lusin",
+        "conversion_value": 1
     },
     {
         "id": 295,
         "product_id": 295,
         "packing_name": "Dus",
         "unit_name": "Set",
-        "conversion_value": 16
+        "conversion_value": 20
     },
     {
         "id": 296,
         "product_id": 296,
         "packing_name": "Dus",
         "unit_name": "Set",
-        "conversion_value": 16
+        "conversion_value": 20
     },
     {
         "id": 297,
         "product_id": 297,
         "packing_name": "Dus",
         "unit_name": "Set",
-        "conversion_value": 14
+        "conversion_value": 16
     },
     {
         "id": 298,
         "product_id": 298,
         "packing_name": "Dus",
         "unit_name": "Set",
-        "conversion_value": 14
+        "conversion_value": 16
     },
     {
         "id": 299,
         "product_id": 299,
         "packing_name": "Dus",
         "unit_name": "Set",
-        "conversion_value": 16
+        "conversion_value": 14
     },
     {
         "id": 300,
         "product_id": 300,
         "packing_name": "Dus",
         "unit_name": "Set",
-        "conversion_value": 16
+        "conversion_value": 14
     },
     {
         "id": 301,
@@ -2111,14 +2111,14 @@
         "product_id": 302,
         "packing_name": "Dus",
         "unit_name": "Set",
-        "conversion_value": 12
+        "conversion_value": 16
     },
     {
         "id": 303,
         "product_id": 303,
         "packing_name": "Dus",
         "unit_name": "Set",
-        "conversion_value": 12
+        "conversion_value": 16
     },
     {
         "id": 304,
@@ -2152,15 +2152,15 @@
         "id": 308,
         "product_id": 308,
         "packing_name": "Dus",
-        "unit_name": "Lusin",
-        "conversion_value": 3
+        "unit_name": "Set",
+        "conversion_value": 12
     },
     {
         "id": 309,
         "product_id": 309,
         "packing_name": "Dus",
-        "unit_name": "Lusin",
-        "conversion_value": 3
+        "unit_name": "Set",
+        "conversion_value": 12
     },
     {
         "id": 310,
@@ -2181,21 +2181,21 @@
         "product_id": 312,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 6
+        "conversion_value": 3
     },
     {
         "id": 313,
         "product_id": 313,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 4
+        "conversion_value": 3
     },
     {
         "id": 314,
         "product_id": 314,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 4
+        "conversion_value": 6
     },
     {
         "id": 315,
@@ -2216,49 +2216,49 @@
         "product_id": 317,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 6
+        "conversion_value": 4
     },
     {
         "id": 318,
         "product_id": 318,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 6
+        "conversion_value": 4
     },
     {
         "id": 319,
         "product_id": 319,
-        "packing_name": "Bal",
+        "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 8
+        "conversion_value": 6
     },
     {
         "id": 320,
         "product_id": 320,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 4
+        "conversion_value": 6
     },
     {
         "id": 321,
         "product_id": 321,
-        "packing_name": "Dus",
+        "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 12
+        "conversion_value": 8
     },
     {
         "id": 322,
         "product_id": 322,
-        "packing_name": "Ikat",
-        "unit_name": "Set",
-        "conversion_value": 12
+        "packing_name": "Dus",
+        "unit_name": "Lusin",
+        "conversion_value": 4
     },
     {
         "id": 323,
         "product_id": 323,
         "packing_name": "Dus",
-        "unit_name": "Set",
-        "conversion_value": 24
+        "unit_name": "Lusin",
+        "conversion_value": 12
     },
     {
         "id": 324,
@@ -2277,463 +2277,463 @@
     {
         "id": 326,
         "product_id": 326,
-        "packing_name": "Bal",
-        "unit_name": "Lusin",
+        "packing_name": "Ikat",
+        "unit_name": "Set",
         "conversion_value": 12
     },
     {
         "id": 327,
         "product_id": 327,
-        "packing_name": "Bal",
-        "unit_name": "Lusin",
-        "conversion_value": 12
+        "packing_name": "Dus",
+        "unit_name": "Set",
+        "conversion_value": 24
     },
     {
         "id": 328,
         "product_id": 328,
-        "packing_name": "Bal",
-        "unit_name": "Lusin",
+        "packing_name": "Ikat",
+        "unit_name": "Set",
         "conversion_value": 12
     },
     {
         "id": 329,
         "product_id": 329,
-        "packing_name": "Bal",
-        "unit_name": "Lusin",
-        "conversion_value": 16
+        "packing_name": "Dus",
+        "unit_name": "Set",
+        "conversion_value": 24
     },
     {
         "id": 330,
         "product_id": 330,
-        "packing_name": "Bal",
-        "unit_name": "Lusin",
-        "conversion_value": 16
+        "packing_name": "Ikat",
+        "unit_name": "Set",
+        "conversion_value": 12
     },
     {
         "id": 331,
         "product_id": 331,
-        "packing_name": "Bal",
-        "unit_name": "Lusin",
-        "conversion_value": 8
+        "packing_name": "Dus",
+        "unit_name": "Set",
+        "conversion_value": 24
     },
     {
         "id": 332,
         "product_id": 332,
-        "packing_name": "Dus",
+        "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 10
+        "conversion_value": 12
     },
     {
         "id": 333,
         "product_id": 333,
-        "packing_name": "Dus",
+        "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 10
+        "conversion_value": 12
     },
     {
         "id": 334,
         "product_id": 334,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 10
+        "conversion_value": 16
     },
     {
         "id": 335,
         "product_id": 335,
-        "packing_name": "Dus",
+        "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 10
+        "conversion_value": 12
     },
     {
         "id": 336,
         "product_id": 336,
-        "packing_name": "Dus",
+        "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 10
+        "conversion_value": 16
     },
     {
         "id": 337,
         "product_id": 337,
-        "packing_name": "Dus",
+        "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 10
+        "conversion_value": 16
     },
     {
         "id": 338,
         "product_id": 338,
-        "packing_name": "Dus",
+        "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 5
+        "conversion_value": 8
     },
     {
         "id": 339,
         "product_id": 339,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 5
+        "conversion_value": 10
     },
     {
         "id": 340,
         "product_id": 340,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 5
+        "conversion_value": 10
     },
     {
         "id": 341,
         "product_id": 341,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 5
+        "conversion_value": 10
     },
     {
         "id": 342,
         "product_id": 342,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 5
+        "conversion_value": 10
     },
     {
         "id": 343,
         "product_id": 343,
-        "packing_name": "Bal",
+        "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 16
+        "conversion_value": 10
     },
     {
         "id": 344,
         "product_id": 344,
-        "packing_name": "Bal",
+        "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 6
+        "conversion_value": 10
     },
     {
         "id": 345,
         "product_id": 345,
-        "packing_name": "Bal",
+        "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 6
+        "conversion_value": 5
     },
     {
         "id": 346,
         "product_id": 346,
-        "packing_name": "Bal",
+        "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 6
+        "conversion_value": 5
     },
     {
         "id": 347,
         "product_id": 347,
-        "packing_name": "Bal",
+        "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 6
+        "conversion_value": 5
     },
     {
         "id": 348,
         "product_id": 348,
-        "packing_name": "Bal",
+        "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 12
+        "conversion_value": 5
     },
     {
         "id": 349,
         "product_id": 349,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 12
+        "conversion_value": 5
     },
     {
         "id": 350,
         "product_id": 350,
-        "packing_name": "Dus",
+        "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 12
+        "conversion_value": 16
     },
     {
         "id": 351,
         "product_id": 351,
-        "packing_name": "Dus",
+        "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 12
+        "conversion_value": 6
     },
     {
         "id": 352,
         "product_id": 352,
-        "packing_name": "Dus",
+        "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 12
+        "conversion_value": 6
     },
     {
         "id": 353,
         "product_id": 353,
         "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 16
+        "conversion_value": 6
     },
     {
         "id": 354,
         "product_id": 354,
         "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 16
+        "conversion_value": 6
     },
     {
         "id": 355,
         "product_id": 355,
         "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 16
+        "conversion_value": 12
     },
     {
         "id": 356,
         "product_id": 356,
-        "packing_name": "Bal",
+        "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 16
+        "conversion_value": 12
     },
     {
         "id": 357,
         "product_id": 357,
-        "packing_name": "Bal",
+        "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 7
+        "conversion_value": 12
     },
     {
         "id": 358,
         "product_id": 358,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 10
+        "conversion_value": 12
     },
     {
         "id": 359,
         "product_id": 359,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 9
+        "conversion_value": 12
     },
     {
         "id": 360,
         "product_id": 360,
-        "packing_name": "Dus",
+        "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 10
+        "conversion_value": 16
     },
     {
         "id": 361,
         "product_id": 361,
-        "packing_name": "Dus",
+        "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 10
+        "conversion_value": 16
     },
     {
         "id": 362,
         "product_id": 362,
-        "packing_name": "Dus",
-        "unit_name": "Gross",
-        "conversion_value": 4
+        "packing_name": "Bal",
+        "unit_name": "Lusin",
+        "conversion_value": 16
     },
     {
         "id": 363,
         "product_id": 363,
-        "packing_name": "Dus",
+        "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 24
+        "conversion_value": 16
     },
     {
         "id": 364,
         "product_id": 364,
-        "packing_name": "Dus",
+        "packing_name": "Bal",
         "unit_name": "Lusin",
-        "conversion_value": 2
+        "conversion_value": 7
     },
     {
         "id": 365,
         "product_id": 365,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 2
+        "conversion_value": 10
     },
     {
         "id": 366,
         "product_id": 366,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 5
+        "conversion_value": 9
     },
     {
         "id": 367,
         "product_id": 367,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 18
+        "conversion_value": 10
     },
     {
         "id": 368,
         "product_id": 368,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 8
+        "conversion_value": 10
     },
     {
         "id": 369,
         "product_id": 369,
-        "packing_name": "Bal",
-        "unit_name": "Lusin",
-        "conversion_value": 20
+        "packing_name": "Dus",
+        "unit_name": "Gross",
+        "conversion_value": 4
     },
     {
         "id": 370,
         "product_id": 370,
-        "packing_name": "Bal",
+        "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 20
+        "conversion_value": 24
     },
     {
         "id": 371,
         "product_id": 371,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 8
+        "conversion_value": 2
     },
     {
         "id": 372,
         "product_id": 372,
-        "packing_name": "Bal",
+        "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 10
+        "conversion_value": 2
     },
     {
         "id": 373,
         "product_id": 373,
-        "packing_name": "Bal",
+        "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 10
+        "conversion_value": 5
     },
     {
         "id": 374,
         "product_id": 374,
-        "packing_name": "Bal",
-        "unit_name": "Lusin",
-        "conversion_value": 10
-    },
-    {
-        "id": 375,
-        "product_id": 375,
-        "packing_name": "Dus",
-        "unit_name": "Set",
-        "conversion_value": 24
-    },
-    {
-        "id": 376,
-        "product_id": 376,
-        "packing_name": "Dus",
-        "unit_name": "Set",
-        "conversion_value": 12
-    },
-    {
-        "id": 377,
-        "product_id": 377,
-        "packing_name": "Dus",
-        "unit_name": "Pieces",
-        "conversion_value": 500
-    },
-    {
-        "id": 378,
-        "product_id": 378,
-        "packing_name": "Dus",
-        "unit_name": "Pieces",
-        "conversion_value": 500
-    },
-    {
-        "id": 379,
-        "product_id": 379,
-        "packing_name": "Dus",
-        "unit_name": "Pieces",
-        "conversion_value": 500
-    },
-    {
-        "id": 380,
-        "product_id": 380,
-        "packing_name": "Dus",
-        "unit_name": "Pieces",
-        "conversion_value": 500
-    },
-    {
-        "id": 381,
-        "product_id": 381,
-        "packing_name": "Dus",
-        "unit_name": "Pieces",
-        "conversion_value": 500
-    },
-    {
-        "id": 382,
-        "product_id": 382,
-        "packing_name": "Dus",
-        "unit_name": "Pieces",
-        "conversion_value": 500
-    },
-    {
-        "id": 383,
-        "product_id": 383,
-        "packing_name": "Dus",
-        "unit_name": "Pieces",
-        "conversion_value": 500
-    },
-    {
-        "id": 384,
-        "product_id": 384,
-        "packing_name": "Dus",
-        "unit_name": "Set",
-        "conversion_value": 12
-    },
-    {
-        "id": 385,
-        "product_id": 385,
-        "packing_name": "Dus",
-        "unit_name": "Lusin",
-        "conversion_value": 6
-    },
-    {
-        "id": 386,
-        "product_id": 386,
-        "packing_name": "Dus",
-        "unit_name": "Lusin",
-        "conversion_value": 6
-    },
-    {
-        "id": 387,
-        "product_id": 387,
-        "packing_name": "Dus",
-        "unit_name": "Lusin",
-        "conversion_value": 12
-    },
-    {
-        "id": 388,
-        "product_id": 388,
         "packing_name": "Dus",
         "unit_name": "Lusin",
         "conversion_value": 18
     },
     {
+        "id": 375,
+        "product_id": 375,
+        "packing_name": "Dus",
+        "unit_name": "Lusin",
+        "conversion_value": 8
+    },
+    {
+        "id": 376,
+        "product_id": 376,
+        "packing_name": "Bal",
+        "unit_name": "Lusin",
+        "conversion_value": 20
+    },
+    {
+        "id": 377,
+        "product_id": 377,
+        "packing_name": "Bal",
+        "unit_name": "Lusin",
+        "conversion_value": 20
+    },
+    {
+        "id": 378,
+        "product_id": 378,
+        "packing_name": "Dus",
+        "unit_name": "Lusin",
+        "conversion_value": 8
+    },
+    {
+        "id": 379,
+        "product_id": 379,
+        "packing_name": "Bal",
+        "unit_name": "Lusin",
+        "conversion_value": 10
+    },
+    {
+        "id": 380,
+        "product_id": 380,
+        "packing_name": "Bal",
+        "unit_name": "Lusin",
+        "conversion_value": 10
+    },
+    {
+        "id": 381,
+        "product_id": 381,
+        "packing_name": "Bal",
+        "unit_name": "Lusin",
+        "conversion_value": 10
+    },
+    {
+        "id": 382,
+        "product_id": 382,
+        "packing_name": "Dus",
+        "unit_name": "Set",
+        "conversion_value": 24
+    },
+    {
+        "id": 383,
+        "product_id": 383,
+        "packing_name": "Dus",
+        "unit_name": "Set",
+        "conversion_value": 12
+    },
+    {
+        "id": 384,
+        "product_id": 384,
+        "packing_name": "Dus",
+        "unit_name": "Piecess",
+        "conversion_value": 500
+    },
+    {
+        "id": 385,
+        "product_id": 385,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 500
+    },
+    {
+        "id": 386,
+        "product_id": 386,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 500
+    },
+    {
+        "id": 387,
+        "product_id": 387,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 500
+    },
+    {
+        "id": 388,
+        "product_id": 388,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 500
+    },
+    {
         "id": 389,
         "product_id": 389,
         "packing_name": "Dus",
-        "unit_name": "Lusin",
-        "conversion_value": 4
+        "unit_name": "Pieces",
+        "conversion_value": 500
     },
     {
         "id": 390,
         "product_id": 390,
         "packing_name": "Dus",
-        "unit_name": "Lusin",
-        "conversion_value": 12
+        "unit_name": "Pieces",
+        "conversion_value": 500
     },
     {
         "id": 391,
         "product_id": 391,
         "packing_name": "Dus",
-        "unit_name": "Lusin",
+        "unit_name": "Set",
         "conversion_value": 12
     },
     {
@@ -2741,14 +2741,14 @@
         "product_id": 392,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 12
+        "conversion_value": 6
     },
     {
         "id": 393,
         "product_id": 393,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 12
+        "conversion_value": 6
     },
     {
         "id": 394,
@@ -2762,14 +2762,14 @@
         "product_id": 395,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 12
+        "conversion_value": 18
     },
     {
         "id": 396,
         "product_id": 396,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 12
+        "conversion_value": 4
     },
     {
         "id": 397,
@@ -2832,28 +2832,28 @@
         "product_id": 405,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 8
+        "conversion_value": 12
     },
     {
         "id": 406,
         "product_id": 406,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 8
+        "conversion_value": 12
     },
     {
         "id": 407,
         "product_id": 407,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 8
+        "conversion_value": 12
     },
     {
         "id": 408,
         "product_id": 408,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 8
+        "conversion_value": 12
     },
     {
         "id": 409,
@@ -2867,7 +2867,7 @@
         "product_id": 410,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 18
+        "conversion_value": 12
     },
     {
         "id": 411,
@@ -2881,42 +2881,42 @@
         "product_id": 412,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 12
+        "conversion_value": 8
     },
     {
         "id": 413,
         "product_id": 413,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 12
+        "conversion_value": 8
     },
     {
         "id": 414,
         "product_id": 414,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 12
+        "conversion_value": 8
     },
     {
         "id": 415,
         "product_id": 415,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 12
+        "conversion_value": 8
     },
     {
         "id": 416,
         "product_id": 416,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 6
+        "conversion_value": 12
     },
     {
         "id": 417,
         "product_id": 417,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 8
+        "conversion_value": 18
     },
     {
         "id": 418,
@@ -2930,7 +2930,7 @@
         "product_id": 419,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 4
+        "conversion_value": 12
     },
     {
         "id": 420,
@@ -2951,21 +2951,21 @@
         "product_id": 422,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 24
+        "conversion_value": 12
     },
     {
         "id": 423,
         "product_id": 423,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 24
+        "conversion_value": 6
     },
     {
         "id": 424,
         "product_id": 424,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 12
+        "conversion_value": 8
     },
     {
         "id": 425,
@@ -2979,7 +2979,7 @@
         "product_id": 426,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 12
+        "conversion_value": 4
     },
     {
         "id": 427,
@@ -3000,21 +3000,21 @@
         "product_id": 429,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 8
+        "conversion_value": 24
     },
     {
         "id": 430,
         "product_id": 430,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 12
+        "conversion_value": 24
     },
     {
         "id": 431,
         "product_id": 431,
         "packing_name": "Dus",
-        "unit_name": "Pieces",
-        "conversion_value": 500
+        "unit_name": "Lusin",
+        "conversion_value": 12
     },
     {
         "id": 432,
@@ -3028,14 +3028,14 @@
         "product_id": 433,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 18
+        "conversion_value": 12
     },
     {
         "id": 434,
         "product_id": 434,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 18
+        "conversion_value": 12
     },
     {
         "id": 435,
@@ -3049,70 +3049,70 @@
         "product_id": 436,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 12
+        "conversion_value": 8
     },
     {
         "id": 437,
         "product_id": 437,
         "packing_name": "Dus",
         "unit_name": "Lusin",
-        "conversion_value": 6
+        "conversion_value": 12
     },
     {
         "id": 438,
         "product_id": 438,
         "packing_name": "Dus",
-        "unit_name": "Lusin",
-        "conversion_value": 12
+        "unit_name": "Pieces",
+        "conversion_value": 500
     },
     {
         "id": 439,
         "product_id": 439,
-        "packing_name": "Bal",
-        "unit_name": "Pieces",
-        "conversion_value": 50
+        "packing_name": "Dus",
+        "unit_name": "Lusin",
+        "conversion_value": 12
     },
     {
         "id": 440,
         "product_id": 440,
-        "packing_name": "Bal",
-        "unit_name": "Pieces",
-        "conversion_value": 50
+        "packing_name": "Dus",
+        "unit_name": "Lusin",
+        "conversion_value": 18
     },
     {
         "id": 441,
         "product_id": 441,
-        "packing_name": "Bal",
-        "unit_name": "Pieces",
-        "conversion_value": 50
+        "packing_name": "Dus",
+        "unit_name": "Lusin",
+        "conversion_value": 18
     },
     {
         "id": 442,
         "product_id": 442,
-        "packing_name": "Bal",
-        "unit_name": "Pieces",
-        "conversion_value": 50
+        "packing_name": "Dus",
+        "unit_name": "Lusin",
+        "conversion_value": 12
     },
     {
         "id": 443,
         "product_id": 443,
-        "packing_name": "Bal",
-        "unit_name": "Pieces",
-        "conversion_value": 50
+        "packing_name": "Dus",
+        "unit_name": "Lusin",
+        "conversion_value": 12
     },
     {
         "id": 444,
         "product_id": 444,
-        "packing_name": "Bal",
-        "unit_name": "Pieces",
-        "conversion_value": 50
+        "packing_name": "Dus",
+        "unit_name": "Lusin",
+        "conversion_value": 6
     },
     {
         "id": 445,
         "product_id": 445,
-        "packing_name": "Bal",
-        "unit_name": "Pieces",
-        "conversion_value": 50
+        "packing_name": "Dus",
+        "unit_name": "Lusin",
+        "conversion_value": 12
     },
     {
         "id": 446,
@@ -3462,181 +3462,685 @@
         "product_id": 495,
         "packing_name": "Bal",
         "unit_name": "Pieces",
-        "conversion_value": 100
+        "conversion_value": 50
     },
     {
         "id": 496,
         "product_id": 496,
         "packing_name": "Bal",
         "unit_name": "Pieces",
-        "conversion_value": 100
+        "conversion_value": 50
     },
     {
         "id": 497,
         "product_id": 497,
         "packing_name": "Bal",
         "unit_name": "Pieces",
-        "conversion_value": 100
+        "conversion_value": 50
     },
     {
         "id": 498,
         "product_id": 498,
         "packing_name": "Bal",
         "unit_name": "Pieces",
-        "conversion_value": 100
+        "conversion_value": 50
     },
     {
         "id": 499,
         "product_id": 499,
-        "packing_name": "Ikat",
-        "unit_name": "Lusin",
-        "conversion_value": 10
+        "packing_name": "Bal",
+        "unit_name": "Pieces",
+        "conversion_value": 50
     },
     {
         "id": 500,
         "product_id": 500,
-        "packing_name": "Ikat",
-        "unit_name": "Lusin",
-        "conversion_value": 10
+        "packing_name": "Bal",
+        "unit_name": "Pieces",
+        "conversion_value": 50
     },
     {
         "id": 501,
         "product_id": 501,
+        "packing_name": "Bal",
+        "unit_name": "Pieces",
+        "conversion_value": 50
+    },
+    {
+        "id": 502,
+        "product_id": 502,
+        "packing_name": "Bal",
+        "unit_name": "Pieces",
+        "conversion_value": 50
+    },
+    {
+        "id": 503,
+        "product_id": 503,
+        "packing_name": "Bal",
+        "unit_name": "Pieces",
+        "conversion_value": 50
+    },
+    {
+        "id": 504,
+        "product_id": 504,
+        "packing_name": "Bal",
+        "unit_name": "Pieces",
+        "conversion_value": 50
+    },
+    {
+        "id": 505,
+        "product_id": 505,
+        "packing_name": "Bal",
+        "unit_name": "Pieces",
+        "conversion_value": 50
+    },
+    {
+        "id": 506,
+        "product_id": 506,
+        "packing_name": "Bal",
+        "unit_name": "Pieces",
+        "conversion_value": 50
+    },
+    {
+        "id": 507,
+        "product_id": 507,
+        "packing_name": "Bal",
+        "unit_name": "Pieces",
+        "conversion_value": 50
+    },
+    {
+        "id": 508,
+        "product_id": 508,
+        "packing_name": "Bal",
+        "unit_name": "Pieces",
+        "conversion_value": 50
+    },
+    {
+        "id": 509,
+        "product_id": 509,
+        "packing_name": "Bal",
+        "unit_name": "Pieces",
+        "conversion_value": 50
+    },
+    {
+        "id": 510,
+        "product_id": 510,
+        "packing_name": "Bal",
+        "unit_name": "Pieces",
+        "conversion_value": 50
+    },
+    {
+        "id": 511,
+        "product_id": 511,
+        "packing_name": "Bal",
+        "unit_name": "Pieces",
+        "conversion_value": 50
+    },
+    {
+        "id": 512,
+        "product_id": 512,
+        "packing_name": "Bal",
+        "unit_name": "Pieces",
+        "conversion_value": 50
+    },
+    {
+        "id": 513,
+        "product_id": 513,
+        "packing_name": "Bal",
+        "unit_name": "Pieces",
+        "conversion_value": 50
+    },
+    {
+        "id": 514,
+        "product_id": 514,
+        "packing_name": "Bal",
+        "unit_name": "Pieces",
+        "conversion_value": 50
+    },
+    {
+        "id": 515,
+        "product_id": 515,
+        "packing_name": "Bal",
+        "unit_name": "Pieces",
+        "conversion_value": 50
+    },
+    {
+        "id": 516,
+        "product_id": 516,
+        "packing_name": "Bal",
+        "unit_name": "Pieces",
+        "conversion_value": 100
+    },
+    {
+        "id": 517,
+        "product_id": 517,
+        "packing_name": "Bal",
+        "unit_name": "Pieces",
+        "conversion_value": 100
+    },
+    {
+        "id": 518,
+        "product_id": 518,
+        "packing_name": "Bal",
+        "unit_name": "Pieces",
+        "conversion_value": 100
+    },
+    {
+        "id": 519,
+        "product_id": 519,
+        "packing_name": "Bal",
+        "unit_name": "Pieces",
+        "conversion_value": 100
+    },
+    {
+        "id": 520,
+        "product_id": 520,
         "packing_name": "Ikat",
         "unit_name": "Lusin",
         "conversion_value": 10
     },
     {
-        "id": 502,
-        "product_id": 502,
+        "id": 521,
+        "product_id": 521,
+        "packing_name": "Ikat",
+        "unit_name": "Lusin",
+        "conversion_value": 10
+    },
+    {
+        "id": 522,
+        "product_id": 522,
+        "packing_name": "Ikat",
+        "unit_name": "Lusin",
+        "conversion_value": 10
+    },
+    {
+        "id": 523,
+        "product_id": 523,
         "packing_name": "Ikat",
         "unit_name": "Lusin",
         "conversion_value": 12
     },
     {
-        "id": 503,
-        "product_id": 503,
+        "id": 524,
+        "product_id": 524,
         "packing_name": "Ikat",
         "unit_name": "Lusin",
         "conversion_value": 12
     },
     {
-        "id": 504,
-        "product_id": 504,
+        "id": 525,
+        "product_id": 525,
         "packing_name": "Ikat",
         "unit_name": "Lusin",
         "conversion_value": 12
     },
     {
-        "id": 505,
-        "product_id": 505,
+        "id": 526,
+        "product_id": 526,
         "packing_name": "Ikat",
         "unit_name": "Lusin",
         "conversion_value": 12
     },
     {
-        "id": 506,
-        "product_id": 506,
+        "id": 527,
+        "product_id": 527,
         "packing_name": "Ikat",
         "unit_name": "Lusin",
         "conversion_value": 12
     },
     {
-        "id": 507,
-        "product_id": 507,
+        "id": 528,
+        "product_id": 528,
         "packing_name": "Ikat",
         "unit_name": "Pieces",
         "conversion_value": 200
     },
     {
-        "id": 508,
-        "product_id": 508,
+        "id": 529,
+        "product_id": 529,
         "packing_name": "Ikat",
         "unit_name": "Pieces",
         "conversion_value": 200
     },
     {
-        "id": 509,
-        "product_id": 509,
+        "id": 530,
+        "product_id": 530,
         "packing_name": "Ikat",
         "unit_name": "Pieces",
         "conversion_value": 200
     },
     {
-        "id": 510,
-        "product_id": 510,
+        "id": 531,
+        "product_id": 531,
         "packing_name": "Ikat",
         "unit_name": "Pieces",
         "conversion_value": 200
     },
     {
-        "id": 511,
-        "product_id": 511,
+        "id": 532,
+        "product_id": 532,
         "packing_name": "Ikat",
         "unit_name": "Pieces",
         "conversion_value": 300
     },
     {
-        "id": 512,
-        "product_id": 512,
+        "id": 533,
+        "product_id": 533,
         "packing_name": "Ikat",
         "unit_name": "Pieces",
         "conversion_value": 200
     },
     {
-        "id": 513,
-        "product_id": 513,
+        "id": 534,
+        "product_id": 534,
         "packing_name": "Ikat",
         "unit_name": "Pieces",
         "conversion_value": 200
     },
     {
-        "id": 514,
-        "product_id": 514,
+        "id": 535,
+        "product_id": 535,
         "packing_name": "Ikat",
         "unit_name": "Pieces",
         "conversion_value": 200
     },
     {
-        "id": 515,
-        "product_id": 515,
+        "id": 536,
+        "product_id": 536,
         "packing_name": "Ikat",
         "unit_name": "Pieces",
         "conversion_value": 200
     },
     {
-        "id": 516,
-        "product_id": 516,
+        "id": 537,
+        "product_id": 537,
         "packing_name": "Dus",
         "unit_name": "Pieces",
         "conversion_value": 720
     },
     {
-        "id": 517,
-        "product_id": 517,
+        "id": 538,
+        "product_id": 538,
         "packing_name": "Dus",
         "unit_name": "Pieces",
         "conversion_value": 480
     },
     {
-        "id": 518,
-        "product_id": 518,
+        "id": 539,
+        "product_id": 539,
         "packing_name": "Dus",
         "unit_name": "Pieces",
         "conversion_value": 480
     },
     {
-        "id": 519,
-        "product_id": 519,
+        "id": 540,
+        "product_id": 540,
         "packing_name": "Dus",
         "unit_name": "Pieces",
         "conversion_value": 400
     },
     {
-        "id": 520,
-        "product_id": 520,
+        "id": 541,
+        "product_id": 541,
         "packing_name": "Dus",
         "unit_name": "Pieces",
         "conversion_value": 320
+    },
+    {
+        "id": 542,
+        "product_id": 623,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 1000
+    },
+    {
+        "id": 543,
+        "product_id": 624,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 1000
+    },
+    {
+        "id": 544,
+        "product_id": 625,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 1000
+    },
+    {
+        "id": 545,
+        "product_id": 626,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 1000
+    },
+    {
+        "id": 546,
+        "product_id": 627,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 1000
+    },
+    {
+        "id": 547,
+        "product_id": 628,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 2000
+    },
+    {
+        "id": 548,
+        "product_id": 629,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 2000
+    },
+    {
+        "id": 549,
+        "product_id": 630,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 3000
+    },
+    {
+        "id": 550,
+        "product_id": 631,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 3000
+    },
+    {
+        "id": 551,
+        "product_id": 632,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 1000
+    },
+    {
+        "id": 552,
+        "product_id": 633,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 1000
+    },
+    {
+        "id": 553,
+        "product_id": 634,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 2000
+    },
+    {
+        "id": 554,
+        "product_id": 635,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 2000
+    },
+    {
+        "id": 555,
+        "product_id": 636,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 1000
+    },
+    {
+        "id": 556,
+        "product_id": 637,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 1000
+    },
+    {
+        "id": 557,
+        "product_id": 638,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 1000
+    },
+    {
+        "id": 558,
+        "product_id": 639,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 1000
+    },
+    {
+        "id": 559,
+        "product_id": 640,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 1000
+    },
+    {
+        "id": 560,
+        "product_id": 641,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 1000
+    },
+    {
+        "id": 561,
+        "product_id": 642,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 500
+    },
+    {
+        "id": 562,
+        "product_id": 643,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 500
+    },
+    {
+        "id": 563,
+        "product_id": 644,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 500
+    },
+    {
+        "id": 564,
+        "product_id": 645,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 500
+    },
+    {
+        "id": 565,
+        "product_id": 646,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 10000
+    },
+    {
+        "id": 566,
+        "product_id": 647,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 1000
+    },
+    {
+        "id": 567,
+        "product_id": 648,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 1000
+    },
+    {
+        "id": 568,
+        "product_id": 649,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 500
+    },
+    {
+        "id": 569,
+        "product_id": 650,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 500
+    },
+    {
+        "id": 570,
+        "product_id": 651,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 1000
+    },
+    {
+        "id": 571,
+        "product_id": 652,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 1000
+    },
+    {
+        "id": 572,
+        "product_id": 653,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 5000
+    },
+    {
+        "id": 573,
+        "product_id": 654,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 5000
+    },
+    {
+        "id": 574,
+        "product_id": 655,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 5000
+    },
+    {
+        "id": 575,
+        "product_id": 656,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 5000
+    },
+    {
+        "id": 576,
+        "product_id": 657,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 5000
+    },
+    {
+        "id": 577,
+        "product_id": 658,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 1000
+    },
+    {
+        "id": 578,
+        "product_id": 659,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 1000
+    },
+    {
+        "id": 579,
+        "product_id": 660,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 1000
+    },
+    {
+        "id": 580,
+        "product_id": 661,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 1000
+    },
+    {
+        "id": 581,
+        "product_id": 662,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 1000
+    },
+    {
+        "id": 582,
+        "product_id": 663,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 1000
+    },
+    {
+        "id": 583,
+        "product_id": 664,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 1000
+    },
+    {
+        "id": 584,
+        "product_id": 665,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 1000
+    },
+    {
+        "id": 585,
+        "product_id": 666,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 2000
+    },
+    {
+        "id": 586,
+        "product_id": 667,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 2000
+    },
+    {
+        "id": 587,
+        "product_id": 668,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 2000
+    },
+    {
+        "id": 588,
+        "product_id": 669,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 5000
+    },
+    {
+        "id": 589,
+        "product_id": 670,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 5000
+    },
+    {
+        "id": 590,
+        "product_id": 671,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 1000
+    },
+    {
+        "id": 591,
+        "product_id": 672,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 1000
+    },
+    {
+        "id": 592,
+        "product_id": 673,
+        "packing_name": "Dus",
+        "unit_name": "Pieces",
+        "conversion_value": 500
     }
 ]

@@ -31,10 +31,10 @@ class ConvertExcelToJson extends Command
 
         foreach ($rows as $row) {
             $product_code   = $row[0] ?? null;
-            $product_name   = $row[2] ?? null;
-            $unit_name      = $row[3] ?? null;
-            $conversion_val = $row[4] ?? null;
-            $packing_name   = $row[5] ?? null;
+            $product_name   = $row[1] ?? null;
+            $unit_name      = $row[2] ?? null;
+            $conversion_val = $row[3] ?? null;
+            $packing_name   = $row[4] ?? null;
 
             if (!$product_name) continue; // skip kalau kosong
 

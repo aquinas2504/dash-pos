@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Sale;
 use App\Models\Unit;
+use App\Models\Draft;
 use App\Models\Packing;
 use App\Models\Product;
 use App\Models\Shipping;
@@ -11,6 +12,7 @@ use App\Models\SaleDetail;
 use Illuminate\Http\Request;
 use App\Models\SuratJalanDetail;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class SaleController extends Controller
 {
@@ -136,6 +138,12 @@ class SaleController extends Controller
             ]);
         }
 
+        $userId = Auth::id();
+        // Hapus draft user untuk form purchase_order
+        Draft::where('form_type', 'sale_order')
+            ->where('user_id', $userId) // pastikan hanya draft user ini
+            ->delete();
+
 
 
         return redirect()->route('sales.ordered')->with('success', 'Sale order created successfully.');
@@ -170,7 +178,7 @@ class SaleController extends Controller
                         'product_name' => $d->product->product_name ?? 'Unknown',
                         'product_code' => $d->product->product_code ?? 'Unknown',
                         'unit' => $d->unit,
-                        'quantity' => (float) $d->quantity, 
+                        'quantity' => (float) $d->quantity,
                         'qty_packing' => $d->qty_packing,
                         'packing' => $d->packing,
                     ];
@@ -187,7 +195,7 @@ class SaleController extends Controller
 
         $query = Product::query();
         foreach ($keywords as $k) {
-            $query->where(function($q) use ($k) {
+            $query->where(function ($q) use ($k) {
                 $q->where('product_name', 'like', "%$k%");
             });
         }

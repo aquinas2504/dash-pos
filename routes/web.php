@@ -32,6 +32,8 @@ Route::middleware('auth')->group(function () {
     //Draft
     Route::post('/drafts/save', [DraftController::class, 'save'])->name('drafts.save');
     Route::get('/drafts', [DraftController::class, 'index'])->name('drafts.index');
+    Route::get('/draft/load', [DraftController::class, 'loadDraft'])->name('draft.load');
+    Route::get('/draft-sale-details', [DraftController::class, 'loadProductPObySO']);
     Route::delete('/drafts/{id}', [DraftController::class, 'delete'])->name('drafts.delete');
 
     // Hak Akses Role (supermanager only)

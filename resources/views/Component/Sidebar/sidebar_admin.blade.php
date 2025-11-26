@@ -6,21 +6,6 @@
             'icon' => 'fas fa-home',
         ],
         (object) [
-            'title' => 'Add Data',
-            'icon' => 'fas fa-plus',
-            'children' => array_filter([
-                (object) ['title' => 'Product', 'path' => 'product-create'],
-                (object) ['title' => 'Payment', 'path' => 'payment-create'],
-                (object) ['title' => 'Shipping', 'path' => 'shipping-create'],
-                (object) ['title' => 'Customer', 'path' => 'customer-create'],
-                (object) ['title' => 'Supplier', 'path' => 'supplier-create'],
-                auth()->check() && auth()->user()->main_role === 'supermanager'
-                    ? (object) ['title' => 'User', 'path' => 'user-create']
-                    : null,
-            ]),
-        ],
-
-        (object) [
             'title' => 'List of',
             'icon' => 'fas fa-list',
             'children' => array_filter([
@@ -68,6 +53,11 @@
             'title' => 'Role Access',
             'icon' => 'fas fa-low-vision',
             'children' => [(object) ['title' => 'Create Access', 'path' => 'role-access']],
+        ],
+        (object) [
+            'title' => 'Drafts',
+            'icon' => 'fas fa-pencil-alt',
+            'children' => [(object) ['title' => 'Draft Index', 'path' => 'drafts']],
         ],
     ];
 @endphp

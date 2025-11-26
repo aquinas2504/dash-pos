@@ -43,18 +43,20 @@
                         <div class="card-body row">
                             <div class="form-group col-md-6">
                                 <label>Order Number</label>
-                                <input type="text" name="order_number" required class="form-control">
+                                <input type="text" id="order_number" name="order_number" required class="form-control">
                             </div>
 
                             <div class="form-group col-md-6">
                                 <label>Date</label>
-                                <input type="date" name="order_date" value="{{ date('Y-m-d') }}" class="form-control">
+                                <input type="date" id="order_date" name="order_date" value="{{ date('Y-m-d') }}"
+                                    class="form-control">
                             </div>
 
                             <div class="form-group col-md-6 position-relative">
                                 <label>Supplier</label>
-                                <input type="text" name="supplier_code" id="search-supplier"
-                                    placeholder="Search Supplier..." class="form-control mb-2">
+                                <input type="hidden" name="supplier_code" id="supplier_code">
+                                <input type="text" id="search-supplier" placeholder="Search Supplier..."
+                                    class="form-control mb-2">
                                 <div id="supplier-search-result" class="mt-1"></div>
                             </div>
                         </div>
@@ -883,9 +885,135 @@
                 updateSummary();
             });
 
+            function loadDraft() {
+                $.get('/draft/load', {
+                    form_type: 'purchase_order'
+                }, function(draft) {
+                    if (!draft) return; // ga ada draft
+
+                    const data = draft.data; // ← ambil field data dari draft
+                    if (!data) return;
+
+                    console.log(data); // lihat datanya
+
+                    // Set header PO
+                    $('#order_number').val(data.order_number);
+                    $('#order_date').val(data.order_date);
+                    $('#search-supplier').val(data.supplier_name);
+                    $('#supplier_code').val(data.supplier_code); // <-- pastikan kode supplier valid
+                    $('textarea[name="note"]').val(data.note);
+                    $('#po_mode').val(data.po_mode);
+
+                    // Mode switch
+                    currentMode = data.po_mode;
+                    if (currentMode === 'so') {
+                        $('#btn-list-so').removeClass('d-none');
+                        $('#manual-form').addClass('d-none');
+                    } else {
+                        $('#btn-list-so').addClass('d-none');
+                        $('#manual-form').removeClass('d-none');
+                    }
+
+                    // Set PPN
+                    if (currentMode === 'manual') {
+                        const ppnRadio = data.ppn_status_manual === 'yes' ? '#ppn-yes' : '#ppn-no';
+                        $(ppnRadio).prop('checked', true);
+                    } else if (currentMode === 'so') {
+                        $('#ppn_status_so').val(data.ppn_status_so || 'yes');
+                    }
+
+                    // Render products
+                    selectedDetails = {};
+                    if (currentMode === 'manual') {
+                        data.products.forEach(p => {
+                            $.get(`/product-packings/${p.id_product}`, function(packData) {
+                                addProductRow(p.id_product, p.name, p.code, packData);
+
+                                const $lastRow = $('#product-table tbody tr').last();
+                                $lastRow.find('.input-packing-qty').val(p.qty_packing);
+                                $lastRow.find('.select-packing').val(p.packing);
+                                $lastRow.find('.qty-unit').val(p.qty_unit);
+                                $lastRow.find('.select-unit').val(p.unit);
+                                $lastRow.find('.price-input').val(p.price);
+                                $lastRow.find('.discount-input').val(p.discount);
+                                $lastRow.attr('data-quantity', p.qty_unit);
+                                recalculateTotal($lastRow);
+                            });
+                        });
+                    } else if (currentMode === 'so') {
+                        const productsDraft = data.products;
+                        const soIds = productsDraft.map(p => p.so_detail).filter(Boolean);
+
+                        if (soIds.length) {
+                            $.get('/draft-sale-details', {
+                                ids: soIds.join(',')
+                            }, function(details) {
+
+                                productsDraft.forEach(p => {
+                                    // Ubah "25,21" menjadi ["25","21"]
+                                    const idList = p.so_detail.split(',').map(id => id
+                                    .trim());
+
+                                    // Ambil semua detail sale berdasarkan ID-ID ini
+                                    const matched = details.filter(d => idList.includes(d.id
+                                        .toString()));
+
+                                    if (!matched.length) return;
+
+                                    // Karena produk sama, packing & unit sama
+                                    const base = matched[0];
+
+                                    // Jumlahkan qty_packing dan qty_unit
+                                    const totalQtyPacking = matched.reduce((sum, d) => sum +
+                                        d.qty_packing, 0);
+                                    const totalQtyUnit = matched.reduce((sum, d) => sum + d
+                                        .qty_unit, 0);
+
+                                    const key =
+                                        `${base.id_product}_${base.packing}_${base.unit}`;
+
+                                    selectedDetails[key] = {
+                                        ids: idList, // simpan semua ID
+                                        product_id: base.id_product,
+
+                                        // ambil dari JSON draft
+                                        name: p.name,
+                                        code: p.code,
+                                        price: p.price ? formatRupiah(p.price.toString()
+                                            .replace(/\D/g, '')) : '',
+                                        discount: p.discount,
+
+                                        // dari detail sale
+                                        packing: base.packing,
+                                        qty_packing: totalQtyPacking,
+                                        unit: base.unit,
+                                        quantity: totalQtyUnit
+                                    };
+                                });
 
 
+                                renderTable();
+                            });
+                        }
+                    }
+
+
+                    updateSummary();
+                });
+            }
+
+            loadDraft();
 
         }); // end $(function)
     </script>
+
+    <script>
+        // kirim URL dan CSRF token ke JS
+        const draftSaveConfig = {
+            url: "{{ route('drafts.save') }}",
+            csrf: "{{ csrf_token() }}"
+        };
+    </script>
+
+    <script src="{{ asset('js/draft_createPO.js') }}"></script>
 @endsection
