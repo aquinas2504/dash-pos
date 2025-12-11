@@ -46,6 +46,23 @@
                                             class="btn btn-sm btn-primary" title="Create Surat Jalan">
                                             <i class="fa fa-truck"></i>
                                         </a>
+                                        <a href="{{ route('sales.edit', $sale['order_number']) }}"
+                                            class="btn btn-sm btn-warning" title="Edit Sales Order">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        <!-- Tombol delete (TERLIHAT) -->
+                                        <button type="button" class="btn btn-sm btn-danger"
+                                            onclick="confirmDelete('{{ $sale['order_number'] }}')">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+
+                                        <!-- Form hidden (TIDAK ADA TOMBOL DI DALAMNYA) -->
+                                        <form id="delete-form-{{ $sale['order_number'] }}"
+                                            action="{{ route('sales.delete', $sale['order_number']) }}" method="POST"
+                                            style="display: none;">
+                                            @csrf
+                                            @method('DELETE')
+                                        </form>
                                     </td>
                                 </tr>
                             @endforeach
@@ -59,4 +76,36 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function confirmDelete(orderNumber) {
+            Swal.fire({
+                title: 'Hapus Sales Order?',
+                text: "Data ini akan hilang permanen!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('delete-form-' + orderNumber).submit();
+                }
+            });
+        }
+    </script>
+
+    @if (session('error'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    title: 'Gagal!',
+                    text: "{{ session('error') }}",
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            });
+        </script>
+    @endif
 @endsection

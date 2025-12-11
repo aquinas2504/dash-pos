@@ -210,60 +210,67 @@ class PenerimaanController extends Controller
                     }
                 }
             }
+            
 
-            // Update status PO
-            if ($order_number) {
-                $purchaseDetails = PurchaseDetail::with('saleDetail')->where('order_number', $order_number)->get();
+            // ========== FIX STATUS PER PURCHASE_DETAIL ==========
+            $purchaseDetails = PurchaseDetail::with('saleDetail')
+                ->where('order_number', $order_number)
+                ->get();
 
-                $groupedPurchase = [];
-                foreach ($purchaseDetails as $detail) {
-                    $id_product = $detail->id_product ?? $detail->saleDetail?->id_product;
-                    $key = ($id_product ?? '-') . '_' . ($detail->packing ?? '-') . '_' . ($detail->unit ?? '-');
+            foreach ($purchaseDetails as $pd) {
 
-                    if (!isset($groupedPurchase[$key])) {
-                        $groupedPurchase[$key] = ['qty_packing' => 0, 'qty_unit' => 0];
-                    }
+                // Ambil id_product (fix kasus PO by SO)
+                $idProduct = $pd->id_product ?? $pd->saleDetail?->id_product;
 
-                    $groupedPurchase[$key]['qty_packing'] += $detail->qty_packing ?? 0;
-                    $groupedPurchase[$key]['qty_unit'] += $detail->qty_unit ?? 0;
+                // Jika tetap tidak dapat id product, skip saja
+                if (!$idProduct) {
+                    $pd->status = 'Pending';
+                    $pd->save();
+                    continue;
                 }
 
-                $receivedDetails = PenerimaanDetail::where('po_number', $order_number)->get();
+                // Total pesanan
+                $orderedPacking = $pd->qty_packing ?? 0;
+                $orderedUnit    = $pd->qty_unit ?? 0;
 
-                $groupedReceived = [];
-                foreach ($receivedDetails as $detail) {
-                    $key = ($detail->id_product ?? '-') . '_' . ($detail->packing ?? '-') . '_' . ($detail->unit ?? '-');
+                // Total penerimaan untuk kombinasi yang sama
+                $received = PenerimaanDetail::where('po_number', $order_number)
+                    ->where('id_product', $idProduct)
+                    ->where('packing', $pd->packing)
+                    ->where('unit', $pd->unit)
+                    ->get();
 
-                    if (!isset($groupedReceived[$key])) {
-                        $groupedReceived[$key] = ['qty_packing' => 0, 'qty_unit' => 0];
-                    }
+                $sumPacking = $received->sum('qty_packing');
+                $sumUnit    = $received->sum('qty_unit');
 
-                    $groupedReceived[$key]['qty_packing'] += $detail->qty_packing ?? 0;
-                    $groupedReceived[$key]['qty_unit'] += $detail->qty_unit ?? 0;
+                // Tentukan status baris
+                if ($sumPacking == 0 && $sumUnit == 0) {
+                    $pd->status = 'Pending';
+                } elseif ($sumPacking >= $orderedPacking && $sumUnit >= $orderedUnit) {
+                    $pd->status = 'Diterima';
+                } else {
+                    $pd->status = 'Sebagian Diterima';
                 }
 
-                $hasReceived = count($groupedReceived) > 0;
-                $isComplete = true;
-
-                foreach ($groupedPurchase as $key => $expectedQty) {
-                    $receivedQty = $groupedReceived[$key] ?? ['qty_packing' => 0, 'qty_unit' => 0];
-
-                    if (
-                        ($receivedQty['qty_packing'] < $expectedQty['qty_packing']) ||
-                        ($receivedQty['qty_unit'] < $expectedQty['qty_unit'])
-                    ) {
-                        $isComplete = false;
-                        break;
-                    }
-                }
-
-                $status = 'Pending';
-                if ($hasReceived) {
-                    $status = $isComplete ? 'Diterima Semua' : 'Diterima Sebagian';
-                }
-
-                $updated = Purchase::where('order_number', $order_number)->update(['status' => $status]);
+                $pd->save();
             }
+
+
+            // ========== UPDATE STATUS HEADER PO ==========
+            $details = PurchaseDetail::where('order_number', $order_number)->get();
+
+            if ($details->every(fn($d) => $d->status === 'Pending')) {
+                $status = 'Pending';
+            } elseif ($details->every(fn($d) => $d->status === 'Diterima')) {
+                $status = 'Diterima Semua';
+            } else {
+                $status = 'Diterima Sebagian';
+            }
+
+            Purchase::where('order_number', $order_number)->update([
+                'status' => $status
+            ]);
+            
 
             DB::commit();
             return redirect()->route('penerimaans.index')

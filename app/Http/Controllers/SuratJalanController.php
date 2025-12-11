@@ -206,6 +206,15 @@ class SuratJalanController extends Controller
                 $saleDetail->save();
             }
 
+            // === CEK STATUS SO ===
+            $allDetails = SaleDetail::where('order_number', $sale->order_number)->get();
+
+            $allProcessed = $allDetails->every(fn($d) => $d->status === 'Terproses');
+
+            $sale->status = $allProcessed ? 'Closed' : 'Sebagian Terproses';
+            $sale->save();
+
+
             DB::commit();
 
             return redirect()->route('pengirimans.index')->with('success', 'Surat Jalan berhasil dibuat!');

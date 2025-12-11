@@ -18,6 +18,9 @@ use App\Http\Controllers\PenerimaanController;
 use App\Http\Controllers\RoleAccessController;
 use App\Http\Controllers\SuratJalanController;
 
+// List Middleware yang belum di daftar:
+// Delete, Edit dan Update SO
+
 // =================== Login / Auth (No Middleware) ===================
 Route::get('/', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
@@ -95,6 +98,9 @@ Route::middleware('auth')->group(function () {
     // Sale
     Route::get('/sale-create', [SaleController::class, 'create'])->name('sales.create')->middleware('checkpermission:sales.create');
     Route::post('/sale', [SaleController::class, 'store'])->name('sales.store')->middleware('checkpermission:sales.store');
+    Route::delete('/sale/{order_number}', [SaleController::class, 'delete'])->name('sales.delete');
+    Route::get('/sales/{order_number}/edit', [SaleController::class, 'edit'])->name('sales.edit');
+    Route::put('/sales/{order_number}', [SaleController::class, 'update'])->name('sales.update');
     Route::get('/ordered-sales', [SaleController::class, 'orderedSales'])->name('sales.ordered')->middleware('checkpermission:sales.ordered');
 
     // Surat Jalan

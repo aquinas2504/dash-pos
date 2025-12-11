@@ -11,6 +11,7 @@ use App\Models\Shipping;
 use App\Models\SaleDetail;
 use Illuminate\Http\Request;
 use App\Models\SuratJalanDetail;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -148,6 +149,189 @@ class SaleController extends Controller
 
         return redirect()->route('sales.ordered')->with('success', 'Sale order created successfully.');
     }
+
+    public function edit($orderNumber)
+    {
+        $sale = Sale::where('order_number', $orderNumber)
+            ->with('saleDetail')
+            ->firstOrFail();
+
+        // cek kondisi: hanya bisa edit jika status sale = 'Pending'
+        if ($sale->status !== 'Pending') {
+            return redirect()->back()->with('error', 'SO tidak bisa diedit karena telah terproses.');
+        }
+
+        // cek minimal ada 1 saleDetail yang Unordered, ini bisa diapus kalo missal mau nambah produk di SO yang udah dipesan semua
+        $hasUnordered = $sale->saleDetail->contains(fn($d) => $d->status !== 'Ordered');
+        if (!$hasUnordered) {
+            return redirect()->back()->with('error', 'Tidak ada produk yang bisa diedit. Semua produk telah di Order.');
+        }
+
+        // apakah semua detail Unordered?
+        $allUnordered = $sale->saleDetail->every(fn($d) => $d->status === 'Unordered');
+
+        // data tambahan untuk select dropdown di form (shippings, dll)
+        $shippings = Shipping::all();
+
+        // kirim sale_details sebagai array ke JS untuk render tabel
+        $products = $sale->saleDetail->map(function ($d) {
+            return [
+                'id' => $d->id,
+                'id_product' => $d->id_product,
+                'product_code' => $d->product?->product_code ?? '',
+                'product_name' => $d->product_name,
+                'qty_packing' => $d->qty_packing,
+                'packing' => $d->packing,
+                'quantity' => (float) $d->quantity,
+                'unit' => $d->unit,
+                'price' => $d->price,
+                'discount' => $d->discount,
+                'total' => $d->total,
+                'status' => $d->status,
+            ];
+        });
+
+        return view('Pages.Sale.edit', compact('sale', 'allUnordered', 'shippings', 'products'));
+    }
+
+    public function update(Request $request, $orderNumber)
+    {
+        $request->validate([
+            'top'        => 'nullable|integer|min:0',
+            'note'       => 'nullable|string|max:1000',
+            'id_product.*'   => 'required|integer|exists:products,id',
+            'product_name.*' => 'required|string|max:255',
+            'packing.*'      => 'required|string|max:100', 
+            'qty_packing.*'  => 'required|numeric|min:0',
+            'unit.*'         => 'required|string|max:50', 
+            'qty.*'          => 'required|numeric|min:0',
+            'unit_price.*'   => 'required|numeric|min:1',
+            'discount' => 'nullable|array',
+            'discount.*' => [
+                'nullable',
+                function ($attribute, $value, $fail) {
+                    if ($value === null || $value === '') {
+                        return; // kalau kosong, skip
+                    }
+
+                    // cek format: angka+angka+...
+                    if (!preg_match('/^\d{1,3}([.,]\d+)?(\+\d{1,3}([.,]\d+)?)*$/', $value)) {
+                        $fail("$attribute harus berupa angka atau kombinasi angka dipisahkan dengan '+' (boleh pakai desimal dengan titik atau koma).");
+                        return;
+                    }
+
+
+                    // cek semua nilai diskon antara 0–100
+                    foreach (explode('+', $value) as $rate) {
+                        if ((int) $rate < 0 || (int) $rate > 100) {
+                            $fail("$attribute harus antara 0 sampai 100%");
+                        }
+                    }
+                },
+            ],
+            'line_total.*'   => 'required|numeric|min:1',
+        ]);
+
+        $sale = Sale::with('saleDetail')->findOrFail($orderNumber);
+
+        $subtotal = str_replace(['Rp', '.', ' '], '', $request->subtotal); 
+        $ppn      = str_replace(['Rp', '.', ' '], '', $request->ppn_amount);
+        $grandtotal = str_replace(['Rp', '.', ' '], '', $request->grand_total);
+
+        // --- Update main Sale table ---
+        $sale->update([
+            'order_date'  => $request->date,
+            'ppn_status'  => $request->ppn,
+            'subtotal'    => $subtotal,
+            'ppn'         => $ppn,
+            'grandtotal'  => $grandtotal,
+            'top'         => $request->top,
+            'ship_1'      => $request->ship_1,
+            'ship_2'      => $request->ship_2,
+            'note'        => $request->note,
+        ]);
+
+        // --- Update sale_details ---
+        // 1. Hapus semua sale_details yang Unordered
+        $sale->saleDetail()->where('status', 'Unordered')->delete();
+
+        // 2. Ambil input array
+        $ids          = $request->id_product ?? [];
+        $names        = $request->product_name ?? [];
+        $qty_packings = $request->qty_packing ?? [];
+        $qty_units    = $request->qty ?? [];
+        $prices       = $request->unit_price ?? [];
+        $discounts    = $request->discount ?? [];
+        $totals       = $request->line_total ?? [];
+
+        // 3. Insert ulang data baru (hanya Unordered)
+        $count = count($ids); // semua array harus sama panjang
+        for ($i = 0; $i < $count; $i++) {
+            // cek dulu: skip jika id_product kosong atau total kosong
+            if (!$ids[$i] || !$totals[$i]) continue;
+
+            // Cek apakah product ini sudah ada di sale_details dengan status Ordered
+            $existingOrdered = $sale->saleDetail()
+                                    ->where('id_product', $ids[$i])
+                                    ->where('status', 'Ordered')
+                                    ->first();
+
+            if ($existingOrdered) {
+                // skip, jangan insert atau update apapun
+                continue;
+            }
+
+            $sale->saleDetail()->create([
+                'id_product'   => $ids[$i],
+                'product_name' => $names[$i],
+                'qty_packing'  => $qty_packings[$i],
+                'packing'      => $request->packing[$i],  // ini nama, bukan id
+                'quantity'     => $qty_units[$i],
+                'unit'         => $request->unit[$i],     // ini nama, bukan id
+                'price'        => $prices[$i],
+                'discount'     => $discounts[$i],
+                'total'        => $totals[$i],
+                'status'       => 'Unordered', // default untuk yang baru
+            ]);
+        }
+
+        return redirect()->route('sales.ordered', $orderNumber)
+            ->with('success', 'Sale order berhasil diperbarui.');
+    }
+
+
+    public function delete($orderNumber)
+    {
+        // Ambil data sales
+        $sale = Sale::where('order_number', $orderNumber)->first();
+
+        if (!$sale) {
+            return back()->with('error', 'Sales Order tidak ditemukan.');
+        }
+
+        // Cek status sales
+        if ($sale->status !== 'Pending') {
+            return back()->with('error', 'Tidak Bisa Dihapus, SO telah masuk tahap pengiriman.');
+        }
+
+        // Ambil sale_details
+        $details = SaleDetail::where('order_number', $orderNumber)->get();
+
+        // Cek apakah ada yg bukan Unordered
+        $adaOrdered = $details->contains(function ($detail) {
+            return $detail->status !== 'Unordered';
+        });
+
+        if ($adaOrdered) {
+            return back()->with('error', 'Tidak Bisa Dihapus, Terdapat product yang telah dipesan');
+        }
+
+        // Lolos semua syarat → hapus
+        $sale->delete(); // otomatis cascade delete sale_details karena fk onDelete('cascade')
+
+        return back()->with('success', 'Sales Order berhasil dihapus.');
+    }
+
 
     // PO Berdasarkan SO
     public function getPendingSales(Request $request)
