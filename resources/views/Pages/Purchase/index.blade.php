@@ -41,10 +41,10 @@
                                     <td>{{ $purchase->supplier->supplier_name ?? '-' }}</td>
                                     <td>{{ $purchase->status }}</td>
                                     <td>
-                                        <a href="{{ route('purchase.pdf', urlencode($purchase->order_number)) }}"
+                                        {{-- <a href="{{ route('purchase.pdf', urlencode($purchase->order_number)) }}"
                                             class="btn btn-sm btn-danger" target="_blank" title="Print PDF">
                                             <i class="fas fa-file-pdf"></i> PDF
-                                        </a>
+                                        </a> --}}
 
                                         @php
                                             $hasSO = $purchase->purchaseDetail->contains(function ($detail) {
@@ -55,7 +55,7 @@
                                         @if ($hasSO)
                                             <a href="{{ route('purchase-grouped.pdf', urlencode($purchase->order_number)) }}"
                                                 class="btn btn-sm btn-danger" target="_blank" title="Print PDF Grouped">
-                                                <i class="fas fa-file-pdf"></i> PDF Grouped
+                                                <i class="fas fa-file-pdf"></i> PDF
                                             </a>
                                         @endif
 
@@ -63,6 +63,17 @@
                                             class="btn btn-sm btn-success" title="Terima">
                                             <i class="fas fa-truck-loading"></i> Terima
                                         </a>
+
+                                        <form action="{{ route('purchases.delete', $purchase->order_number) }}"
+                                            method="POST" class="d-inline delete-po-form">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="button" class="btn btn-sm btn-danger btn-delete-po">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+
+
                                     </td>
                                 </tr>
                             @empty
@@ -80,4 +91,39 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.btn-delete-po').forEach(button => {
+                button.addEventListener('click', function() {
+                    const form = this.closest('form');
+
+                    Swal.fire({
+                        title: 'Hapus Purchase Order?',
+                        text: 'Data PO akan dihapus permanen!',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Ya, Hapus',
+                        cancelButtonText: 'Batal',
+                        reverseButtons: true
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal',
+                text: "{{ session('error') }}",
+                confirmButtonText: 'OK'
+            });
+        </script>
+    @endif
 @endsection

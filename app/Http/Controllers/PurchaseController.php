@@ -248,6 +248,39 @@ class PurchaseController extends Controller
         }
     }
 
+    public function delete($order_number)
+    {
+        $purchase = Purchase::with('purchaseDetail')->findOrFail($order_number);
+
+        // ❌ Jika status bukan Pending
+        if ($purchase->status !== 'Pending') {
+            return redirect()->back()->with(
+                'error',
+                'Tidak Bisa Dihapus, PO telah masuk masa penerimaan.'
+            );
+        }
+
+        DB::transaction(function () use ($purchase) {
+
+            // Ambil semua so_detail yang ada di purchase_details
+            $soDetails = $purchase->purchaseDetail
+                ->pluck('so_detail')
+                ->filter()
+                ->unique();
+
+            if ($soDetails->isNotEmpty()) {
+                // Update sale_details -> status = Unordered
+                SaleDetail::whereIn('id', $soDetails)
+                    ->update(['status' => 'Unordered']);
+            }
+
+            // Hapus PO (purchase_details ikut terhapus karena cascade)
+            $purchase->delete();
+        });
+
+        return redirect()->back()->with('success', 'Purchase Order berhasil dihapus.');
+    }
+
     private function parseCurrency($value)
     {
         if ($value === null || $value === '') return '0.00';

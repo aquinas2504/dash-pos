@@ -20,6 +20,7 @@ use App\Http\Controllers\SuratJalanController;
 
 // List Middleware yang belum di daftar:
 // Delete, Edit dan Update SO
+// Delete PO
 
 // =================== Login / Auth (No Middleware) ===================
 Route::get('/', [AuthController::class, 'showLogin'])->name('login');
@@ -94,6 +95,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/purchase-create', [PurchaseController::class, 'create'])->name('purchases.create')->middleware('checkpermission:purchases.create');
     Route::post('/purchase', [PurchaseController::class, 'store'])->name('purchases.store')->middleware('checkpermission:purchases.store');
     Route::get('/purchase-list', [PurchaseController::class, 'index'])->name('purchases.index')->middleware('checkpermission:purchases.index');
+    Route::delete('/purchases/{order_number}', [PurchaseController::class, 'delete'])->name('purchases.delete');
+
 
     // Sale
     Route::get('/sale-create', [SaleController::class, 'create'])->name('sales.create')->middleware('checkpermission:sales.create');

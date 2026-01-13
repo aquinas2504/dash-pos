@@ -16,7 +16,6 @@ class SaleFactory extends Factory
     {
         $ppnStatus = $this->faker->randomElement(['yes', 'no']);
         $subtotal   = $this->faker->numberBetween(500000, 5000000);
-        $dpp        = $ppnStatus === 'yes' ? $subtotal : null;
         $ppn        = $ppnStatus === 'yes' ? $subtotal * 0.11 : null;
         $grandTotal = $subtotal + ($ppn ?? 0);
 
@@ -26,7 +25,6 @@ class SaleFactory extends Factory
             'customer_code' => Customer::inRandomOrder()->first()?->customer_code,
             'ppn_status'    => $ppnStatus,
             'subtotal'      => $subtotal,
-            'dpp'           => $dpp,
             'ppn'           => $ppn,
             'grandtotal'    => $grandTotal,
             'top'           => $this->faker->randomElement([null, 7, 14, 30]),

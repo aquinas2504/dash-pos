@@ -36,6 +36,7 @@ class SaleDetailFactory extends Factory
         return [
             'order_number' => Sale::inRandomOrder()->first()?->order_number, // nanti override kalau pakai has()
             'id_product'   => $product?->id,
+            'product_name' => $product?->product_name,
             'qty_packing'  => $qtyPacking,
             'packing'      => $packing?->packing_name,
             'quantity'     => $qty,
