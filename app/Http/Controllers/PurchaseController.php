@@ -250,6 +250,8 @@ class PurchaseController extends Controller
 
     public function delete($order_number)
     {
+        $order_number = urldecode($order_number);
+        
         $purchase = Purchase::with('purchaseDetail')->findOrFail($order_number);
 
         // ❌ Jika status bukan Pending

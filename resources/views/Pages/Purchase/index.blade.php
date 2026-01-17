@@ -64,7 +64,7 @@
                                             <i class="fas fa-truck-loading"></i> Terima
                                         </a>
 
-                                        <form action="{{ route('purchases.delete', $purchase->order_number) }}"
+                                        <form action="{{ route('purchases.delete', urlencode($purchase->order_number)) }}"
                                             method="POST" class="d-inline delete-po-form">
                                             @csrf
                                             @method('DELETE')

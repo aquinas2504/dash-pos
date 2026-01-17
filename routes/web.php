@@ -95,7 +95,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/purchase-create', [PurchaseController::class, 'create'])->name('purchases.create')->middleware('checkpermission:purchases.create');
     Route::post('/purchase', [PurchaseController::class, 'store'])->name('purchases.store')->middleware('checkpermission:purchases.store');
     Route::get('/purchase-list', [PurchaseController::class, 'index'])->name('purchases.index')->middleware('checkpermission:purchases.index');
-    Route::delete('/purchases/{order_number}', [PurchaseController::class, 'delete'])->name('purchases.delete');
+    Route::delete('/purchases/{order_number}', [PurchaseController::class, 'delete'])->where('order_number', '.*')->name('purchases.delete');
 
 
     // Sale
