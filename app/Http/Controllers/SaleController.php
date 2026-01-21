@@ -229,7 +229,7 @@ class SaleController extends Controller
                     }
                 },
             ],
-            'line_total.*'   => 'required|numeric|min:1',
+            'line_total.*'   => 'required|numeric|min:0',
         ]);
 
         $sale = Sale::with('saleDetail')->findOrFail($orderNumber);
@@ -268,13 +268,15 @@ class SaleController extends Controller
         $count = count($ids); // semua array harus sama panjang
         for ($i = 0; $i < $count; $i++) {
             // cek dulu: skip jika id_product kosong atau total kosong
-            if (!$ids[$i] || !$totals[$i]) continue;
+            if (empty($ids[$i]) || $totals[$i] === null) {
+                continue;
+            }
 
             // Cek apakah product ini sudah ada di sale_details dengan status Ordered
             $existingOrdered = $sale->saleDetail()
-                                    ->where('id_product', $ids[$i])
-                                    ->where('status', 'Ordered')
-                                    ->first();
+                ->where('id_product', $ids[$i])
+                ->where('status', 'Ordered')
+                ->first();
 
             if ($existingOrdered) {
                 // skip, jangan insert atau update apapun
