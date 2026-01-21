@@ -9,14 +9,24 @@ use App\Http\Controllers\Controller;
 class ShippingController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
         $shippings = Shipping::query();
 
-        $shippingspagination = $shippings->paginate(10);
+        if ($request->filled('search')) {
+            $search = $request->search;
 
-        return view('Pages.Shipping.index', compact('shippings', 'shippingspagination'));
+            $shippings->where(function ($q) use ($search) {
+                $q->where('shipping_name', 'like', '%' . $search . '%')
+                    ->orWhere('address', 'like', '%' . $search . '%');
+            });
+        }
+
+        $shippingspagination = $shippings->paginate(10)->withQueryString();
+
+        return view('Pages.Shipping.index', compact('shippingspagination'));
     }
+
 
     public function create()
     {
