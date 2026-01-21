@@ -86,31 +86,42 @@
                                 <input type="hidden" name="ppn" value="{{ $sale->ppn_status }}">
                             @endif
 
-                            <div class="form-row mb-3">
+                            <div class="form-row mb-2">
                                 <div class="form-group col-md-4">
                                     <label>Shipping 1</label>
-                                    <select name="ship_1" class="form-control" {{ !$allUnordered ? 'disabled' : '' }}>
+                                    <select name="ship_1" class="form-control select-shipping" data-target="#ship1-address"
+                                        {{ !$allUnordered ? 'disabled' : '' }}>
+
                                         <option value="">-- Select Shipping --</option>
                                         @foreach ($shippings as $shipping)
                                             <option value="{{ $shipping->shipping_code }}"
+                                                data-address="{{ $shipping->address }}"
                                                 {{ $sale->ship_1 == $shipping->shipping_code ? 'selected' : '' }}>
                                                 {{ $shipping->shipping_name }}
                                             </option>
                                         @endforeach
                                     </select>
+
+                                    <small id="ship1-address" class="text-muted shipping-address d-none"></small>
                                 </div>
+
 
                                 <div class="form-group col-md-4">
                                     <label>Shipping 2</label>
-                                    <select name="ship_2" class="form-control" {{ !$allUnordered ? 'disabled' : '' }}>
+                                    <select name="ship_2" class="form-control select-shipping" data-target="#ship2-address"
+                                        {{ !$allUnordered ? 'disabled' : '' }}>
+
                                         <option value="">-- Select Shipping --</option>
                                         @foreach ($shippings as $shipping)
                                             <option value="{{ $shipping->shipping_code }}"
+                                                data-address="{{ $shipping->address }}"
                                                 {{ $sale->ship_2 == $shipping->shipping_code ? 'selected' : '' }}>
                                                 {{ $shipping->shipping_name }}
                                             </option>
                                         @endforeach
                                     </select>
+
+                                    <small id="ship2-address" class="text-muted shipping-address d-none"></small>
                                 </div>
 
                                 @if (!$allUnordered)
@@ -314,6 +325,52 @@
             });
         </script>
     @endif
+
+    {{-- Script Search Shipping --}}
+    <script>
+        $(document).ready(function() {
+            $('.select-shipping').select2({
+                placeholder: '-- Select Shipping --',
+                allowClear: true,
+                width: '100%',
+                templateResult: formatShipping,
+                templateSelection: formatShippingSelection
+            });
+
+            $('.select-shipping').on('change', function() {
+                const selected = $(this).find(':selected');
+                const address = selected.data('address') || '';
+                const target = $(this).data('target');
+
+                if (address) {
+                    $(target).text(address).removeClass('d-none');
+                } else {
+                    $(target).text('').addClass('d-none');
+                }
+            });
+
+            // 🔥 INI YANG PENTING UNTUK HALAMAN EDIT
+            $('.select-shipping').trigger('change');
+
+            function formatShipping(shipping) {
+                if (!shipping.id) return shipping.text;
+
+                const address = $(shipping.element).data('address');
+
+                return $(`
+                <div>
+                    <div><strong>${shipping.text}</strong></div>
+                    <div style="font-size:12px;color:#666;">${address || ''}</div>
+                </div>
+            `);
+            }
+
+            function formatShippingSelection(shipping) {
+                return shipping.text;
+            }
+        });
+    </script>
+
 
     {{-- Script Search Product & Modal Handling --}}
     <script>
