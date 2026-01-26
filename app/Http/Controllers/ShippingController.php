@@ -37,7 +37,7 @@ class ShippingController extends Controller
     {
         $request->validate([
             'shipping_name' => 'required',
-            'address' => 'required',
+            'address' => 'required|string|max:1000',
         ]);
 
         // Simpan dulu untuk dapat ID
@@ -65,7 +65,7 @@ class ShippingController extends Controller
     {
         $request->validate([
             'shipping_name' => 'required',
-            'address' => 'required',
+            'address' => 'required|string|max:1000',
         ]);
 
         $shipping->update($request->only('shipping_name', 'address'));
