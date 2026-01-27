@@ -20,6 +20,76 @@
         <div class="col">
             <div class="card border-primary" style="border-width: 2px;">
                 <div class="card-body">
+
+                    <form method="GET" action="{{ route('purchases.index') }}" class="mb-3">
+                        <div class="row g-2">
+
+                            {{-- Order Number --}}
+                            <div class="col-md-3">
+                                <input type="text" name="order_number" class="form-control" placeholder="Order Number"
+                                    value="{{ request('order_number') }}">
+                            </div>
+
+                            {{-- Supplier --}}
+                            <div class="col-md-3">
+                                <input type="text" name="supplier" class="form-control" placeholder="Supplier Name"
+                                    value="{{ request('supplier') }}">
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <span class="input-group-text">From</span>
+                                    <input type="date" name="date_from" class="form-control"
+                                        value="{{ request('date_from') }}">
+
+                                    <span class="input-group-text">To</span>
+                                    <input type="date" name="date_to" class="form-control"
+                                        value="{{ request('date_to') }}">
+                                </div>
+                            </div>
+
+
+                            {{-- Submit --}}
+                            <div class="col-md-1 d-grid">
+                                <button class="btn btn-primary">
+                                    <i class="fas fa-filter"></i> Filter
+                                </button>
+                            </div>
+
+                            <div class="col-md-1 d-grid">
+                                <a href="{{ route('purchases.index') }}" class="btn btn-secondary btn-sm mt-2">
+                                    Reset
+                                </a>
+                            </div>
+                        </div>
+
+                        {{-- STATUS RADIO --}}
+                        <div class="mt-3 d-flex gap-3">
+                            @php
+                                $status = request('status', 'All');
+                            @endphp
+
+                            @foreach (['All', 'Pending', 'Diterima Sebagian', 'Diterima Semua'] as $item)
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="status"
+                                        value="{{ $item }}" id="status_{{ $item }}"
+                                        {{ $status === $item ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="status_{{ $item }}">
+                                        {{ $item }}
+                                    </label>
+                                </div>
+                            @endforeach
+                        </div>
+                    </form>
+
+                    <div class="alert alert-info d-flex justify-content-between align-items-center mb-3">
+                        <strong>Total Sisa Harga</strong>
+                        <span class="fw-bold text-danger fs-5">
+                            Rp {{ number_format($totalSisaHarga) }}
+                        </span>
+                    </div>
+
+
                     <table class="table table-bordered table-hover">
                         <thead class="table-light">
                             <tr>
@@ -28,6 +98,7 @@
                                 <th>Date</th>
                                 <th>Supplier</th>
                                 <th>Status</th>
+                                <th>Sisa</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -40,11 +111,12 @@
                                     <td>{{ $purchase->order_date }}</td>
                                     <td>{{ $purchase->supplier->supplier_name ?? '-' }}</td>
                                     <td>{{ $purchase->status }}</td>
+                                    <td
+                                        class="text-end fw-bold 
+                                        {{ $purchase->sisa_harga > 0 ? 'text-danger' : 'text-success' }}">
+                                        Rp. {{ number_format($purchase->sisa_harga) }}
+                                    </td>
                                     <td>
-                                        {{-- <a href="{{ route('purchase.pdf', urlencode($purchase->order_number)) }}"
-                                            class="btn btn-sm btn-danger" target="_blank" title="Print PDF">
-                                            <i class="fas fa-file-pdf"></i> PDF
-                                        </a> --}}
 
                                         @php
                                             $hasSO = $purchase->purchaseDetail->contains(function ($detail) {
@@ -55,6 +127,11 @@
                                         @if ($hasSO)
                                             <a href="{{ route('purchase-grouped.pdf', urlencode($purchase->order_number)) }}"
                                                 class="btn btn-sm btn-danger" target="_blank" title="Print PDF Grouped">
+                                                <i class="fas fa-file-pdf"></i> PDF
+                                            </a>
+                                        @else
+                                            <a href="{{ route('purchase.pdf', urlencode($purchase->order_number)) }}"
+                                                class="btn btn-sm btn-danger" target="_blank" title="Print PDF">
                                                 <i class="fas fa-file-pdf"></i> PDF
                                             </a>
                                         @endif

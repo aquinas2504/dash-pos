@@ -25,13 +25,50 @@ class PurchaseController extends Controller
 
     public function index(Request $request)
     {
-        $purchases = Purchase::with('purchaseDetail', 'supplier')
-            ->whereIn('status', ['Pending', 'Diterima Sebagian'])
-            ->orderBy('order_date', 'desc') // biar terbaru dulu
-            ->paginate(10);
+        // 1️⃣ base query
+        $query = Purchase::with(
+            'purchaseDetail.saleDetail',
+            'penerimaanDetails',
+            'supplier'
+        );
 
-        return view('Pages.Purchase.index', compact('purchases'));
+        // 2️⃣ FILTER
+        $query
+            ->when($request->order_number, function ($q) use ($request) {
+                $q->where('order_number', 'like', '%' . $request->order_number . '%');
+            })
+            ->when($request->supplier, function ($q) use ($request) {
+                $q->whereHas('supplier', function ($s) use ($request) {
+                    $s->where('supplier_name', 'like', '%' . $request->supplier . '%');
+                });
+            })
+            ->when($request->status && $request->status !== 'All', function ($q) use ($request) {
+                $q->where('status', $request->status);
+            })
+            ->when($request->date_from, function ($q) use ($request) {
+                $q->whereDate('order_date', '>=', $request->date_from);
+            })
+            ->when($request->date_to, function ($q) use ($request) {
+                $q->whereDate('order_date', '<=', $request->date_to);
+            });
+
+        // 3️⃣ TOTAL SISA (PAKAI ACCESSOR)
+        $totalSisaHarga = $query
+            ->get()
+            ->sum(fn($purchase) => $purchase->sisa_harga);
+
+        // 4️⃣ PAGINATION (QUERY YANG SAMA)
+        $purchases = $query
+            ->orderBy('order_date', 'desc')
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('Pages.Purchase.index', compact(
+            'purchases',
+            'totalSisaHarga'
+        ));
     }
+
 
 
     public function store(Request $request)
