@@ -64,6 +64,7 @@
                                 <input type="text" id="search-customer" placeholder="Search Customer..."
                                     class="form-control mb-2">
                                 <div id="customer-search-result" class="mt-1"></div>
+                                <div id="customer-address" class="text-muted small mt-2"></div>
                             </div>
 
                             <div class="form-group col-md-6">
@@ -177,7 +178,8 @@
                             <div class="form-group col-md-6">
                                 <div id="subtotal-ppn-section">
                                     <label>Subtotal</label>
-                                    <input type="text" id="subtotal" name="subtotal" class="form-control mb-2" readonly>
+                                    <input type="text" id="subtotal" name="subtotal" class="form-control mb-2"
+                                        readonly>
 
                                     <label>PPN</label>
                                     <input type="text" id="ppn" name="ppn_amount" class="form-control mb-2"
@@ -369,6 +371,7 @@
     <script>
         const customerInput = document.getElementById('search-customer');
         const resultBox = document.getElementById('customer-search-result');
+        const addressBox = document.getElementById('customer-address');
 
         customerInput.addEventListener('keyup', function() {
             const query = this.value;
@@ -390,24 +393,25 @@
 
                     data.forEach(customer => {
                         const item = document.createElement('div');
-                        item.textContent = customer.customer_name;
                         item.classList.add('p-2', 'border-bottom', 'search-result-item');
                         item.style.cursor = 'pointer';
 
+                        item.innerHTML = `
+                            <div class="fw-semibold">${customer.customer_name}</div>
+                            <div class="text-muted small">${customer.address}</div>
+                        `;
+
                         item.onclick = () => {
+                            // set input utama
                             customerInput.value = customer.customer_name;
 
-                            // Optional hidden input to store customer_code
-                            let hiddenInput = document.getElementById('customer_code');
-                            if (!hiddenInput) {
-                                hiddenInput = document.createElement('input');
-                                hiddenInput.type = 'hidden';
-                                hiddenInput.name = 'customer_code';
-                                hiddenInput.id = 'customer_code';
-                                document.getElementById('purchase-form').appendChild(hiddenInput);
-                            }
-                            hiddenInput.value = customer.customer_code;
+                            // set hidden customer_code
+                            document.getElementById('customer_code').value = customer.customer_code;
 
+                            // tampilkan address di bawah field
+                            addressBox.textContent = customer.address;
+
+                            // clear result
                             resultBox.innerHTML = '';
                         };
 

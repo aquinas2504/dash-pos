@@ -24,8 +24,8 @@ class CustomerController extends Controller
         }
 
         $customers = $query
-        ->orderBy('customer_name', 'asc') // urut A-Z
-        ->paginate(10);
+            ->orderBy('customer_name', 'asc') // urut A-Z
+            ->paginate(10);
 
         return view('Pages.Customer.index', compact('customers', 'searchQuery'));
     }
@@ -107,7 +107,10 @@ class CustomerController extends Controller
     public function searchCustomers(Request $request)
     {
         $query = $request->get('q');
-        $customers = Customer::where('customer_name', 'like', '%' . $query . '%')->get();
+
+        $customers = Customer::where('customer_name', 'like', '%' . $query . '%')
+            ->select('customer_code', 'customer_name', 'address')
+            ->get();
 
         return response()->json($customers);
     }
