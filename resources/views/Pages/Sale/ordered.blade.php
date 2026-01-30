@@ -15,6 +15,63 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
+
+                    <form method="GET" class="row g-2 mb-3">
+
+                        <div class="col-md-3">
+                            <input type="text" name="order_number" class="form-control" placeholder="Order Number"
+                                value="{{ request('order_number') }}">
+                        </div>
+
+                        <div class="col-md-3">
+                            <input type="text" name="customer_name" class="form-control" placeholder="Customer Name"
+                                value="{{ request('customer_name') }}">
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <span class="input-group-text">From</span>
+                                <input type="date" name="date_from" class="form-control"
+                                    value="{{ request('date_from') }}">
+
+                                <span class="input-group-text">To</span>
+                                <input type="date" name="date_to" class="form-control" value="{{ request('date_to') }}">
+                            </div>
+                        </div>
+
+                        {{-- Submit --}}
+                        <div class="col-md-1 d-grid">
+                            <button class="btn btn-primary">
+                                <i class="fas fa-filter"></i> Filter
+                            </button>
+                        </div>
+
+                        <div class="col-md-1 d-grid">
+                            <a href="{{ route('sales.ordered') }}" class="btn btn-secondary btn-sm mt-2">
+                                Reset
+                            </a>
+                        </div>
+
+                        <div class="col-12 mt-2">
+                            @foreach (['All', 'Pending', 'Sebagian Terproses', 'Closed'] as $status)
+                                <label class="me-3">
+                                    <input type="radio" name="status" value="{{ $status }}"
+                                        {{ request('status', 'All') === $status ? 'checked' : '' }}>
+                                    {{ $status }}
+                                </label>
+                            @endforeach
+                        </div>
+
+                    </form>
+
+                    <div class="alert alert-info d-flex justify-content-between align-items-center">
+                        <strong>Total Sisa :</strong>
+                        <span class="fw-bold text-danger">
+                            Rp {{ number_format($totalSisa) }}
+                        </span>
+                    </div>
+
+
                     <table class="table table-bordered table-striped table-hover align-middle">
                         <thead class="table-light">
                             <tr>
@@ -24,11 +81,15 @@
                                 <th>Customer</th>
                                 <th>Status Pesanan</th>
                                 <th>Status Pengiriman</th>
+                                <th>Sisa</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($orderedSalesPagination as $sale)
+                                @php
+                                    $saleModel = $sale['sale_model'];
+                                @endphp
                                 <tr>
                                     <td>{{ ($orderedSalesPagination->currentPage() - 1) * $orderedSalesPagination->perPage() + $loop->iteration }}
                                     </td>
@@ -37,6 +98,10 @@
                                     <td>{{ $sale['customer_name'] }}</td>
                                     <td>{!! $sale['status_pesanan'] !!}</td>
                                     <td>{{ $sale['status_pengiriman'] }}</td>
+                                    <td
+                                        class="text-end fw-bold {{ $saleModel->sisa_harga > 0 ? 'text-danger' : 'text-success' }}">
+                                        Rp {{ number_format($saleModel->sisa_harga) }}
+                                    </td>
                                     <td>
                                         <a href="{{ route('sale.pdf', $sale['order_number']) }}"
                                             class="btn btn-sm btn-danger" target="_blank" title="Print Sale Order">

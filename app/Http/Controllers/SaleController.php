@@ -201,9 +201,9 @@ class SaleController extends Controller
             'note'       => 'nullable|string|max:1000',
             'id_product.*'   => 'required|integer|exists:products,id',
             'product_name.*' => 'required|string|max:255',
-            'packing.*'      => 'required|string|max:100', 
+            'packing.*'      => 'required|string|max:100',
             'qty_packing.*'  => 'required|numeric|min:0',
-            'unit.*'         => 'required|string|max:50', 
+            'unit.*'         => 'required|string|max:50',
             'qty.*'          => 'required|numeric|min:0',
             'unit_price.*'   => 'required|numeric|min:1',
             'discount' => 'nullable|array',
@@ -234,7 +234,7 @@ class SaleController extends Controller
 
         $sale = Sale::with('saleDetail')->findOrFail($orderNumber);
 
-        $subtotal = str_replace(['Rp', '.', ' '], '', $request->subtotal); 
+        $subtotal = str_replace(['Rp', '.', ' '], '', $request->subtotal);
         $ppn      = str_replace(['Rp', '.', ' '], '', $request->ppn_amount);
         $grandtotal = str_replace(['Rp', '.', ' '], '', $request->grand_total);
 
@@ -417,10 +417,17 @@ class SaleController extends Controller
         $details = SaleDetail::whereIn('status', ['Unordered', 'Ordered', 'Sebagian Terproses', 'Terproses'])
             ->with([
                 'sale.customer',
+                'sale.suratJalanDetails', // 🔥 penting
+                'sale.saleDetail',           // 🔥 penting
                 'product',
                 'purchaseDetail.purchase.supplier'
             ])
             ->get();
+
+        $sales = Sale::with(['saleDetail', 'suratJalanDetails', 'customer'])
+            ->get()
+            ->keyBy('order_number');
+
 
         $grouped = $details->groupBy('order_number');
 
@@ -461,11 +468,64 @@ class SaleController extends Controller
                 'customer_name' => $first->sale->customer->customer_name ?? '-',
                 'status_pesanan' => $statusPesanan,
                 'status_pengiriman' => $statusPengiriman,
+                'sale_model' => $sales[$orderNumber] ?? null,
             ];
         }
 
         // ubah ke collection biar bisa paginate
         $orderedSales = collect($orderedSales);
+
+        $request = request();
+
+        $orderedSales = $orderedSales->filter(function ($item) use ($request) {
+
+            // 🔍 Order Number
+            if ($request->filled('order_number')) {
+                if (!str_contains(
+                    strtolower($item['order_number']),
+                    strtolower($request->order_number)
+                )) {
+                    return false;
+                }
+            }
+
+            // 🔍 Customer Name
+            if ($request->filled('customer_name')) {
+                if (!str_contains(
+                    strtolower($item['customer_name']),
+                    strtolower($request->customer_name)
+                )) {
+                    return false;
+                }
+            }
+
+            // 📅 Date From
+            if ($request->filled('date_from')) {
+                if ($item['order_date'] < $request->date_from) {
+                    return false;
+                }
+            }
+
+            // 📅 Date To
+            if ($request->filled('date_to')) {
+                if ($item['order_date'] > $request->date_to) {
+                    return false;
+                }
+            }
+
+            // 📌 Status
+            if ($request->filled('status') && $request->status !== 'All') {
+                if ($item['sale_model']->status !== $request->status) {
+                    return false;
+                }
+            }
+
+            return true;
+        });
+
+        $totalSisa = $orderedSales->sum(function ($item) {
+            return $item['sale_model']->sisa_harga ?? 0;
+        });
 
         // urutkan dari order_date terbaru
         $orderedSales = $orderedSales->sortByDesc('order_date')->values();
@@ -483,7 +543,7 @@ class SaleController extends Controller
             ['path' => request()->url(), 'query' => request()->query()]
         );
 
-        return view('Pages.Sale.ordered', compact('orderedSalesPagination'));
+        return view('Pages.Sale.ordered', compact('orderedSalesPagination' , 'totalSisa'));
     }
 
     // Untuk melihat detail suatu SO yang mengarah pada form pembuatan surat jalan
