@@ -86,7 +86,7 @@
                                                         <input type="number"
                                                             name="details[{{ $i }}][qty_packing]"
                                                             value="{{ $item['qty_packing'] }}"
-                                                            class="form-control text-end" min="1"
+                                                            class="form-control text-end" min="0"
                                                             max="{{ $item['qty_packing'] }}">
                                                     </div>
                                                     <div class="col-5">

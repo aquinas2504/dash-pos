@@ -161,7 +161,7 @@ class PenerimaanController extends Controller
                 'date' => 'required|date',
                 'supplier_code' => 'required|exists:suppliers,supplier_code',
                 'details' => 'required|array|min:1',
-                'details.*.qty_packing' => 'required|integer|min:1',
+                'details.*.qty_packing' => 'required|integer|min:0',
                 'details.*.qty_unit' => 'required|numeric|min:0.5',
             ]);
 
@@ -343,7 +343,7 @@ class PenerimaanController extends Controller
 
             'manual' => 'required|array|min:1',
             'manual.*.id_product' => 'required|exists:products,id',
-            'manual.*.qty_packing' => 'required|integer|min:1',
+            'manual.*.qty_packing' => 'required|integer|min:0',
             'manual.*.packing' => 'required|string',
             'manual.*.qty_unit' => 'required|numeric|min:0.5',
             'manual.*.unit' => 'required|string',
