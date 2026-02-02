@@ -13,17 +13,55 @@ use App\Models\PurchaseDetail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use App\Models\PenerimaanDetail;    
+use App\Models\PenerimaanDetail;
 
 class PenerimaanController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $penerimaans = Penerimaan::with(['supplier', 'details'])
-            ->orderByDesc('date')
-            ->paginate(10);
+        $query = Penerimaan::with(['supplier', 'details']);
 
+        // 🔍 penerimaan_number
+        if ($request->filled('penerimaan_number')) {
+            $query->where('penerimaan_number', 'like', '%' . $request->penerimaan_number . '%');
+        }
+
+        // 🔍 PO Number (via penerimaan_details)
+        if ($request->filled('po_number')) {
+            $query->whereHas('details', function ($q) use ($request) {
+                $q->where('po_number', 'like', '%' . $request->po_number . '%');
+            });
+        }
+
+        // 🔍 Supplier Name
+        if ($request->filled('supplier_name')) {
+            $query->whereHas('supplier', function ($q) use ($request) {
+                $q->where('supplier_name', 'like', '%' . $request->supplier_name . '%');
+            });
+        }
+
+        // 📅 Date Range
+        if ($request->filled('date_from') && $request->filled('date_to')) {
+            $query->whereBetween('date', [
+                $request->date_from,
+                $request->date_to
+            ]);
+        } elseif ($request->filled('date_from')) {
+            $query->whereDate('date', '>=', $request->date_from);
+        } elseif ($request->filled('date_to')) {
+            $query->whereDate('date', '<=', $request->date_to);
+        }
+
+        // 📌 Status
+        if ($request->filled('status') && $request->status !== 'All') {
+            $query->where('status', $request->status);
+        }
+
+        $penerimaans = $query
+            ->orderByDesc('date')
+            ->paginate(10)
+            ->withQueryString();
 
         return view('Pages.Penerimaan.index', compact('penerimaans'));
     }
