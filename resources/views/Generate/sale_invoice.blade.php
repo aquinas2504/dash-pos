@@ -221,7 +221,7 @@
             <tr>
                 <td width="60%"></td>
                 <td class="text-center">
-                    Hormat Kami,<br><br><br><br><br>
+                    Hormat Kami,<br><br><br><br><br><br><br><br>
                     @if ($invoice->suratjalan->ppn_status === 'yes')
                         <strong>PT. DASH MEGAH INTERNASIONAL</strong>
                     @else
