@@ -21,7 +21,7 @@ class InvoiceController extends Controller
     public function create($penerimaan_number)
     {
         $penerimaan_number = urldecode($penerimaan_number); // ← Tambahkan baris ini
-        
+
         $penerimaan = Penerimaan::with([
             'supplier',
             'details.product'
@@ -167,14 +167,47 @@ class InvoiceController extends Controller
     }
 
     // Index Invoice Pembelian
-    public function indexPurchaseInvoice()
+    public function indexPurchaseInvoice(Request $request)
     {
-        $invoices = Invoice::with('penerimaan.supplier')
-            ->orderBy('date', 'desc')
-            ->paginate(10);
+        $query = Invoice::with('penerimaan.supplier');
+
+        // 🔍 Invoice Number
+        if ($request->filled('invoice_number')) {
+            $query->where('invoice_number', 'like', '%' . $request->invoice_number . '%');
+        }
+
+        // 🔍 Penerimaan Number
+        if ($request->filled('penerimaan_number')) {
+            $query->where('penerimaan_number', 'like', '%' . $request->penerimaan_number . '%');
+        }
+
+        // 🔍 Supplier Name (via Penerimaan)
+        if ($request->filled('supplier_name')) {
+            $query->whereHas('penerimaan.supplier', function ($q) use ($request) {
+                $q->where('supplier_name', 'like', '%' . $request->supplier_name . '%');
+            });
+        }
+
+        // 📅 Date Range
+        if ($request->filled('date_from') && $request->filled('date_to')) {
+            $query->whereBetween('date', [
+                $request->date_from,
+                $request->date_to
+            ]);
+        } elseif ($request->filled('date_from')) {
+            $query->whereDate('date', '>=', $request->date_from);
+        } elseif ($request->filled('date_to')) {
+            $query->whereDate('date', '<=', $request->date_to);
+        }
+
+        $invoices = $query
+            ->orderByDesc('date')
+            ->paginate(10)
+            ->withQueryString();
 
         return view('Pages.Invoice.index_pembelian', compact('invoices'));
     }
+
 
     // Edit Invoice Pembelian
     public function editPurchaseInvoice($invoice_number)
@@ -480,14 +513,47 @@ class InvoiceController extends Controller
     }
 
     // Index Invoice Penjualan
-    public function indexSaleInvoice()
+    public function indexSaleInvoice(Request $request)
     {
-        $invoices = SaleInvoice::with('suratJalan.customer')
-            ->orderBy('date', 'desc')
-            ->paginate(10);
+        $query = SaleInvoice::with('suratJalan.customer');
+
+        // 🔍 Invoice Number
+        if ($request->filled('invoice_number')) {
+            $query->where('invoice_number', 'like', '%' . $request->invoice_number . '%');
+        }
+
+        // 🔍 Surat Jalan Number
+        if ($request->filled('sj_number')) {
+            $query->where('sj_number', 'like', '%' . $request->sj_number . '%');
+        }
+
+        // 🔍 Customer Name (via Surat Jalan)
+        if ($request->filled('customer_name')) {
+            $query->whereHas('suratJalan.customer', function ($q) use ($request) {
+                $q->where('customer_name', 'like', '%' . $request->customer_name . '%');
+            });
+        }
+
+        // 📅 Date Range
+        if ($request->filled('date_from') && $request->filled('date_to')) {
+            $query->whereBetween('date', [
+                $request->date_from,
+                $request->date_to
+            ]);
+        } elseif ($request->filled('date_from')) {
+            $query->whereDate('date', '>=', $request->date_from);
+        } elseif ($request->filled('date_to')) {
+            $query->whereDate('date', '<=', $request->date_to);
+        }
+
+        $invoices = $query
+            ->orderByDesc('date')
+            ->paginate(10)
+            ->withQueryString();
 
         return view('Pages.Invoice.index_penjualan', compact('invoices'));
     }
+
 
     // Edit Sale Invoice
     public function editSaleInvoice($invoice_number)

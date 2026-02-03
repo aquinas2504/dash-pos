@@ -19,12 +19,54 @@ class SuratJalanController extends Controller
 {
 
     // Index Surat Jalan
-    public function index()
+    public function index(Request $request)
     {
-        $suratJalans = SuratJalan::with('SJdetails')->latest('ship_date')->paginate(10);
+        $query = SuratJalan::with(['SJdetails', 'customer']);
+
+        // 🔍 SJ Number
+        if ($request->filled('sj_number')) {
+            $query->where('sj_number', 'like', '%' . $request->sj_number . '%');
+        }
+
+        // 🔍 SO Number (via surat_jalan_details)
+        if ($request->filled('so_number')) {
+            $query->whereHas('SJdetails', function ($q) use ($request) {
+                $q->where('so_number', 'like', '%' . $request->so_number . '%');
+            });
+        }
+
+        // 🔍 Customer Name
+        if ($request->filled('customer_name')) {
+            $query->whereHas('customer', function ($q) use ($request) {
+                $q->where('customer_name', 'like', '%' . $request->customer_name . '%');
+            });
+        }
+
+        // 📅 Ship Date Range
+        if ($request->filled('date_from') && $request->filled('date_to')) {
+            $query->whereBetween('ship_date', [
+                $request->date_from,
+                $request->date_to
+            ]);
+        } elseif ($request->filled('date_from')) {
+            $query->whereDate('ship_date', '>=', $request->date_from);
+        } elseif ($request->filled('date_to')) {
+            $query->whereDate('ship_date', '<=', $request->date_to);
+        }
+
+        // 📌 Status
+        if ($request->filled('status') && $request->status !== 'All') {
+            $query->where('status', $request->status);
+        }
+
+        $suratJalans = $query
+            ->latest('ship_date')
+            ->paginate(10)
+            ->withQueryString();
 
         return view('Pages.SuratJalan.index', compact('suratJalans'));
     }
+
 
     // Aseli lupa ini buat fungsi mana
     public function getPendingPurchases()
@@ -257,7 +299,7 @@ class SuratJalanController extends Controller
 
         // 🔹 Ambil dulu data manual ke variabel biasa
         $manualItems = $request->input('manual', []);
-    
+
         foreach ($manualItems as &$item) {
             if (isset($item['qty_unit'])) {
                 $item['qty_unit'] = (float) str_replace(',', '.', $item['qty_unit']);
