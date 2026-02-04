@@ -120,6 +120,15 @@
                                     <td>{{ $supplierName }}</td>
                                     <td>{{ $penerimaan->status }}</td>
                                     <td>
+
+                                        <button class="btn btn-sm btn-info btn-view-detail" data-bs-toggle="modal"
+                                            data-bs-target="#detailModal" data-penerimaan='@json($penerimaan)'
+                                            data-details='@json($penerimaan->details)' data-po="{{ $poNumber }}"
+                                            data-supplier="{{ $supplierName }}">
+                                            <i class="fa fa-eye"></i>
+                                        </button>
+
+
                                         @if ($penerimaan->status !== 'Difaktur')
                                             <a href="{{ route('invoice.create', urlencode($penerimaan->penerimaan_number)) }}"
                                                 class="btn btn-sm btn-success">
@@ -132,6 +141,67 @@
                         </tbody>
                     </table>
 
+                    {{-- model untuk view detail --}}
+
+                    <div class="modal fade" id="detailModal" tabindex="-1">
+                        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                            <div class="modal-content">
+
+                                <div class="modal-header bg-primary text-white">
+                                    <h5 class="modal-title" id="modalTitle">Detail Penerimaan</h5>
+                                    <button type="button" class="btn-close btn-close-white"
+                                        data-bs-dismiss="modal"></button>
+                                </div>
+
+                                <div class="modal-body">
+
+                                    {{-- Info --}}
+                                    <table class="table table-sm table-bordered mb-4">
+                                        <tr>
+                                            <th>No. Penerimaan</th>
+                                            <td id="m_penerimaan"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>No. PO</th>
+                                            <td id="m_po"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Tanggal</th>
+                                            <td id="m_date"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Supplier</th>
+                                            <td id="m_supplier"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>PPN Status</th>
+                                            <td id="m_ppn"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Note</th>
+                                            <td id="m_note"></td>
+                                        </tr>
+                                    </table>
+
+                                    {{-- Detail Produk --}}
+                                    <table class="table table-bordered table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Product</th>
+                                                <th>Qty Packing</th>
+                                                <th>Qty Unit</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="detailTableBody"></tbody>
+                                    </table>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="d-flex justify-content-center mt-4">
                         {{ $penerimaans->links() }}
                     </div>
@@ -139,4 +209,43 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.btn-view-detail').forEach(button => {
+                button.addEventListener('click', function() {
+
+                    const penerimaan = JSON.parse(this.dataset.penerimaan);
+                    const details = JSON.parse(this.dataset.details);
+
+                    document.getElementById('modalTitle').innerText =
+                        'Detail Penerimaan - ' + penerimaan.penerimaan_number;
+
+                    document.getElementById('m_penerimaan').innerText = penerimaan
+                    .penerimaan_number;
+                    document.getElementById('m_po').innerText = this.dataset.po ?? '-';
+                    document.getElementById('m_date').innerText = penerimaan.date;
+                    document.getElementById('m_supplier').innerText = this.dataset.supplier ?? '-';
+                    document.getElementById('m_ppn').innerText = penerimaan.ppn_status ?? '-';
+                    document.getElementById('m_note').innerText = penerimaan.note ?? '-';
+
+                    const tbody = document.getElementById('detailTableBody');
+                    tbody.innerHTML = '';
+
+                    details.forEach((item, index) => {
+                        tbody.innerHTML += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${item.product?.product_name ?? '-'}</td>
+                        <td>${item.qty_packing ?? 0} ${item.packing ?? ''}</td>
+                        <td>${item.qty_unit ?? 0} ${item.unit ?? ''}</td>
+                    </tr>
+                `;
+                    });
+
+                });
+            });
+        });
+    </script>
+    
 @endsection

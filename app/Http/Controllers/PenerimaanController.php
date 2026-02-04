@@ -20,7 +20,7 @@ class PenerimaanController extends Controller
 
     public function index(Request $request)
     {
-        $query = Penerimaan::with(['supplier', 'details']);
+        $query = Penerimaan::with(['supplier', 'details.product']);
 
         // 🔍 penerimaan_number
         if ($request->filled('penerimaan_number')) {
