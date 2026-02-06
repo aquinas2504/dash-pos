@@ -17,79 +17,74 @@
 
                             {{-- SJ Number --}}
                             <div class="col-md-2">
-                                <label class="form-label">No. Surat Jalan</label>
-                                <input type="text" name="sj_number" class="form-control"
+                                <label class="form-label">No. Surat Jalan :</label>
+                                <input type="text" name="sj_number" class="form-control" placeholder="SJ Number"
                                     value="{{ request('sj_number') }}">
                             </div>
 
                             {{-- SO Number --}}
                             <div class="col-md-2">
-                                <label class="form-label">No. SO</label>
-                                <input type="text" name="so_number" class="form-control"
+                                <label class="form-label">No. SO :</label>
+                                <input type="text" name="so_number" class="form-control" placeholder="SO Number"
                                     value="{{ request('so_number') }}">
                             </div>
 
                             {{-- Customer --}}
                             <div class="col-md-2">
-                                <label class="form-label">Customer</label>
-                                <input type="text" name="customer_name" class="form-control"
+                                <label class="form-label">Customer :</label>
+                                <input type="text" name="customer_name" class="form-control" placeholder="Customer Name"
                                     value="{{ request('customer_name') }}">
                             </div>
 
-                            {{-- Date Range --}}
-                            <div class="col-md-2">
-                                <label class="form-label">Ship Date From</label>
-                                <input type="date" name="date_from" class="form-control"
-                                    value="{{ request('date_from') }}">
-                            </div>
+                            {{-- Filter Date --}}
+                            <div class="col-md-4">
+                                <label class="form-label">Date :</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">From</span>
+                                    <input type="date" name="date_from" class="form-control"
+                                        value="{{ request('date_from') }}">
 
-                            <div class="col-md-2">
-                                <label class="form-label">Ship Date To</label>
-                                <input type="date" name="date_to" class="form-control" value="{{ request('date_to') }}">
-                            </div>
-
-                            {{-- Status --}}
-                            <div class="col-md-2">
-                                <label class="form-label d-block">Status</label>
-
-                                @php $status = request('status', 'All'); @endphp
-
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="status" value="All"
-                                        {{ $status === 'All' ? 'checked' : '' }}>
-                                    <label class="form-check-label">All</label>
-                                </div>
-
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="status" value="Pending"
-                                        {{ $status === 'Pending' ? 'checked' : '' }}>
-                                    <label class="form-check-label">Pending</label>
-                                </div>
-
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="status" value="Difaktur"
-                                        {{ $status === 'Difaktur' ? 'checked' : '' }}>
-                                    <label class="form-check-label">Difaktur</label>
+                                    <span class="input-group-text">To</span>
+                                    <input type="date" name="date_to" class="form-control"
+                                        value="{{ request('date_to') }}">
                                 </div>
                             </div>
 
                             {{-- Button --}}
-                            <div class="col-md-12 mt-2">
-                                <button class="btn btn-primary btn-sm">
+                            <div class="col-md-2 mt-2">
+                                <button class="btn btn-primary">
                                     <i class="fa fa-filter"></i> Filter
                                 </button>
 
-                                <a href="{{ route('pengirimans.index') }}" class="btn btn-secondary btn-sm">
+                                <a href="{{ route('pengirimans.index') }}" class="btn btn-secondary">
                                     Reset
                                 </a>
                             </div>
 
+                            {{-- STATUS RADIO --}}
+                            <div class="mt-3 d-flex gap-3">
+                                @php
+                                    $status = request('status', 'All');
+                                @endphp
+
+                                @foreach (['All', 'Pending', 'Difaktur'] as $item)
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="status"
+                                            value="{{ $item }}" id="status_{{ $item }}"
+                                            {{ $status === $item ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="status_{{ $item }}">
+                                            {{ $item }}
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
                         </div>
                     </form>
 
-                    <table class="table table-bordered">
-                        <thead>
+                    <table class="table table-bordered table-hover">
+                        <thead class="table-light">
                             <tr>
+                                <th>#</th>
                                 <th>Tanggal</th>
                                 <th>No. Surat Jalan</th>
                                 <th>No. SO</th>
@@ -101,6 +96,7 @@
                         <tbody>
                             @foreach ($suratJalans as $sj)
                                 <tr>
+                                    <td>{{ ($suratJalans->currentPage() - 1) * $suratJalans->perPage() + $loop->iteration }}</td>
                                     <td>{{ $sj->ship_date }}</td>
                                     <td>{{ $sj->sj_number }}</td>
                                     <td>{{ $sj->SJdetails->first()->so_number ?? '-' }}</td>

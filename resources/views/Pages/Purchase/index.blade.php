@@ -22,21 +22,25 @@
                 <div class="card-body">
 
                     <form method="GET" action="{{ route('purchases.index') }}" class="mb-3">
-                        <div class="row g-2">
+                        <div class="row g-2 align-items-end">
 
                             {{-- Order Number --}}
                             <div class="col-md-3">
-                                <input type="text" name="order_number" class="form-control" placeholder="Order Number"
+                                <label class="form-label">No. PO :</label>
+                                <input type="text" name="order_number" class="form-control" placeholder="PO Number"
                                     value="{{ request('order_number') }}">
                             </div>
 
                             {{-- Supplier --}}
                             <div class="col-md-3">
+                                <label class="form-label">Supplier :</label>
                                 <input type="text" name="supplier" class="form-control" placeholder="Supplier Name"
                                     value="{{ request('supplier') }}">
                             </div>
 
+                            {{-- Date --}}
                             <div class="col-md-4">
+                                <label class="form-label">Date :</label> 
                                 <div class="input-group">
                                     <span class="input-group-text">From</span>
                                     <input type="date" name="date_from" class="form-control"
@@ -48,16 +52,13 @@
                                 </div>
                             </div>
 
-
                             {{-- Submit --}}
-                            <div class="col-md-1 d-grid">
+                            <div class="col-md-2 mt-2">
                                 <button class="btn btn-primary">
                                     <i class="fas fa-filter"></i> Filter
                                 </button>
-                            </div>
 
-                            <div class="col-md-1 d-grid">
-                                <a href="{{ route('purchases.index') }}" class="btn btn-secondary btn-sm mt-2">
+                                <a href="{{ route('purchases.index') }}" class="btn btn-secondary">
                                     Reset
                                 </a>
                             </div>

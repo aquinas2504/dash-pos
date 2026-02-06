@@ -14,45 +14,47 @@
                         <div class="row g-2 align-items-end">
 
                             {{-- Invoice Number --}}
-                            <div class="col-md-3">
-                                <label class="form-label">Invoice Number</label>
+                            <div class="col-md-2">
+                                <label class="form-label">No. Invoice :</label>
                                 <input type="text" name="invoice_number" class="form-control"
-                                    value="{{ request('invoice_number') }}">
+                                    placeholder="Invoice Number" value="{{ request('invoice_number') }}">
                             </div>
 
                             {{-- Surat Jalan --}}
-                            <div class="col-md-3">
-                                <label class="form-label">No. Surat Jalan</label>
-                                <input type="text" name="sj_number" class="form-control"
+                            <div class="col-md-2">
+                                <label class="form-label">No. Surat Jalan :</label>
+                                <input type="text" name="sj_number" class="form-control" placeholder="SJ Number"
                                     value="{{ request('sj_number') }}">
                             </div>
 
                             {{-- Customer --}}
-                            <div class="col-md-3">
-                                <label class="form-label">Customer</label>
-                                <input type="text" name="customer_name" class="form-control"
+                            <div class="col-md-2">
+                                <label class="form-label">Customer :</label>
+                                <input type="text" name="customer_name" class="form-control" placeholder="Customer Name"
                                     value="{{ request('customer_name') }}">
                             </div>
 
-                            {{-- Date Range --}}
-                            <div class="col-md-1">
-                                <label class="form-label">From</label>
-                                <input type="date" name="date_from" class="form-control"
-                                    value="{{ request('date_from') }}">
-                            </div>
+                            {{-- Filter Date --}}
+                            <div class="col-md-4">
+                                <label class="form-label">Date :</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">From</span>
+                                    <input type="date" name="date_from" class="form-control"
+                                        value="{{ request('date_from') }}">
 
-                            <div class="col-md-1">
-                                <label class="form-label">To</label>
-                                <input type="date" name="date_to" class="form-control" value="{{ request('date_to') }}">
+                                    <span class="input-group-text">To</span>
+                                    <input type="date" name="date_to" class="form-control"
+                                        value="{{ request('date_to') }}">
+                                </div>
                             </div>
 
                             {{-- Button --}}
-                            <div class="col-md-12 mt-2">
-                                <button class="btn btn-primary btn-sm">
+                            <div class="col-md-2 mt-2">
+                                <button class="btn btn-primary">
                                     <i class="fa fa-filter"></i> Filter
                                 </button>
 
-                                <a href="{{ route('saleInvoice.index') }}" class="btn btn-secondary btn-sm">
+                                <a href="{{ route('saleInvoice.index') }}" class="btn btn-secondary">
                                     Reset
                                 </a>
                             </div>
@@ -60,7 +62,7 @@
                         </div>
                     </form>
 
-                    <table class="table table-bordered mt-3">
+                    <table class="table table-bordered table-hover">
                         <thead class="table-light">
                             <tr>
                                 <th>#</th>
@@ -94,7 +96,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="text-center">Belum ada data invoice.</td>
+                                    <td colspan="6" class="text-center">Belum ada data invoice.</td>
                                 </tr>
                             @endforelse
                         </tbody>
