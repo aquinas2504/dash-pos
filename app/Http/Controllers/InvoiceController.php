@@ -212,6 +212,8 @@ class InvoiceController extends Controller
     // Edit Invoice Pembelian
     public function editPurchaseInvoice($invoice_number)
     {
+        $invoice_number = urldecode($invoice_number);
+
         $invoice = Invoice::with([
             'details.penerimaanDetail.product',
             'penerimaan.supplier',

@@ -14,7 +14,7 @@
                 <div class="card-body">
                     <h4 class="mb-4 text-warning">Edit Purchase Invoice</h4>
 
-                    <form method="POST" id="invoice-form" action="{{ route('invoices.purchase.update', $invoice->invoice_number) }}">
+                    <form method="POST" id="invoice-form" action="{{ route('invoices.purchase.update', urlencode($invoice->invoice_number)) }}">
                         @csrf
                         @method('PUT')
 

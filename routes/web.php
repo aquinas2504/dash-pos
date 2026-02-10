@@ -124,7 +124,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/invoice/create/{penerimaan_number}', [InvoiceController::class, 'create'])->where('penerimaan_number', '.*')->name('invoice.create')->middleware('checkpermission:invoice.create');
     Route::post('/invoices/store', [InvoiceController::class, 'store'])->name('invoices.store')->middleware('checkpermission:invoices.store');
     Route::get('/purchaseInvoice-list', [InvoiceController::class, 'indexPurchaseInvoice'])->name('purchaseInvoice.index')->middleware('checkpermission:purchaseInvoice.index');
-    Route::get('/invoices/purchase/{id}/edit', [InvoiceController::class, 'editPurchaseInvoice'])->name('invoices.purchase.edit')->middleware('checkpermission:invoices.purchase.edit');
+    Route::get('/invoices/purchase/{id}/edit', [InvoiceController::class, 'editPurchaseInvoice'])->where('id', '.*')->name('invoices.purchase.edit')->middleware('checkpermission:invoices.purchase.edit');
     Route::put('/invoices/purchase/{id}', [InvoiceController::class, 'updatePurchaseInvoice'])->name('invoices.purchase.update')->middleware('checkpermission:invoices.purchase.update');
 
     // Invoice Penjualan
