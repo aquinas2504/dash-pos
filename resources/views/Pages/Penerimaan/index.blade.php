@@ -22,8 +22,8 @@
                             {{-- Search Penerimaan Number --}}
                             <div class="col-md-2">
                                 <label class="form-label">No. Penerimaan :</label>
-                                <input type="text" name="penerimaan_number" class="form-control" placeholder="Penerimaan Number"
-                                    value="{{ request('penerimaan_number') }}">
+                                <input type="text" name="penerimaan_number" class="form-control"
+                                    placeholder="Penerimaan Number" value="{{ request('penerimaan_number') }}">
                             </div>
 
                             {{-- Search PO Number --}}
@@ -106,7 +106,8 @@
                                 @endphp
 
                                 <tr>
-                                    <td>{{ ($penerimaans->currentPage() - 1) * $penerimaans->perPage() + $loop->iteration }}</td>
+                                    <td>{{ ($penerimaans->currentPage() - 1) * $penerimaans->perPage() + $loop->iteration }}
+                                    </td>
                                     <td>{{ $penerimaan->date }}</td>
                                     <td>{{ $penerimaan->penerimaan_number }}</td>
                                     <td>{{ $poNumber }}</td>
@@ -128,6 +129,20 @@
                                                 <i class="fa fa-file-invoice"></i> Invoice
                                             </a>
                                         @endif
+
+                                        @if ($penerimaan->status === 'Pending')
+                                            <form
+                                                action="{{ route('penerimaans.delete', urlencode($penerimaan->penerimaan_number)) }}"
+                                                method="POST" style="display:inline;" class="form-delete">
+                                                @csrf
+                                                @method('DELETE')
+
+                                                <button type="button" class="btn btn-sm btn-danger btn-delete">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        @endif
+
                                     </td>
                                 </tr>
                             @endforeach
@@ -202,6 +217,59 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const deleteButtons = document.querySelectorAll('.btn-delete');
+
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function() {
+
+                    const form = this.closest('.form-delete');
+
+                    Swal.fire({
+                        title: 'Yakin ingin menghapus?',
+                        text: "Data penerimaan akan dihapus permanen!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#6c757d',
+                        confirmButtonText: 'Ya, Hapus!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+
+                });
+            });
+
+        });
+    </script>
+
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: "{{ session('success') }}",
+                timer: 2000,
+                showConfirmButton: false
+            });
+        </script>
+    @endif
+
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: "{{ session('error') }}"
+            });
+        </script>
+    @endif
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

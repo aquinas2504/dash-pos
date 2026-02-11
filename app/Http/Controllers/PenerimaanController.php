@@ -69,7 +69,7 @@ class PenerimaanController extends Controller
     public function createFromPO($order_number)
     {
         $order_number = urldecode($order_number); // ← Tambahkan baris ini
-        
+
         $purchase = Purchase::with(['supplier', 'purchaseDetail.product'])->where('order_number', $order_number)->firstOrFail();
 
         // 🔹 Step 1: Gabungkan purchase_details berdasarkan id_product + packing + unit
@@ -167,7 +167,7 @@ class PenerimaanController extends Controller
 
             // 🔹 Ambil array "details" secara terpisah (bukan reference ke Request)
             $details = $request->input('details', []);
-            
+
             foreach ($details as &$detail) {
                 if (isset($detail['qty_unit'])) {
                     $detail['qty_unit'] = (float) str_replace(',', '.', $detail['qty_unit']);
@@ -228,7 +228,7 @@ class PenerimaanController extends Controller
                 ]);
 
                 // 🔹 Konversi qty_unit ke pieces
-                $qtyInPieces = match(strtolower($unit)) {
+                $qtyInPieces = match (strtolower($unit)) {
                     'lusin' => $qty_unit * 12,
                     'gross' => $qty_unit * 144,
                     'set', 'pieces' => $qty_unit,
@@ -248,9 +248,9 @@ class PenerimaanController extends Controller
                     }
                 }
             }
-            
 
-            // ========== FIX STATUS PER PURCHASE_DETAIL ==========
+
+            // ========== UPDATE STATUS PURCHASE_DETAILS ==========
             $purchaseDetails = PurchaseDetail::with('saleDetail')
                 ->where('order_number', $order_number)
                 ->get();
@@ -294,7 +294,7 @@ class PenerimaanController extends Controller
             }
 
 
-            // ========== UPDATE STATUS HEADER PO ==========
+            // ========== UPDATE STATUS PURCHASES ==========
             $details = PurchaseDetail::where('order_number', $order_number)->get();
 
             if ($details->every(fn($d) => $d->status === 'Pending')) {
@@ -308,7 +308,7 @@ class PenerimaanController extends Controller
             Purchase::where('order_number', $order_number)->update([
                 'status' => $status
             ]);
-            
+
 
             DB::commit();
             return redirect()->route('penerimaans.index')
@@ -408,6 +408,132 @@ class PenerimaanController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
+
+    public function delete($penerimaan_number)
+    {
+        $penerimaan_number = urldecode($penerimaan_number);
+
+        DB::beginTransaction();
+
+        try {
+
+            $penerimaan = Penerimaan::with('details')->findOrFail($penerimaan_number);
+
+            // ❗ RULE 1: Hanya boleh delete jika status Pending
+            if ($penerimaan->status !== 'Pending') {
+                return back()->with('error', 'Penerimaan tidak bisa dihapus karena status bukan Pending.');
+            }
+
+            $ppn_status = $penerimaan->ppn_status;
+
+            // ===============================
+            // 🔹 1. KURANGI STOK PRODUCTS
+            // ===============================
+            foreach ($penerimaan->details as $detail) {
+
+                if (!$detail->id_product) continue;
+
+                // Konversi ke pieces
+                $qtyInPieces = match (strtolower($detail->unit)) {
+                    'lusin' => $detail->qty_unit * 12,
+                    'gross' => $detail->qty_unit * 144,
+                    'set', 'pieces' => $detail->qty_unit,
+                    default => $detail->qty_unit,
+                };
+
+                $product = Product::find($detail->id_product);
+
+                if ($product) {
+                    if ($ppn_status === 'yes') {
+                        $product->qty_ppn -= $qtyInPieces;
+                    } else {
+                        $product->qty_nonppn -= $qtyInPieces;
+                    }
+
+                    $product->save();
+                }
+            }
+
+            // ===============================
+            // 🔹 2. UPDATE STATUS PURCHASE (JIKA ADA PO)
+            // ===============================
+
+            $order_number = $penerimaan->details->first()?->po_number;
+
+            if ($order_number) {
+
+                $purchaseDetails = PurchaseDetail::with('saleDetail')
+                    ->where('order_number', $order_number)
+                    ->get();
+
+                foreach ($purchaseDetails as $pd) {
+
+                    $idProduct = $pd->id_product ?? $pd->saleDetail?->id_product;
+
+                    if (!$idProduct) {
+                        $pd->status = 'Pending';
+                        $pd->save();
+                        continue;
+                    }
+
+                    $orderedPacking = $pd->qty_packing ?? 0;
+                    $orderedUnit    = $pd->qty_unit ?? 0;
+
+                    // 🔹 Hitung ulang penerimaan YANG MASIH ADA
+                    $received = PenerimaanDetail::where('po_number', $order_number)
+                        ->where('id_product', $idProduct)
+                        ->where('packing', $pd->packing)
+                        ->where('unit', $pd->unit)
+                        ->where('penerimaan_number', '!=', $penerimaan_number)
+                        ->get();
+
+                    $sumPacking = $received->sum('qty_packing');
+                    $sumUnit    = $received->sum('qty_unit');
+
+                    if ($sumPacking == 0 && $sumUnit == 0) {
+                        $pd->status = 'Pending';
+                    } elseif ($sumPacking >= $orderedPacking && $sumUnit >= $orderedUnit) {
+                        $pd->status = 'Diterima';
+                    } else {
+                        $pd->status = 'Sebagian Diterima';
+                    }
+
+                    $pd->save();
+                }
+
+                // 🔹 Update status purchases
+                $details = PurchaseDetail::where('order_number', $order_number)->get();
+
+                if ($details->every(fn($d) => $d->status === 'Pending')) {
+                    $status = 'Pending';
+                } elseif ($details->every(fn($d) => $d->status === 'Diterima')) {
+                    $status = 'Diterima Semua';
+                } else {
+                    $status = 'Diterima Sebagian';
+                }
+
+                Purchase::where('order_number', $order_number)
+                    ->update(['status' => $status]);
+            }
+
+            // ===============================
+            // 🔹 3. DELETE PENERIMAAN
+            // ===============================
+
+            $penerimaan->delete(); // cascade delete details
+
+            DB::commit();
+
+            return redirect()->route('penerimaans.index')
+                ->with('success', 'Penerimaan berhasil dihapus.');
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            return back()->with('error', 'Gagal menghapus: ' . $e->getMessage());
         }
     }
 }

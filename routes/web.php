@@ -119,6 +119,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/penerimaan/manual', [PenerimaanController::class, 'createManual'])->name('penerimaan.create.manual')->middleware('checkpermission:penerimaan.create.manual');
     Route::post('/penerimaans/manual/store', [PenerimaanController::class, 'storeManual'])->name('penerimaans.manual.store')->middleware('checkpermission:penerimaans.manual.store');
     Route::get('/penerimaan-list', [PenerimaanController::class, 'index'])->name('penerimaans.index')->middleware('checkpermission:penerimaans.index');
+    Route::delete('/penerimaans/{penerimaan_number}', [PenerimaanController::class, 'delete'])->where('penerimaan_number', '.*')->name('penerimaans.delete');
+
 
     // Invoice Pembelian
     Route::get('/invoice/create/{penerimaan_number}', [InvoiceController::class, 'create'])->where('penerimaan_number', '.*')->name('invoice.create')->middleware('checkpermission:invoice.create');
