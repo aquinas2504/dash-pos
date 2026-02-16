@@ -96,7 +96,8 @@
                         <tbody>
                             @foreach ($suratJalans as $sj)
                                 <tr>
-                                    <td>{{ ($suratJalans->currentPage() - 1) * $suratJalans->perPage() + $loop->iteration }}</td>
+                                    <td>{{ ($suratJalans->currentPage() - 1) * $suratJalans->perPage() + $loop->iteration }}
+                                    </td>
                                     <td>{{ $sj->ship_date }}</td>
                                     <td>{{ $sj->sj_number }}</td>
                                     <td>{{ $sj->SJdetails->first()->so_number ?? '-' }}</td>
@@ -116,6 +117,18 @@
                                             </a>
                                         @endif
 
+                                        @if ($sj->status === 'Pending')
+                                            <form action="{{ route('suratjalan.delete', urlencode($sj->sj_number)) }}"
+                                                method="POST" style="display:inline;" class="form-delete">
+                                                @csrf
+                                                @method('DELETE')
+
+                                                <button type="button" class="btn btn-sm btn-danger btn-delete">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        @endif
+
                                     </td>
                                 </tr>
                             @endforeach
@@ -129,4 +142,57 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const deleteButtons = document.querySelectorAll('.btn-delete');
+
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function() {
+
+                    const form = this.closest('.form-delete');
+
+                    Swal.fire({
+                        title: 'Yakin ingin menghapus?',
+                        text: "Data surat jalan akan dihapus permanen!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#6c757d',
+                        confirmButtonText: 'Ya, Hapus!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+
+                });
+            });
+
+        });
+    </script>
+
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: "{{ session('success') }}",
+                timer: 2000,
+                showConfirmButton: false
+            });
+        </script>
+    @endif
+
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: "{{ session('error') }}"
+            });
+        </script>
+    @endif
 @endsection

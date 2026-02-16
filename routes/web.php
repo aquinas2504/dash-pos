@@ -112,6 +112,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/surat-jalan/manual', [SuratJalanController::class, 'createManual'])->name('SJ.CreateManual')->middleware('checkpermission:SJ.CreateManual');
     Route::post('/surat-jalan/manual', [SuratJalanController::class, 'storeManual'])->name('SJ.StoreManual')->middleware('checkpermission:SJ.StoreManual');
     Route::get('/pengiriman-list', [SuratJalanController::class, 'index'])->name('pengirimans.index')->middleware('checkpermission:pengirimans.index');
+    Route::delete('/surat-jalan/{sj_number}', [SuratJalanController::class, 'delete'])->where('sj_number', '.*')->name('suratjalan.delete');
+
 
     // Penerimaan Barang
     Route::get('/penerimaan/from-po/{orderNumber}', [PenerimaanController::class, 'createFromPO'])->where('orderNumber', '.*')->name('penerimaan.create.fromPO')->middleware('checkpermission:penerimaan.create.fromPO');

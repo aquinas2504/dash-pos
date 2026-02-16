@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Sale;
 use App\Models\Unit;
 use App\Models\Packing;
 use App\Models\Product;
@@ -221,13 +222,14 @@ class SuratJalanController extends Controller
 
             SuratJalanDetail::insert($details);
 
-            // Update status per sale_detail
-            foreach ($request->product_details as $index => $detailId) {
+            // ========== UPDATE STATUS SALE_DETAILS ==========
+            foreach ($request->product_details as $detailId) {
+
                 $saleDetail = SaleDetail::find($detailId);
                 if (!$saleDetail) continue;
 
-                $totalPackingOrdered = $saleDetail->qty_packing;
-                $totalUnitOrdered = $saleDetail->quantity;
+                $orderedPacking = $saleDetail->qty_packing ?? 0;
+                $orderedUnit    = $saleDetail->quantity ?? 0;
 
                 // Ambil semua surat jalan yg mengandung order_number dan id_product yang sama
                 $previousShipments = SuratJalanDetail::where('so_number', $saleDetail->order_number)
@@ -239,7 +241,12 @@ class SuratJalanController extends Controller
                 $sumPacking = $previousShipments->sum('qty_packing');
                 $sumUnit = $previousShipments->sum('qty_unit');
 
-                if ($sumPacking >= $totalPackingOrdered && $sumUnit >= $totalUnitOrdered) {
+                if ($sumPacking == 0 && $sumUnit == 0) {
+                    // Jangan override Unordered
+                    if ($saleDetail->status !== 'Unordered') {
+                        $saleDetail->status = 'Ordered';
+                    }
+                } elseif ($sumPacking >= $orderedPacking && $sumUnit >= $orderedUnit) {
                     $saleDetail->status = 'Terproses';
                 } else {
                     $saleDetail->status = 'Sebagian Terproses';
@@ -248,12 +255,18 @@ class SuratJalanController extends Controller
                 $saleDetail->save();
             }
 
-            // === CEK STATUS SO ===
+            // ========== UPDATE STATUS SALES ==========
             $allDetails = SaleDetail::where('order_number', $sale->order_number)->get();
 
-            $allProcessed = $allDetails->every(fn($d) => $d->status === 'Terproses');
+            if ($allDetails->every(fn($d) => in_array($d->status, ['Unordered', 'Ordered']))) {
+                $saleStatus = 'Pending';
+            } elseif ($allDetails->every(fn($d) => $d->status === 'Terproses')) {
+                $saleStatus = 'Closed';
+            } else {
+                $saleStatus = 'Sebagian Terproses';
+            }
 
-            $sale->status = $allProcessed ? 'Closed' : 'Sebagian Terproses';
+            $sale->status = $saleStatus;
             $sale->save();
 
 
@@ -368,6 +381,124 @@ class SuratJalanController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
             return back()->with('error', 'Gagal menyimpan: ' . $e->getMessage());
+        }
+    }
+
+
+    public function delete($sj_number)
+    {
+
+        $sj_number = urldecode($sj_number);
+
+        DB::beginTransaction();
+
+        try {
+
+            $sj = SuratJalan::with('SJdetails')->findOrFail($sj_number);
+
+            // ❌ 1. Cek status dulu
+            if ($sj->status !== 'Pending') {
+                return back()->with('error', 'Surat Jalan tidak bisa dihapus karena status bukan Pending.');
+            }
+
+            foreach ($sj->SJdetails as $detail) {
+
+                // 🔹 Convert ke pieces
+                $qtyInPieces = match (strtolower($detail->unit)) {
+                    'lusin' => $detail->qty_unit * 12,
+                    'gross' => $detail->qty_unit * 144,
+                    'set', 'pieces' => $detail->qty_unit,
+                    default => $detail->qty_unit,
+                };
+
+                $product = Product::find($detail->id_product);
+
+                if ($product) {
+                    if ($sj->ppn_status === 'yes') {
+                        $product->qty_ppn += $qtyInPieces;   // ⬅ increment balik
+                    } else {
+                        $product->qty_nonppn += $qtyInPieces;
+                    }
+                    $product->save();
+                }
+
+                // =====================================================
+                // 🔥 UPDATE STATUS SALE_DETAIL & SALES (jika ada SO)
+                // =====================================================
+
+                if ($detail->so_number) {
+
+                    $saleDetail = SaleDetail::where('order_number', $detail->so_number)
+                        ->where('id_product', $detail->id_product)
+                        ->where('packing', $detail->packing)
+                        ->where('unit', $detail->unit)
+                        ->first();
+
+                    if ($saleDetail) {
+
+                        $orderedPacking = $saleDetail->qty_packing ?? 0;
+                        $orderedUnit    = $saleDetail->quantity ?? 0;
+
+                        // Ambil semua shipment tersisa (kecuali yg mau dihapus)
+                        $previousShipments = SuratJalanDetail::where('so_number', $saleDetail->order_number)
+                            ->where('id_product', $saleDetail->id_product)
+                            ->where('packing', $saleDetail->packing)
+                            ->where('unit', $saleDetail->unit)
+                            ->where('sj_number', '!=', $sj->sj_number)
+                            ->get();
+
+                        $sumPacking = $previousShipments->sum('qty_packing');
+                        $sumUnit    = $previousShipments->sum('qty_unit');
+
+                        if ($sumPacking == 0 && $sumUnit == 0) {
+
+                            if ($saleDetail->status !== 'Unordered') {
+                                $saleDetail->status = 'Ordered';
+                            }
+                        } elseif ($sumPacking >= $orderedPacking && $sumUnit >= $orderedUnit) {
+                            $saleDetail->status = 'Terproses';
+                        } else {
+                            $saleDetail->status = 'Sebagian Terproses';
+                        }
+
+                        $saleDetail->save();
+                    }
+                }
+            }
+
+            // 🔥 UPDATE STATUS SALES (kalau ada SO)
+            $soNumber = $sj->SJdetails->pluck('so_number')->filter()->first();
+
+            if ($soNumber) {
+                $sale = Sale::find($soNumber);
+                if ($sale) {
+
+                    $allDetails = SaleDetail::where('order_number', $soNumber)->get();
+
+                    if ($allDetails->every(fn($d) => in_array($d->status, ['Unordered', 'Ordered']))) {
+                        $saleStatus = 'Pending';
+                    } elseif ($allDetails->every(fn($d) => $d->status === 'Terproses')) {
+                        $saleStatus = 'Closed';
+                    } else {
+                        $saleStatus = 'Sebagian Terproses';
+                    }
+
+                    $sale->status = $saleStatus;
+                    $sale->save();
+                }
+            }
+
+            // 🔥 Hapus SJ (detail akan cascade)
+            $sj->delete();
+
+            DB::commit();
+
+            return back()->with('success', 'Surat Jalan berhasil dihapus dan stok dikembalikan.');
+        } catch (\Exception $e) {
+
+            DB::rollback();
+
+            return back()->with('error', 'Gagal menghapus: ' . $e->getMessage());
         }
     }
 }
