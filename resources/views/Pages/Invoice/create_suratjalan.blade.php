@@ -48,7 +48,7 @@
 
                         <div class="mb-3">
                             <label>Rekening Tujuan Pembayaran</label>
-                            <select name="payment_id" class="form-select">
+                            <select name="payment_id" class="form-select" required>
                                 <option value="">-- Pilih Rekening --</option>
                                 @foreach ($payments as $payment)
                                     <option value="{{ $payment->id }}">

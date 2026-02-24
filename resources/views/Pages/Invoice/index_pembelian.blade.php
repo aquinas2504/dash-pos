@@ -70,6 +70,7 @@
                                 <th>Date</th>
                                 <th>Supplier</th>
                                 <th>No. Penerimaan</th>
+                                <th>Grandtotal</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -81,6 +82,7 @@
                                     <td>{{ \Carbon\Carbon::parse($invoice->date)->format('d/m/Y') }}</td>
                                     <td>{{ $invoice->penerimaan->supplier->supplier_name ?? '-' }}</td>
                                     <td>{{ $invoice->penerimaan_number }}</td>
+                                    <td>Rp {{ number_format($invoice->grandtotal, 0, ',', '.') }}</td>
                                     <td>
                                         <a href="{{ route('invoices.purchase.edit', $invoice->invoice_number) }}"
                                             class="btn btn-sm btn-warning">

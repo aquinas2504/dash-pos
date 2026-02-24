@@ -70,6 +70,7 @@
                                 <th>Date</th>
                                 <th>Customer</th>
                                 <th>Surat Jalan</th>
+                                <th>Grandtotal</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -81,6 +82,7 @@
                                     <td>{{ \Carbon\Carbon::parse($invoice->date)->format('d/m/Y') }}</td>
                                     <td>{{ $invoice->suratJalan->customer->customer_name ?? '-' }}</td>
                                     <td>{{ $invoice->sj_number }}</td>
+                                    <td>Rp {{ number_format($invoice->grandtotal, 0, ',', '.') }}</td>
                                     <td>
 
                                         <a href="{{ route('saleInvoice.Print', $invoice->invoice_number) }}"

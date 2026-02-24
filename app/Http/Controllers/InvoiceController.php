@@ -409,7 +409,7 @@ class InvoiceController extends Controller
                     }
                 },
             ],
-            'payment_id' => 'nullable|exists:payments,id',
+            'payment_id' => 'required|exists:payments,id',
         ]);
 
         try {
@@ -615,7 +615,7 @@ class InvoiceController extends Controller
                     }
                 },
             ],
-            'payment_id' => 'nullable|exists:payments,id',
+            'payment_id' => 'required|exists:payments,id',
         ]);
 
         try {
