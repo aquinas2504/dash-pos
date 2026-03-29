@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Purchase extends Model
@@ -25,6 +24,7 @@ class Purchase extends Model
         'ppn',
         'grandtotal',
         'status',
+        'lock_reason',
         'note',
     ];
 
@@ -66,54 +66,75 @@ class Purchase extends Model
 
     public function getSisaHargaAttribute()
     {
-        if ($this->status === 'Pending') {
-            return $this->grandtotal;
+        switch ($this->status) {
+
+            case 'Pending':
+                return $this->grandtotal;
+
+            case 'Diterima Semua':
+                return 0;
+
+            case 'Diterima Sebagian':
+                return $this->calculateRemainingPrice();
+
+            case 'Locked':
+                return $this->calculateLockedRemainingPrice();
+
+            default:
+                return 0;
+        }
+    }
+
+    private function calculateRemainingPrice()
+    {
+        $totalSisa = 0;
+
+        foreach ($this->purchaseDetail as $detail) {
+
+            $productId = $detail->id_product
+                ?? $detail->saleDetail->id_product
+                ?? null;
+
+            if (!$productId || !$detail->unit) {
+                continue;
+            }
+
+            $qtyDiterima = PenerimaanDetail::where('po_number', $this->order_number)
+                ->where('id_product', $productId)
+                ->where('unit', $detail->unit)
+                ->sum('qty_unit');
+
+            $qtyPO = $detail->qty_unit ?? 0;
+            $sisaQty = $qtyPO - $qtyDiterima;
+
+            if ($sisaQty <= 0) {
+                continue;
+            }
+
+            $finalPrice = $this->applyDiscount(
+                $detail->price,
+                $detail->discount
+            );
+
+            $totalSisa += $sisaQty * $finalPrice;
         }
 
-        if ($this->status === 'Diterima Semua') {
+        return $totalSisa;
+    }
+
+    private function calculateLockedRemainingPrice()
+    {
+        if ($this->purchaseDetail->isEmpty()) {
             return 0;
         }
 
-        if ($this->status === 'Diterima Sebagian') {
+        $totalDiterima = PenerimaanDetail::where('po_number', $this->order_number)
+            ->sum('qty_unit');
 
-            $totalSisa = 0;
-
-            foreach ($this->purchaseDetail as $detail) {
-
-                // 🔥 resolve product id (manual vs SO)
-                $productId = $detail->id_product
-                    ?? $detail->saleDetail->id_product
-                    ?? null;
-
-                if (!$productId || !$detail->unit) {
-                    continue;
-                }
-
-                // qty diterima
-                $qtyDiterima = PenerimaanDetail::where('po_number', $this->order_number)
-                    ->where('id_product', $productId)
-                    ->where('unit', $detail->unit)
-                    ->sum('qty_unit');
-
-                $qtyPO = $detail->qty_unit ?? 0;
-                $sisaQty = $qtyPO - $qtyDiterima;
-
-                if ($sisaQty <= 0) {
-                    continue;
-                }
-
-                // 🔥 hitung harga setelah diskon bertingkat
-                $finalPrice = $this->applyDiscount(
-                    $detail->price,
-                    $detail->discount
-                );
-
-                $totalSisa += $sisaQty * $finalPrice;
-            }
-
-            return $totalSisa;
+        if ($totalDiterima == 0) {
+            return $this->grandtotal;
         }
 
-        return 0;
+        return $this->calculateRemainingPrice();
     }
 }

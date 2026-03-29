@@ -116,6 +116,12 @@
                                         <td
                                             class="text-end fw-bold {{ $saleModel->sisa_harga > 0 ? 'text-danger' : 'text-success' }}">
                                             Rp {{ number_format($saleModel->sisa_harga) }}
+
+                                            @if ($saleModel->locked_amount > 0)
+                                                <small class="text-muted">
+                                                    (Locked: Rp {{ number_format($saleModel->locked_amount) }})
+                                                </small>
+                                            @endif
                                         </td>
                                         <td>
                                             <a href="{{ route('sale.pdf', $sale['order_number']) }}"

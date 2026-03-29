@@ -288,7 +288,7 @@ class PurchaseController extends Controller
     public function delete($order_number)
     {
         $order_number = urldecode($order_number);
-        
+
         $purchase = Purchase::with('purchaseDetail')->findOrFail($order_number);
 
         // ❌ Jika status bukan Pending
@@ -318,6 +318,109 @@ class PurchaseController extends Controller
         });
 
         return redirect()->back()->with('success', 'Purchase Order berhasil dihapus.');
+    }
+
+    public function close(Request $request, $order_number)
+    {
+
+        $request->validate([
+            'lock_reason' => 'required|string'
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+
+            $purchase = Purchase::with('purchaseDetail')->findOrFail($order_number);
+
+            // PO yang sudah selesai tidak boleh di close
+            if ($purchase->status === 'Diterima Semua') {
+                return back()->with('error', 'PO sudah selesai dan tidak bisa di close.');
+            }
+
+            foreach ($purchase->purchaseDetail as $detail) {
+
+                if ($detail->so_detail) {
+
+                    $saleDetail = SaleDetail::find($detail->so_detail);
+
+                    if ($saleDetail) {
+                        $saleDetail->update([
+                            'is_locked' => true
+                        ]);
+                    }
+                }
+            }
+
+            $purchase->update([
+                'status' => 'Locked',
+                'lock_reason' => $request->lock_reason
+            ]);
+
+            DB::commit();
+
+            return back()->with('success', 'PO berhasil di Close.');
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
+    public function open($order_number)
+    {
+
+        $order_number = urldecode($order_number);
+
+        DB::beginTransaction();
+
+        try {
+
+            $purchase = Purchase::with('purchaseDetail')->findOrFail($order_number);
+
+            foreach ($purchase->purchaseDetail as $detail) {
+
+                if ($detail->so_detail) {
+
+                    $saleDetail = SaleDetail::find($detail->so_detail);
+
+                    if ($saleDetail) {
+                        $saleDetail->update([
+                            'is_locked' => false
+                        ]);
+                    }
+                }
+            }
+
+            // ===============================
+            // Hitung ulang status purchase
+            // ===============================
+
+            $details = PurchaseDetail::where('order_number', $order_number)->get();
+
+            if ($details->every(fn($d) => $d->status === 'Pending')) {
+                $status = 'Pending';
+            } elseif ($details->every(fn($d) => $d->status === 'Diterima')) {
+                $status = 'Diterima Semua';
+            } else {
+                $status = 'Diterima Sebagian';
+            }
+
+            $purchase->update([
+                'status' => $status,
+                'lock_reason' => null
+            ]);
+
+            DB::commit();
+
+            return back()->with('success', 'PO berhasil dibuka kembali.');
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 
     private function parseCurrency($value)

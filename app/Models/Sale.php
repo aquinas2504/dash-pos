@@ -62,56 +62,87 @@ class Sale extends Model
 
     public function getSisaHargaAttribute()
     {
-        // 1️⃣ Pending → full grandtotal
-        if ($this->status === 'Pending') {
-            return $this->grandtotal;
-        }
-
-        // 2️⃣ Closed → 0
+        // Closed tetap 0
         if ($this->status === 'Closed') {
             return 0;
         }
 
-        // 3️⃣ Sebagian Terproses
-        if ($this->status === 'Sebagian Terproses') {
+        // group pengiriman
+        $shippedGrouped = $this->suratJalanDetails
+            ->groupBy(fn($row) => $row->id_product . '|' . $row->unit);
 
-            // group pengiriman
-            $shippedGrouped = $this->suratJalanDetails
-                ->groupBy(fn($row) => $row->id_product . '|' . $row->unit);
+        $totalSisa = 0;
 
-            $totalSisa = 0;
+        foreach ($this->saleDetail as $detail) {
 
-            foreach ($this->saleDetail as $detail) {
-
-                if (!$detail->id_product || !$detail->unit) {
-                    continue;
-                }
-
-                $key = $detail->id_product . '|' . $detail->unit;
-
-                $qtyDikirim = isset($shippedGrouped[$key])
-                    ? $shippedGrouped[$key]->sum('qty_unit')
-                    : 0;
-
-                $qtySO = $detail->quantity;
-                $sisaQty = $qtySO - $qtyDikirim;
-
-                if ($sisaQty <= 0) {
-                    continue;
-                }
-
-                // 🔥 apply discount bertingkat kalau ada
-                $finalPrice = $this->applyDiscount(
-                    $detail->price,
-                    $detail->discount
-                );
-
-                $totalSisa += $sisaQty * $finalPrice;
+            // 🔥 SKIP kalau locked
+            if ($detail->is_locked) {
+                continue;
             }
 
-            return $totalSisa;
+            if (!$detail->id_product || !$detail->unit) {
+                continue;
+            }
+
+            $key = $detail->id_product . '|' . $detail->unit;
+
+            $qtyDikirim = isset($shippedGrouped[$key])
+                ? $shippedGrouped[$key]->sum('qty_unit')
+                : 0;
+
+            $qtySO = $detail->quantity;
+            $sisaQty = $qtySO - $qtyDikirim;
+
+            if ($sisaQty <= 0) {
+                continue;
+            }
+
+            $finalPrice = $this->applyDiscount(
+                $detail->price,
+                $detail->discount
+            );
+
+            $totalSisa += $sisaQty * $finalPrice;
         }
 
-        return 0;
+        return $totalSisa;
+    }
+
+    public function getLockedAmountAttribute()
+    {
+        $totalLocked = 0;
+
+        foreach ($this->saleDetail as $detail) {
+
+            if (!$detail->is_locked) {
+                continue;
+            }
+
+            if (!$detail->id_product || !$detail->unit) {
+                continue;
+            }
+
+            // hitung qty sudah dikirim
+            $qtyDikirim = $this->suratJalanDetails
+                ->where('id_product', $detail->id_product)
+                ->where('unit', $detail->unit)
+                ->sum('qty_unit');
+
+            $qtySO = $detail->quantity;
+            $sisaQty = $qtySO - $qtyDikirim;
+
+            if ($sisaQty <= 0) {
+                continue;
+            }
+
+            $finalPrice = $this->applyDiscount(
+                $detail->price,
+                $detail->discount
+            );
+
+            $totalLocked += $sisaQty * $finalPrice;
+        }
+
+        return $totalLocked;
     }
 }

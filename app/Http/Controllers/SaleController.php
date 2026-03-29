@@ -11,7 +11,6 @@ use App\Models\Shipping;
 use App\Models\SaleDetail;
 use Illuminate\Http\Request;
 use App\Models\SuratJalanDetail;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -554,6 +553,7 @@ class SaleController extends Controller
         $details = SaleDetail::with('product')
             ->where('order_number', $order_number)
             ->whereIn('status', ['Ordered', 'Sebagian Terproses'])
+            ->where('is_locked', false) // 🔥 filter locked
             ->get()
             ->map(function ($detail) {
                 // Cari semua surat jalan yang cocok (secara manual)

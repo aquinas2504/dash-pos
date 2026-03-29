@@ -40,7 +40,7 @@
 
                             {{-- Date --}}
                             <div class="col-md-4">
-                                <label class="form-label">Date :</label> 
+                                <label class="form-label">Date :</label>
                                 <div class="input-group">
                                     <span class="input-group-text">From</span>
                                     <input type="date" name="date_from" class="form-control"
@@ -70,7 +70,7 @@
                                 $status = request('status', 'All');
                             @endphp
 
-                            @foreach (['All', 'Pending', 'Diterima Sebagian', 'Diterima Semua'] as $item)
+                            @foreach (['All', 'Pending', 'Diterima Sebagian', 'Diterima Semua', 'Locked'] as $item)
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="status"
                                         value="{{ $item }}" id="status_{{ $item }}"
@@ -111,7 +111,16 @@
                                     <td>{{ $purchase->order_number }}</td>
                                     <td>{{ $purchase->order_date }}</td>
                                     <td>{{ $purchase->supplier->supplier_name ?? '-' }}</td>
-                                    <td>{{ $purchase->status }}</td>
+                                    <td>
+                                        {{ $purchase->status }}
+
+                                        @if ($purchase->status == 'Locked' && $purchase->lock_reason)
+                                            <br>
+                                            <small class="text-muted">
+                                                Reason: {{ $purchase->lock_reason }}
+                                            </small>
+                                        @endif
+                                    </td>
                                     <td
                                         class="text-end fw-bold 
                                         {{ $purchase->sisa_harga > 0 ? 'text-danger' : 'text-success' }}">
@@ -125,6 +134,7 @@
                                             });
                                         @endphp
 
+                                        {{-- PDF --}}
                                         @if ($hasSO)
                                             <a href="{{ route('purchase-grouped.pdf', urlencode($purchase->order_number)) }}"
                                                 class="btn btn-sm btn-danger" target="_blank" title="Print PDF Grouped">
@@ -137,21 +147,41 @@
                                             </a>
                                         @endif
 
-                                        <a href="{{ route('penerimaan.create.fromPO', urlencode($purchase->order_number)) }}"
-                                            class="btn btn-sm btn-success" title="Terima">
-                                            <i class="fas fa-truck-loading"></i> Terima
-                                        </a>
+                                        {{-- STATUS LOCKED --}}
+                                        @if ($purchase->status === 'Locked')
+                                            <form
+                                                action="{{ route('purchases.open', urlencode($purchase->order_number)) }}"
+                                                method="POST" class="d-inline">
+                                                @csrf
+                                                <button class="btn btn-sm btn-warning">
+                                                    <i class="fas fa-lock-open"></i> Open
+                                                </button>
+                                            </form>
 
-                                        <form action="{{ route('purchases.delete', urlencode($purchase->order_number)) }}"
-                                            method="POST" class="d-inline delete-po-form">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="button" class="btn btn-sm btn-danger btn-delete-po">
-                                                <i class="fas fa-trash"></i>
+                                        {{-- STATUS NORMAL --}}
+                                        @elseif ($purchase->status !== 'Diterima Semua')
+                                            <a href="{{ route('penerimaan.create.fromPO', urlencode($purchase->order_number)) }}"
+                                                class="btn btn-sm btn-success" title="Terima">
+                                                <i class="fas fa-truck-loading"></i> Terima
+                                            </a>
+
+                                            {{-- Close PO --}}
+                                            <button class="btn btn-sm btn-secondary"
+                                                onclick="openCloseModal('{{ $purchase->order_number }}')" title="Close PO">
+                                                <i class="fas fa-lock"></i>
                                             </button>
-                                        </form>
 
-
+                                            {{-- Delete --}}
+                                            <form
+                                                action="{{ route('purchases.delete', urlencode($purchase->order_number)) }}"
+                                                method="POST" class="d-inline delete-po-form">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="button" class="btn btn-sm btn-danger btn-delete-po">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        @endif
                                     </td>
                                 </tr>
                             @empty
@@ -170,6 +200,42 @@
         </div>
     </div>
 
+
+    {{-- Untuk Close --}}
+    <div class="modal fade" id="closeModal" tabindex="-1">
+        <div class="modal-dialog">
+            <form method="POST" id="closeForm">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Close PO</h5>
+                    </div>
+                    <div class="modal-body">
+
+                        <label>Alasan Close</label>
+                        <textarea name="lock_reason" class="form-control" required></textarea>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openCloseModal(orderNumber) {
+            const form = document.getElementById('closeForm');
+            form.action = `/purchases/${orderNumber}/close`;
+
+            const modal = new bootstrap.Modal(document.getElementById('closeModal'));
+            modal.show();
+        }
+    </script>
+
+    {{-- Script Delete --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.btn-delete-po').forEach(button => {

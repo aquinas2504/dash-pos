@@ -10,9 +10,13 @@ class SaleDetail extends Model
     use HasFactory;
 
     protected $table = 'sale_details';
-    
+
+    protected $casts = [
+        'is_locked' => 'boolean',
+    ];
+
     public $timestamps = false;
-    
+
     protected $fillable = [
         'order_number',
         'id_product',
@@ -24,6 +28,7 @@ class SaleDetail extends Model
         'total',
         'qty_packing',
         'packing',
+        'is_locked',
     ];
 
     public function sale()
