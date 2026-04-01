@@ -225,6 +225,8 @@ class InvoiceController extends Controller
     // Update Invoice Pembelian
     public function updatePurchaseInvoice(Request $request, $invoice_number)
     {
+        $invoice_number = urldecode($invoice_number);
+        
         $request->merge([
             'price' => array_map(fn($p) => (int) preg_replace('/\D/', '', $p), $request->price ?? [])
         ]);
