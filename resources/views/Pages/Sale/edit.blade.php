@@ -57,7 +57,7 @@
                                 <label>Date</label>
                                 <input type="date" id="date" name="date"
                                     value="{{ \Carbon\Carbon::parse($sale['order_date'])->format('Y-m-d') }}"
-                                    class="form-control" required {{ !$allUnordered ? 'readonly' : '' }}>
+                                    class="form-control" required>
                             </div>
 
                             <div class="form-group col-md-6 position-relative">
@@ -89,8 +89,7 @@
                             <div class="form-row mb-2">
                                 <div class="form-group col-md-4">
                                     <label>Shipping 1</label>
-                                    <select name="ship_1" class="form-control select-shipping" data-target="#ship1-address"
-                                        {{ !$allUnordered ? 'disabled' : '' }}>
+                                    <select name="ship_1" class="form-control select-shipping" data-target="#ship1-address">
 
                                         <option value="">-- Select Shipping --</option>
                                         @foreach ($shippings as $shipping)
@@ -108,8 +107,7 @@
 
                                 <div class="form-group col-md-4">
                                     <label>Shipping 2</label>
-                                    <select name="ship_2" class="form-control select-shipping" data-target="#ship2-address"
-                                        {{ !$allUnordered ? 'disabled' : '' }}>
+                                    <select name="ship_2" class="form-control select-shipping" data-target="#ship2-address">
 
                                         <option value="">-- Select Shipping --</option>
                                         @foreach ($shippings as $shipping)
@@ -124,16 +122,11 @@
                                     <small id="ship2-address" class="text-muted shipping-address d-none"></small>
                                 </div>
 
-                                @if (!$allUnordered)
-                                    <input type="hidden" name="ship_1" value="{{ $sale->ship_1 }}">
-                                    <input type="hidden" name="ship_2" value="{{ $sale->ship_2 }}">
-                                @endif
-
 
                                 <div class="form-group col-md-4">
                                     <label>Term of Payment (days)</label>
                                     <input type="number" name="top" id="top" class="form-control" min="0"
-                                        value="{{ $sale->top }}" {{ !$allUnordered ? 'readonly' : '' }}>
+                                        value="{{ $sale->top }}">
                                 </div>
                             </div>
                         </div>
@@ -148,9 +141,13 @@
                         <div class="card-header bg-secondary text-white">Product Selection</div>
                         <div class="card-body">
 
+                            @php
+                                $hasOrdered = $sale->saleDetail->contains(fn($d) => $d->status === 'Ordered');
+                            @endphp
+
                             <div class="form-group position-relative mb-3 w-25">
                                 <input type="text" id="search-product" placeholder="Search product..."
-                                    class="form-control">
+                                    class="form-control" {{ $hasOrdered ? 'disabled' : '' }}>
                                 <div id="product-search-result" class="mt-1"></div>
                             </div>
 
@@ -193,8 +190,8 @@
                             <div class="form-group col-md-6">
                                 <div id="subtotal-ppn-section">
                                     <label>Subtotal</label>
-                                    <input type="text" id="subtotal" name="subtotal" class="form-control mb-2" readonly
-                                        value="{{ number_format($sale->subtotal, 0, ',', '.') }}">
+                                    <input type="text" id="subtotal" name="subtotal" class="form-control mb-2"
+                                        readonly value="{{ number_format($sale->subtotal, 0, ',', '.') }}">
 
                                     <label>PPN</label>
                                     <input type="text" id="ppn" name="ppn_amount" class="form-control mb-2"
@@ -778,8 +775,8 @@
             tr.dataset.total = p.total;
 
             let actionCellHtml = '';
-            if (p.status === 'Ordered') {
-                actionCellHtml = '<span class="text-muted">Ordered</span>';
+            if ({{ $hasOrdered ? 'true' : 'false' }}) {
+                actionCellHtml = '<span class="text-muted">Locked</span>';
             } else {
                 actionCellHtml = `
                     <button type="button" class="btn btn-sm btn-outline-primary btn-edit" title="Edit">
@@ -849,6 +846,17 @@
                 subtotalPpnSection.style.display = isPpnYes ? 'block' : 'none';
 
                 calculateSummary();
+            }
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if ({{ $hasOrdered ? 'true' : 'false' }}) {
+                const btn = document.getElementById('modal_save_btn');
+                if (btn) {
+                    btn.disabled = true;
+                }
             }
         });
     </script>
