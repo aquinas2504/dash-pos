@@ -69,7 +69,8 @@
             @if ($invoice->suratjalan->ppn_status === 'yes')
                 <tr>
                     <td width="30%">
-                        <img src="/home/u836342820/domains/pos.dashmegah.my.id/public_html/img/logo-dmi.jpg" alt="Logo" style="height:75px; margin-top:10px;">
+                        <img src="/home/u836342820/domains/pos.dashmegah.my.id/public_html/img/logo-dmi.jpg"
+                            alt="Logo" style="height:75px; margin-top:10px;">
                         {{-- <img src="{{ public_path('img/logo-dmi.jpg') }}" alt="Logo" style="height: 75px; margin-top:10px;"> --}}
                     </td>
                     <td style="text-align: center; font-size: 11px; line-height: 1.4;">
@@ -88,7 +89,8 @@
                 {{-- Versi tanpa alamat, logo di tengah --}}
                 <tr>
                     <td style="text-align: center;">
-                        <img src="/home/u836342820/domains/pos.dashmegah.my.id/public_html/img/logo-dmi.jpg" alt="Logo" style="height:75px;">
+                        <img src="/home/u836342820/domains/pos.dashmegah.my.id/public_html/img/logo-dmi.jpg"
+                            alt="Logo" style="height:75px;">
                         {{-- <img src="{{ public_path('img/logo-dmi.jpg') }}" alt="Logo" style="height: 75px;"> --}}
                     </td>
                 </tr>
@@ -169,7 +171,7 @@
                     $qtyUnit = $sjDetail->qty_unit ?? 0;
                     $formattedQty = rtrim(rtrim(number_format($qtyUnit, 2, '.', ''), '0'), '.');
                     $quantity = $formattedQty . ' ' . ($sjDetail->unit ?? '');
-                    
+
                     $discount = $detail->discount ?: 0;
                 @endphp
                 <tr>
@@ -194,6 +196,12 @@
             <tr>
                 <td><strong>PPN</strong></td>
                 <td class="text-left">: {{ \App\Helpers\formatRp::rupiah($invoice->ppn) }}</td>
+            </tr>
+        @endif
+        @if ($invoice->potongan_harga > 0)
+            <tr>
+                <td><strong>Potongan Harga</strong></td>
+                <td class="text-left">: {{ \App\Helpers\formatRp::rupiah($invoice->potongan_harga) }}</td>
             </tr>
         @endif
         <tr>
