@@ -384,6 +384,7 @@ class InvoiceController extends Controller
         $request->validate([
             'invoice_number' => 'required|unique:sale_invoices,invoice_number',
             'date' => 'required|date',
+            'potongan_harga' => 'nullable|integer|min:0',
             'price' => 'required|array',
             'price.*' => 'required|integer|min:1',
             'discount' => 'nullable|array',
@@ -457,7 +458,8 @@ class InvoiceController extends Controller
             $dpp = $subtotal;
             $ppn = 0;
             $returUsed = (int) $request->retur_deduction ?? 0;
-            $grandtotal = max(0, $subtotal - $returUsed);
+            $potonganHarga = (int) $request->potongan_harga ?? 0;
+            $grandtotal = max(0, $subtotal - $potonganHarga - $returUsed);
 
             if ($ppnStatus === 'yes') {
                 $dpp = round($subtotal / 1.11);
@@ -474,6 +476,7 @@ class InvoiceController extends Controller
                 'grandtotal' => $grandtotal,
                 'payment_id' => $request->payment_id,
                 'retur_used' => $returUsed,
+                'potongan_harga' => $potonganHarga,
             ]);
 
             $suratjalan->status = 'Difaktur';

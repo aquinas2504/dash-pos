@@ -20,6 +20,7 @@ class SaleInvoice extends Model
         'grandtotal',
         'payment_id',
         'retur_used',
+        'potongan_harga',
     ];
 
     public function payment()

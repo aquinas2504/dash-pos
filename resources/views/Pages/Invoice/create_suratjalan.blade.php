@@ -41,10 +41,19 @@
                             </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label>PPN Status</label>
-                            <input type="text" class="form-control" value="{{ $SuratJalan->ppn_status }}" readonly>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label>PPN Status</label>
+                                <input type="text" class="form-control" value="{{ $SuratJalan->ppn_status }}" readonly>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Potongan Harga</label>
+                                <input type="text" id="potonganHargaInputDisplay" class="form-control"
+                                    placeholder="Rp 0">
+                                <input type="hidden" name="potongan_harga" id="potonganHargaInput" value="0">
+                            </div>
                         </div>
+
 
                         <div class="mb-3">
                             <label>Rekening Tujuan Pembayaran</label>
@@ -95,7 +104,8 @@
                                         <tr>
                                             <td class="text-start">{{ $detail->product_name ?? '-' }}</td>
                                             <td>{{ $detail->qty_packing }} {{ $detail->packing }}</td>
-                                            <td>{{ rtrim(rtrim(number_format((float) $detail->qty_unit, 2, '.', ''), '0'), '.') }} {{ $detail->unit }}</td>
+                                            <td>{{ rtrim(rtrim(number_format((float) $detail->qty_unit, 2, '.', ''), '0'), '.') }}
+                                                {{ $detail->unit }}</td>
                                             <td>
                                                 <input type="text" name="price[]" class="form-control price-input"
                                                     value="{{ $price ? number_format($price, 0, ',', '.') : '' }}"
@@ -120,15 +130,14 @@
                         </div>
 
                         <div class="mt-4 text-end" id="summary">
-                            {{-- <p><strong>Subtotal:</strong> <span id="subtotal">Rp 0</span></p> --}}
                             @if ($SuratJalan->ppn_status === 'yes')
                                 <p><strong>DPP:</strong> <span id="dpp">Rp 0</span></p>
                                 <p><strong>PPN:</strong> <span id="ppn">Rp 0</span></p>
                             @endif
+                            <p><strong>Potongan Harga:</strong> <span id="potonganharga">Rp 0</span></p>
                             <p><strong>Potongan Retur:</strong> <span id="returDeduction">Rp 0</span></p>
                             <p><strong>Grand Total:</strong> <span id="grandtotal">Rp 0</span></p>
                             <input type="hidden" name="retur_deduction" id="returDeductionInput" value="0">
-
                         </div>
 
 
@@ -247,6 +256,8 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const ppnStatus = '{{ $SuratJalan->ppn_status }}';
+            const potonganInputDisplay = document.getElementById('potonganHargaInputDisplay');
+            const potonganInput = document.getElementById('potonganHargaInput');
 
             function formatRupiah(angka) {
                 const number = parseFloat(angka);
@@ -280,30 +291,40 @@
                 rows.forEach(row => {
                     const priceInput = row.querySelector('.price-input');
                     const discountInput = row.querySelector('.discount-input');
+
                     let price = parseRupiah(priceInput.value);
                     let qty = parseFloat(priceInput.dataset.qty) || 0;
                     let discountStr = discountInput.value || '';
 
                     const totalDiscountPerUnit = parseDiscountNested(discountStr, price);
                     let total = qty * (price - totalDiscountPerUnit);
+
                     subtotal += total;
 
                     row.querySelector('.total-col').innerText = formatRupiah(total);
                 });
 
+                // === PPN ===
                 let dpp = subtotal;
                 let ppn = 0;
+
                 if (ppnStatus === 'yes') {
                     dpp = Math.round(subtotal / 1.11);
                     ppn = subtotal - dpp;
-                }
 
-                // document.getElementById('subtotal').innerText = formatRupiah(subtotal);
-                if (ppnStatus === 'yes') {
                     document.getElementById('dpp').innerText = formatRupiah(dpp);
                     document.getElementById('ppn').innerText = formatRupiah(ppn);
                 }
-                document.getElementById('grandtotal').innerText = formatRupiah(subtotal);
+
+                // === AMBIL POTONGAN HARGA ===
+                let potonganHarga = parseFloat(document.getElementById('potonganHargaInput')?.value) || 0;
+
+                // === GRAND TOTAL ===
+                let grandTotal = subtotal - potonganHarga;
+                grandTotal = Math.max(0, grandTotal);
+
+                document.getElementById('potonganharga').innerText = formatRupiah(potonganHarga);
+                document.getElementById('grandtotal').innerText = formatRupiah(grandTotal);
             }
 
 
@@ -342,7 +363,7 @@
 
                     const newTotal = currentTotalRetur + (checked ? thisReturTotal : 0);
                     const grandTotal = parseRupiah(document.getElementById('grandtotal')
-                    .innerText); // sebelum retur
+                        .innerText); // sebelum retur
 
                     if (newTotal > grandTotal) {
                         alert("Total retur melebihi nilai invoice!");
@@ -404,6 +425,16 @@
 
             document.querySelectorAll('.discount-input').forEach(input => {
                 input.addEventListener('input', recalculate);
+            });
+
+            potonganInputDisplay.addEventListener('input', function() {
+                let numeric = this.value.replace(/\D/g, '');
+                if (numeric === '') numeric = '0';
+
+                this.value = formatRupiah(numeric);
+                potonganInput.value = numeric;
+
+                recalculate();
             });
 
             recalculate();
