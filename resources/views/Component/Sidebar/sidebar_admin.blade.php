@@ -10,12 +10,22 @@
             'icon' => 'fas fa-list',
             'children' => array_filter([
                 (object) ['title' => 'Product', 'path' => 'product-list'],
+                (object) ['title' => 'Adjustment', 'path' => 'inventory-adjustment/create'],
                 (object) ['title' => 'Payment', 'path' => 'payment-list'],
                 (object) ['title' => 'Shipping', 'path' => 'shipping-list'],
                 (object) ['title' => 'Customer', 'path' => 'customer-list'],
                 (object) ['title' => 'Supplier', 'path' => 'supplier-list'],
+
+                auth()->check() && auth()->user()->main_role === 'supermanager'
+                    ? (object) ['title' => 'CoA', 'path' => 'coa-create']
+                    : null,
+
                 auth()->check() && auth()->user()->main_role === 'supermanager'
                     ? (object) ['title' => 'User', 'path' => 'users']
+                    : null,
+
+                auth()->check() && auth()->user()->main_role === 'supermanager'
+                    ? (object) ['title' => 'Profit - Loss', 'path' => 'reports/profit-loss']
                     : null,
             ]),
         ],

@@ -1,22 +1,25 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\SaleController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\CoAController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DraftController;
-use App\Http\Controllers\ReturController;
+use App\Http\Controllers\GenerateController;
+use App\Http\Controllers\InventoryAdjustmentController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\PenerimaanController;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\GenerateController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ReturController;
+use App\Http\Controllers\RoleAccessController;
+use App\Http\Controllers\SaleController;
 use App\Http\Controllers\ShippingController;
 use App\Http\Controllers\SupplierController;
-use App\Http\Controllers\PenerimaanController;
-use App\Http\Controllers\RoleAccessController;
 use App\Http\Controllers\SuratJalanController;
+use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Route;
 
 // List Middleware yang belum di daftar:
 // Delete, Edit dan Update SO
@@ -191,4 +194,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/retur-purchase/FinalIndex', [ReturController::class, 'indexPurchaseRetur'])->name('retur-purchase.FinalIndex');
     Route::get('/pdf/{retur_number}', [GenerateController::class, 'exportPdfRetur'])->name('retur-purchase.pdf');
     Route::post('/retur-purchase/FinalStore', [ReturController::class, 'storePurchaseRetur'])->name('retur-purchase.FinalStore');
+
+    // Report Rugi Laba
+    Route::get('/reports/profit-loss', [ReportController::class, 'profitLoss'])->name('reports.profit-loss');
+
+    // CoA
+    Route::get('/coa-create', [CoAController::class, 'create'])->name('CoA.create');
+    Route::post('/coa-store', [CoAController::class, 'store'])->name('CoA.store');
+    Route::get('/coa/generate/{id}', [CoAController::class, 'generate']);
+
+    // Inventory Adjustment
+    Route::get('/inventory-adjustment/create', [InventoryAdjustmentController::class, 'create']);
+    Route::post('/inventory-adjustment/store', [InventoryAdjustmentController::class, 'store'])->name('inventory-adjustment.store');
 });
